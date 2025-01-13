@@ -16,7 +16,7 @@ public class ColorMixingDatabase : ScriptableObject
     }
 
     // Function to get a mix result from the database
-    public CustomColor GetMixResult(CustomColor c1, CustomColor c2)
+    private CustomColor GetMixResult(CustomColor c1, CustomColor c2)
     {
         foreach (var entry in mixingEntries)
         {
@@ -27,6 +27,12 @@ public class ColorMixingDatabase : ScriptableObject
             }
         }
         return null; // No mix found
+    }
+
+    public Card MixCards(Card card1, Card card2)
+    {
+        CustomColor customColor = GetMixResult(card1.ColorReference, card2.ColorReference);
+        return new Card(customColor);
     }
     
     // Singleton instance

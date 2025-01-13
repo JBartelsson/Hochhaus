@@ -13,5 +13,4 @@ MonoBehaviour:
   m_Name: Green
   m_EditorClassIdentifier: 
   colorName: Green
-  rgbColor: {r: 0, g: 1, b: 0, a: 0}
-  mixableColors: []
+  rgbColor: {r: 0, g: 1, b: 0, a: 1}

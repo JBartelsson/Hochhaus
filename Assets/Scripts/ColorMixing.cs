@@ -26,9 +26,9 @@ public class ColorMixing : MonoBehaviour
         // Debug.Log($"Resulting Color: "+ mixedColor);
 
         // Apply to material
-        meshRendererColor1.material.color = cmyk1.rgbColor;
-        meshRendererColor2.material.color = cmyk2.rgbColor;
-        meshRenderer.material.color = ColorUtility.MixColors(cmyk1, cmyk2).rgbColor;
+        meshRendererColor1.material.color = cmyk1.RGBColor;
+        meshRendererColor2.material.color = cmyk2.RGBColor;
+        // meshRenderer.material.color = ColorUtility.MixColors(cmyk1, cmyk2).RGBColor;
     }
 
     private void OnValidate()

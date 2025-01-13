@@ -22,3 +22,6 @@ MonoBehaviour:
   - color1: {fileID: 11400000, guid: fdf4e1d7f67357046a50bd26993b4fc6, type: 2}
     color2: {fileID: 11400000, guid: eef2f1fffd4e8d540ba1b94ef3076c42, type: 2}
     result: {fileID: 11400000, guid: afa1c7238bfcf7d45b77ed3c22650b6e, type: 2}
+  - color1: {fileID: 11400000, guid: 5b70c3251d5873c4b8a35c4348944495, type: 2}
+    color2: {fileID: 11400000, guid: fdf4e1d7f67357046a50bd26993b4fc6, type: 2}
+    result: {fileID: 11400000, guid: e571272528b43924ba341e73924757d6, type: 2}

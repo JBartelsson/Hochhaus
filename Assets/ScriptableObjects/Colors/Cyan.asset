@@ -13,5 +13,4 @@ MonoBehaviour:
   m_Name: Cyan
   m_EditorClassIdentifier: 
   colorName: Cyan
-  rgbColor: {r: 0, g: 1, b: 1, a: 0}
-  mixableColors: []
+  rgbColor: {r: 0, g: 1, b: 1, a: 1}

@@ -5,7 +5,10 @@ using UnityEngine;
 public class CustomColor : ScriptableObject
 {
     [Header("Color Properties")]
-    public string colorName; // Name of the color
-    public Color rgbColor;   // RGB representation of the color
+    [SerializeField] private string colorName; // Name of the color
+    [SerializeField] private Color rgbColor;   // RGB representation of the color
 
+    public string ColorName => colorName;
+
+    public Color RGBColor => rgbColor;
 }

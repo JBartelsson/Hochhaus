@@ -13,5 +13,4 @@ MonoBehaviour:
   m_Name: Magenta
   m_EditorClassIdentifier: 
   colorName: Magenta
-  rgbColor: {r: 1, g: 0, b: 1, a: 0}
-  mixableColors: []
+  rgbColor: {r: 1, g: 0, b: 1, a: 1}
