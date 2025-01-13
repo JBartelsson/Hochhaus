@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 506c06b59759aa744b72f6c68ce32449, type: 3}
+  m_Name: ColorMixingDatabase
+  m_EditorClassIdentifier: 
+  mixingEntries:
+  - color1: {fileID: 11400000, guid: 019e1fcf3e59de3408077b327a688182, type: 2}
+    color2: {fileID: 11400000, guid: fdf4e1d7f67357046a50bd26993b4fc6, type: 2}
+    result: {fileID: 11400000, guid: 5b70c3251d5873c4b8a35c4348944495, type: 2}
+  - color1: {fileID: 11400000, guid: 019e1fcf3e59de3408077b327a688182, type: 2}
+    color2: {fileID: 11400000, guid: eef2f1fffd4e8d540ba1b94ef3076c42, type: 2}
+    result: {fileID: 11400000, guid: 188a7496ebd2d574fb0a8221e38be119, type: 2}
+  - color1: {fileID: 11400000, guid: fdf4e1d7f67357046a50bd26993b4fc6, type: 2}
+    color2: {fileID: 11400000, guid: eef2f1fffd4e8d540ba1b94ef3076c42, type: 2}
+    result: {fileID: 11400000, guid: afa1c7238bfcf7d45b77ed3c22650b6e, type: 2}

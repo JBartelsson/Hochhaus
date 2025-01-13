@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 0c7aa6cf5529e7b4587a23ab138c3312
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 71306
+  packageName: Editor Aider - The Lost Jigsaw
+  packageVersion: 1.0.2
+  assetPath: Assets/WanzyeeStudio/Scripts/Editor/Toolkit/Environment/InspectorHelper.cs
+  uploadId: 272712

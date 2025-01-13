@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 75f7b7145d0a3d94fb6a8ba424512663
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 71306
+  packageName: Editor Aider - The Lost Jigsaw
+  packageVersion: 1.0.2
+  assetPath: Assets/WanzyeeStudio/Scripts/Editor/Toolkit/Environment/ObjectGrouper.cs
+  uploadId: 272712
