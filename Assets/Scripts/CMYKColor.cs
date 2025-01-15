@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [Serializable]
-public class CYMKColor
+public class CMYKColor
 {
 
     public float C
@@ -37,11 +37,26 @@ public class CYMKColor
     [Range(0,1f)]
     [SerializeField] private float k;
 
-    public CYMKColor(float c, float m, float y, float k)
+    public CMYKColor(float c, float m, float y, float k)
     {
         this.c = c;
         this.m = m;
         this.y = y;
         this.k = k;
+    }
+    
+    public bool IsUnset()
+    {
+        return C==0 && M==0 && Y==0;
+    }
+
+    public CMYKColor Mix(CMYKColor other)
+    {
+        return new CMYKColor((this.c + other.c) / 2f, (this.m + other.m) / 2f, (this.y + other.y) / 2f, 0);
+    }
+
+    public bool IsBlack()
+    {
+        return this.c > 0 || this.m > 0 || this.y > 0;
     }
 }

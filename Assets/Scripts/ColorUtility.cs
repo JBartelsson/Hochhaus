@@ -11,13 +11,13 @@ public static class CMYKColorUtility
         return new Color(r, g, b);
     }
     
-    public static Color CMYKToRGB(CYMKColor color)
+    public static Color CMYKToRGB(CMYKColor color)
     {
         return CMYKToRGB(color.C, color.M, color.Y, color.K);
     }
 
     // Convert RGB to CMYK
-    public static CYMKColor RGBToCMYK(Color color)
+    public static CMYKColor RGBToCMYK(Color color)
     {
         float r = color.r;
         float g = color.g;
@@ -30,10 +30,10 @@ public static class CMYKColorUtility
 
         if (Mathf.Approximately(k, 1)) c = m = y = 0; // Avoid NaN issues
 
-        return new CYMKColor(c, m, y, k);
+        return new CMYKColor(c, m, y, k);
     }
     
-    public static CYMKColor MixCMYKColors(
+    public static CMYKColor MixCMYKColors(
         (float c, float m, float y, float k) color1,
         (float c, float m, float y, float k) color2,
         float ratio = .5f)
@@ -48,12 +48,12 @@ public static class CMYKColorUtility
         float mixY = Mathf.Clamp((color1.y + color2.y) * factor, 0, 1f);
         float mixK = Mathf.Clamp((color1.k + color2.k) * factor, 0, 1f);
 
-        return new CYMKColor(mixC, mixM, mixY, mixK);
+        return new CMYKColor(mixC, mixM, mixY, mixK);
     }
     
-    public static CYMKColor MixCMYKColors(
-        CYMKColor color1,
-        CYMKColor color2,
+    public static CMYKColor MixCMYKColors(
+        CMYKColor color1,
+        CMYKColor color2,
         float ratio = .5f)
     {
         return MixCMYKColors((color1.C, color1.M, color1.Y, color1.K), (color2.C, color2.M, color2.Y, color2.K));

@@ -14,7 +14,10 @@ public class EnvironmentManager : MonoBehaviourSingleton<EnvironmentManager>
     {
         activeEnvironments = GameObject.FindObjectsByType<Environment>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).ToList();
         uiController.InitSubscriptions();
-        Debug.Log(activeEnvironments.Count);
+        foreach (Environment env in activeEnvironments)
+        {
+            env.StartEnvironment();
+        }
     }
 
     public Environment GetActiveEnvironment()

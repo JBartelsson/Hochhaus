@@ -18,6 +18,7 @@ public class UIController : MonoBehaviour
     public void InitSubscriptions()
     {
         Environment env = EnvironmentManager.Instance.GetActiveEnvironment();
+        Debug.Log(env.name);
         env.OnCardSystemChanged += EnvOnOnCardSystemChanged;
     }
 
@@ -28,20 +29,21 @@ public class UIController : MonoBehaviour
 
     }
 
-    private void EnvOnOnCardSystemChanged(object sender, CardSystem e)
+    private void EnvOnOnCardSystemChanged(object sender, CardSystem cardSystem)
     {
         foreach (var singleCardUI in singleCardUIs)
         {
             Destroy(singleCardUI.gameObject);
         }
         singleCardUIs.Clear();
-        foreach (var card in e.Hand)
+        Debug.Log("OnCardSystemChanged");
+        for (int i = 0; i < cardSystem.Hand.Count; i++)
         {
             SingleCardUI singleCardUI = Instantiate(cardUIPrefab, cardsSpawnTarget);
-            Debug.Log($"Filling Hand with {card}");
-            singleCardUI.SetCardUI(card, cardsSpawnTarget.parent, this);
+            singleCardUI.SetCardUI(cardSystem.Hand[i], cardsSpawnTarget.parent, this);
             singleCardUIs.Add(singleCardUI);
         }
+   
     }
 
     public void TryMixCards(SingleCardUI card1, SingleCardUI card2)
@@ -49,7 +51,7 @@ public class UIController : MonoBehaviour
         EnvironmentManager.Instance.GetActiveEnvironment().MixHandCards(card1.Card, card2.Card);
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         ResetSubscriptions();
     }

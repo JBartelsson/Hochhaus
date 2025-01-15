@@ -4,8 +4,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "ColorMixingDatabase", menuName = "ColorSystem/ColorMixingDatabase", order = 2)]
 public class ColorMixingDatabase : ScriptableObject
 {
+    [SerializeField] private CustomColor black;// List of all color mixing rules
     [Header("Mixing Rules")]
-    public List<MixEntry> mixingEntries; // List of all color mixing rules
+    public List<MixEntry> mixingEntries;
 
     [System.Serializable]
     public class MixEntry
@@ -18,6 +19,11 @@ public class ColorMixingDatabase : ScriptableObject
     // Function to get a mix result from the database
     private CustomColor GetMixResult(CustomColor c1, CustomColor c2)
     {
+        if (c1.RuntimeCMYK.IsUnset()) c1.RuntimeCMYK = c1.CmykColor;
+        if (c2.RuntimeCMYK.IsUnset()) c2.RuntimeCMYK = c2.CmykColor;
+
+        if (c1.RuntimeCMYK.Mix(c2.RuntimeCMYK).IsBlack()) return black;
+        
         foreach (var entry in mixingEntries)
         {
             // Check both (c1 + c2) and (c2 + c1) for symmetry
@@ -32,6 +38,7 @@ public class ColorMixingDatabase : ScriptableObject
     public Card MixCards(Card card1, Card card2)
     {
         CustomColor customColor = GetMixResult(card1.ColorReference, card2.ColorReference);
+        if (customColor == null) return null;
         return new Card(customColor);
     }
     

@@ -9,6 +9,7 @@ public class SingleCardUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     [SerializeField] private Image cardColorArea;
     private Card _card;
     private UIController uiController;
+    private int originalSiblingIndex;
 
     public Card Card => _card;
 
@@ -24,9 +25,10 @@ public class SingleCardUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        Debug.Log("OnBeginDrag");
-        transform.SetParent(parentDuringDrag);
+        //Get sibling index first and THEN change parent lol
+        originalSiblingIndex = transform.GetSiblingIndex();
         parentAfterDrag = transform.parent;
+        transform.SetParent(parentDuringDrag);
         cardColorArea.raycastTarget = false;
     }
 
@@ -37,8 +39,8 @@ public class SingleCardUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        Debug.Log("OnEndDrag");
         transform.SetParent(parentAfterDrag);
+        transform.SetSiblingIndex(originalSiblingIndex);
         cardColorArea.raycastTarget = true;
 
     }

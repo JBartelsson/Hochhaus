@@ -14,7 +14,7 @@ public class Environment : MonoBehaviour
     //Events
     public event EventHandler<CardSystem> OnCardSystemChanged; 
 
-    private void Start()
+    public void StartEnvironment()
     {
         _cardSystem = new CardSystem(colorMixingDatabase, envSettings);
         _cardSystem.Shuffle();
@@ -22,14 +22,14 @@ public class Environment : MonoBehaviour
         OnCardSystemChanged?.Invoke(this, _cardSystem);
     }
 
-    public void MixHandCards(Card card1, Card card2)
+    public void MixHandCards(Card topCard, Card bottomCard)
     {
-        Debug.Log(card1);
-        Debug.Log(card2);
-        Debug.Log(card1.ColorReference);
-        Debug.Log(card2.ColorReference);
+        Debug.Log(topCard);
+        Debug.Log(bottomCard);
+        Debug.Log(topCard.ColorReference);
+        Debug.Log(bottomCard.ColorReference);
 
-        _cardSystem.MixHandCards(card1, card2);
+        _cardSystem.MixHandCards(topCard, bottomCard);
         OnCardSystemChanged?.Invoke(this, _cardSystem);
 
     }

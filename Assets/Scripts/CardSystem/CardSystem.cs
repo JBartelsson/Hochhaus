@@ -43,12 +43,15 @@ public class CardSystem {
         }
     }
 
-    public void MixHandCards(Card card1, Card card2)
+    public void MixHandCards(Card topCard, Card bottomCard)
     {
-        Card newCard = _colorMixingDatabase.MixCards(card1, card2);
-        hand.Remove(card1);
-        hand.Remove(card2);
-        hand.Add(newCard);
+        Card newCard = _colorMixingDatabase.MixCards(topCard, bottomCard);
+        if (newCard == null) return;
+        hand.Remove(topCard);
+        int bottomCardIndex = hand.IndexOf(bottomCard);
+        hand.Remove(bottomCard);
+        hand.Insert(bottomCardIndex, newCard);
+        Draw();
     }
 
     // Return a list of drawn Cards from deck
@@ -63,6 +66,7 @@ public class CardSystem {
             drawPile.RemoveAt(0);
         }
         hand.AddRange(drawnCards);
+        Debug.Log($"Remaining Cards: {drawPile.Count}");
     }
 
     public void DrawFullHand()
