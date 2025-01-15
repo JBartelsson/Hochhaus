@@ -29,6 +29,7 @@ public class ColorMixingDatabase : ScriptableObject
             // Check both (c1 + c2) and (c2 + c1) for symmetry
             if ((entry.color1 == c1 && entry.color2 == c2) || (entry.color1 == c2 && entry.color2 == c1))
             {
+                entry.result.RuntimeCMYK = c1.RuntimeCMYK.Mix(c2.RuntimeCMYK);
                 return entry.result;
             }
         }
