@@ -3,23 +3,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Utility;
 
-public class Environment : MonoBehaviour
+public class Environment : MonoBehaviour, IInitHandler
 {
     [SerializeField] ColorMixingDatabase colorMixingDatabase;
     [SerializeField] private EnvSettings envSettings;
-    
+    [SerializeField] private BoardManager boardManager;
+
+    public BoardManager BoardManager
+    {
+        get => boardManager;
+        set => boardManager = value;
+    }
+
     private CardSystem _cardSystem;
-    
+
+    public CardSystem CardSystem => _cardSystem;
+
     //Events
-    public event EventHandler<CardSystem> OnCardSystemChanged; 
 
     public void StartEnvironment()
     {
-        _cardSystem = new CardSystem(colorMixingDatabase, envSettings);
         _cardSystem.Shuffle();
         _cardSystem.DrawFullHand();
-        OnCardSystemChanged?.Invoke(this, _cardSystem);
+        
+        boardManager.InitBoard();
     }
 
     public void MixHandCards(Card topCard, Card bottomCard)
@@ -30,7 +39,16 @@ public class Environment : MonoBehaviour
         Debug.Log(bottomCard.ColorReference);
 
         _cardSystem.MixHandCards(topCard, bottomCard);
-        OnCardSystemChanged?.Invoke(this, _cardSystem);
+    }
 
+    public void AddCardColorToFace(Card card, BoardField boardField)
+    {
+        boardField.AddCard(card);
+        _cardSystem.DiscardCard(card);
+    }
+
+    public void Init()
+    {
+        _cardSystem = new CardSystem(colorMixingDatabase, envSettings);
     }
 }

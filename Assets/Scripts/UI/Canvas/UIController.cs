@@ -1,10 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UI;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class UIController : MonoBehaviour
+public class UIController : MonoBehaviour, ISubscriber
 {
     List<SingleCardUI> singleCardUIs = new List<SingleCardUI>();
 
@@ -19,14 +20,13 @@ public class UIController : MonoBehaviour
     {
         Environment env = EnvironmentManager.Instance.GetActiveEnvironment();
         Debug.Log(env.name);
-        env.OnCardSystemChanged += EnvOnOnCardSystemChanged;
+        env.CardSystem.OnCardSystemChanged += EnvOnOnCardSystemChanged;
     }
 
-    private void ResetSubscriptions()
+    public void ResetSubscriptions()
     {
         Environment env = EnvironmentManager.Instance.GetActiveEnvironment();
-        env.OnCardSystemChanged -= EnvOnOnCardSystemChanged;
-
+        env.CardSystem.OnCardSystemChanged -= EnvOnOnCardSystemChanged;
     }
 
     private void EnvOnOnCardSystemChanged(object sender, CardSystem cardSystem)
@@ -45,14 +45,6 @@ public class UIController : MonoBehaviour
         }
    
     }
-
-    public void TryMixCards(SingleCardUI card1, SingleCardUI card2)
-    {
-        EnvironmentManager.Instance.GetActiveEnvironment().MixHandCards(card1.Card, card2.Card);
-    }
-
-    private void OnDisable()
-    {
-        ResetSubscriptions();
-    }
+    
+    
 }

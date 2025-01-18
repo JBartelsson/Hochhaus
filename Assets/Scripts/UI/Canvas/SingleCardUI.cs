@@ -48,7 +48,14 @@ public class SingleCardUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     public void OnDrop(PointerEventData eventData)
     {
         GameObject droppedObject = eventData.pointerDrag;
-        SingleCardUI droppedCardUI = droppedObject.GetComponent<SingleCardUI>();
-        uiController.TryMixCards(droppedCardUI, this);
+      
+
+        if (droppedObject.TryGetComponent(out SingleCardUI otherCard))
+        {
+            SingleCardUI droppedCardUI = droppedObject.GetComponent<SingleCardUI>();
+            EnvironmentManager.Instance.GetActiveEnvironment().MixHandCards(this.Card, otherCard.Card);
+
+        }
+        
     }
 }

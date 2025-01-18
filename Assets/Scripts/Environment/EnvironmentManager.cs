@@ -9,15 +9,27 @@ public class EnvironmentManager : MonoBehaviourSingleton<EnvironmentManager>
     private int activeEnvironment = 0;
     private List<Environment> activeEnvironments = new List<Environment>();
     [SerializeField] UIController uiController;
+    [SerializeField] BoardVisual boardVisual;
 
     private void Start()
     {
         activeEnvironments = GameObject.FindObjectsByType<Environment>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).ToList();
+        foreach (Environment env in activeEnvironments)
+        {
+            env.Init();
+        }
         uiController.InitSubscriptions();
+        boardVisual.InitSubscriptions();
         foreach (Environment env in activeEnvironments)
         {
             env.StartEnvironment();
         }
+    }
+
+    private void OnDisable()
+    {
+        uiController.ResetSubscriptions();
+        boardVisual.ResetSubscriptions();
     }
 
     public Environment GetActiveEnvironment()

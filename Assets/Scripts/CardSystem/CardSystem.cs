@@ -1,6 +1,8 @@
+using System;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Random = UnityEngine.Random;
 
 public class CardSystem {
     List<Card> drawPile;
@@ -18,6 +20,9 @@ public class CardSystem {
     public List<Card> Hand => hand;
 
     private EnvSettings _envSettings;
+    
+    public event EventHandler<CardSystem> OnCardSystemChanged; 
+
 
     public CardSystem(ColorMixingDatabase colorMixingDatabase, EnvSettings envSettings)
     {
@@ -51,6 +56,7 @@ public class CardSystem {
         int bottomCardIndex = hand.IndexOf(bottomCard);
         hand.Remove(bottomCard);
         hand.Insert(bottomCardIndex, newCard);
+        OnCardSystemChanged?.Invoke(this, this);
         Draw();
     }
 
@@ -67,6 +73,8 @@ public class CardSystem {
         }
         hand.AddRange(drawnCards);
         Debug.Log($"Remaining Cards: {drawPile.Count}");
+        OnCardSystemChanged?.Invoke(this, this);
+
     }
 
     public void DrawFullHand()
@@ -105,6 +113,8 @@ public class CardSystem {
     {
         discardPile.Insert(0, card);
         hand.Remove(card);
+        OnCardSystemChanged?.Invoke(this, this);
+
     }
 
     public void ShuffleDiscard()
@@ -134,6 +144,8 @@ public class CardSystem {
     public void AddCard(Card card)
     {
         fullDeck.Add(card);
+        OnCardSystemChanged?.Invoke(this, this);
+
     }
 
     public override string ToString()
