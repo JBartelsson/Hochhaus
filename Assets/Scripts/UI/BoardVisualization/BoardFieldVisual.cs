@@ -5,17 +5,24 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Random = Unity.Mathematics.Random;
 
-public class BoardFieldVisual : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IDropHandler
+public class BoardFieldVisual : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     
         [SerializeField] MeshRenderer faceRenderer;
         [SerializeField] MeshFilter meshFilter;
         [SerializeField] MeshCollider meshCollider;
-        [SerializeField] private float scale = 4f;
+        private float scale = 4f;
+
+
         [Header("Hover Effect")]
         [SerializeField] Material _hoverMaterial;
         private BoardField _boardField;
         private Material _originalMaterial;
+        public float Scale
+        {
+            get => scale;
+            set => scale = value;
+        }
 
         public BoardField BoardField => _boardField;
         private void Start()
@@ -23,8 +30,9 @@ public class BoardFieldVisual : MonoBehaviour, IPointerEnterHandler, IPointerExi
             _originalMaterial = faceRenderer.material;
         }
 
-        public void Init(BoardField boardField)
+        public void Init(BoardField boardField, float scale)
         {
+            this.scale = scale;
             this._boardField = boardField;
             CreateMeshFromFace(_boardField.DCELFace);
             _boardField.OnUpdate += BoardFieldOnOnUpdate;
@@ -33,7 +41,7 @@ public class BoardFieldVisual : MonoBehaviour, IPointerEnterHandler, IPointerExi
         private void BoardFieldOnOnUpdate(object sender, EventArgs e)
         {
             if (_boardField.paintStack.Count == 0) return;
-            faceRenderer.material.color = _boardField.paintStack.Last().ColorReference.RGBColor;
+            faceRenderer.material.color = _boardField.paintStack.Last().CardCopy.ColorReference.RGBColor;
         }
         
         public void CreateMeshFromFace(Face face, Material material = null)
@@ -81,12 +89,5 @@ public class BoardFieldVisual : MonoBehaviour, IPointerEnterHandler, IPointerExi
             // faceRenderer.material = _originalMaterial;
         }
 
-        public void OnDrop(PointerEventData eventData)
-        {
-            GameObject droppedObject = eventData.pointerDrag;
-            if (droppedObject.TryGetComponent<SingleCardUI>(out SingleCardUI singleCardUI))
-            {
-                EnvironmentManager.Instance.GetActiveEnvironment().AddCardColorToFace(singleCardUI.Card, BoardField);
-            }
-        }
+        
 }

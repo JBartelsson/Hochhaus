@@ -105,7 +105,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 1
+  m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
 --- !u!1 &7729026079550167427
@@ -156,5 +156,4 @@ MonoBehaviour:
   faceRenderer: {fileID: 4065343865661703806}
   meshFilter: {fileID: 7385561621540086961}
   meshCollider: {fileID: 276319531223249159}
-  scale: 4
   _hoverMaterial: {fileID: 2100000, guid: c6f5c843ad4a3aa479083a705aa86b85, type: 2}

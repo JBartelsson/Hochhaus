@@ -1,36 +1,132 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using UnityEditor.SceneManagement;
 using UnityEngine;
-[CreateAssetMenu(fileName = "BoardLayout", menuName = "BoardSystem/BoardLayout", order = 1)]
 
+[CreateAssetMenu(fileName = "BoardLayout", menuName = "BoardSystem/BoardLayout", order = 1)]
 public class BoardLayout : ScriptableObject
 {
+    [SerializeField] private string JSONUrl;
     [Serializable]
     public class Edge
     {
         public Vector2 point1;
         public Vector2 point2;
-    }
-    [SerializeField] List<Edge> edges;
-    public List<Edge> Edges { get => edges; set => edges = value; }
+        
+        public override bool Equals(object obj)
+        {
+            if (obj is Edge other)
+            {
+                // Check if edges are identical or reversed (undirected check)
+                return (point1.Equals(other.point1) && point2.Equals(other.point2)) ||
+                       (point1.Equals(other.point2) && point2.Equals(other.point1));
+            }
+            return false;
+        }
 
+        public override int GetHashCode()
+        {
+            // Hash code that works for undirected edges
+            int hash1 = point1.GetHashCode() ^ point2.GetHashCode();
+            int hash2 = point2.GetHashCode() ^ point1.GetHashCode();
+            return Mathf.Min(hash1, hash2); // Use the smaller hash for consistency
+        }
+    }
+
+    public class EdgeList
+    {
+        [SerializeField] List<Edge> edges;
+
+        public EdgeList(List<Edge> edges)
+        {
+            this.edges = edges;
+        }
+
+        public List<Edge> Edges
+        {
+            get => edges;
+            set => edges = value;
+        }
+    }
+
+    [SerializeField] List<Edge> edges;
+
+    public List<Edge> Edges
+    {
+        get => edges;
+        set => edges = value;
+    }
+    
+    void Awake()
+    {
+        // Set file path (StreamingAssets ensures it's accessible)
+        // string filePath = Path.Combine(Application.streamingAssetsPath, $"{this.name}.json");
+        //
+        // EdgeList edgeList = new EdgeList(edges);
+        // // Convert the list to a JSON string
+        // string json = JsonUtility.ToJson(edgeList, true); // Pretty print for readability
+        //
+        // // Save the JSON string to a file
+        // SaveJsonToFile(json , filePath);
+        //
+        // Debug.Log($"JSON saved to: {filePath}");
+    }
+
+    void SaveJsonToFile(string json, string filePath)
+    {
+        // Ensure the directory exists
+        string directory = Path.GetDirectoryName(filePath);
+        if (!Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+
+        // Write the JSON to the file
+        File.WriteAllText(filePath, json);
+    }
+
+    void LoadFromJsonFile(string filePath)
+    {
+        string json = File.ReadAllText(filePath);
+        Debug.Log(json);
+        EdgeList edgeList = JsonUtility.FromJson<EdgeList>(json);
+        this.edges = edgeList.Edges;
+    }
+
+    public void RemoveDuplicates()
+    {
+        // Use a HashSet to remove duplicates efficiently
+        HashSet<Edge> uniqueEdges = new HashSet<Edge>(edges);
+        edges = new List<Edge>(uniqueEdges);
+    }
     public DCEL ConvertToDCEL()
     {
+        LoadFromJsonFile(Path.Combine(Application.streamingAssetsPath, $"{this.name}.json"));
         DCEL dcel = new DCEL();
+        RemoveDuplicates();
         Dictionary<Vector2, Vertex> vertexLookup = CreateVerticesFromEdges(edges);
         List<HalfEdge> halfEdges = CreateHalfEdgesFromEdges(edges, vertexLookup);
         LinkHalfEdges(halfEdges);
-        foreach (var halfEdge in halfEdges)
-        {
-            Debug.Log(halfEdge);
-        }
+
         AssignFaces(halfEdges, dcel);
 
         // Add everything to the DCEL
         dcel.Vertices = vertexLookup.Values.ToList();
         dcel.Edges = halfEdges;
-        dcel.Faces.Remove(DetermineOutsideFace(dcel.Faces));
+        Face outsideFace = DetermineOutsideFace(dcel.Faces);
+        foreach (var dcelEdge in dcel.Edges)
+        {
+            if (dcelEdge.Face == outsideFace)
+                dcelEdge.Face = null;
+        }
+        dcel.Faces.Remove(outsideFace);
+        foreach (var dcelFace in dcel.Faces)
+        {
+            dcelFace.Triangulate();
+        }
+
         return dcel;
     }
 
@@ -44,6 +140,7 @@ public class BoardLayout : ScriptableObject
             {
                 vertexLookup[edge.point1] = new Vertex { Position = edge.point1 };
             }
+
             if (!vertexLookup.ContainsKey(edge.point2))
             {
                 vertexLookup[edge.point2] = new Vertex { Position = edge.point2 };
@@ -81,7 +178,7 @@ public class BoardLayout : ScriptableObject
 
         return halfEdges;
     }
-    
+
     private void LinkHalfEdges(List<HalfEdge> halfEdges)
     {
         // Group edges by origin vertex
@@ -113,7 +210,7 @@ public class BoardLayout : ScriptableObject
             }
         }
     }
-    
+
     private void AssignFaces(List<HalfEdge> halfEdges, DCEL dcel)
     {
         HashSet<HalfEdge> visitedEdges = new HashSet<HalfEdge>();
@@ -140,7 +237,7 @@ public class BoardLayout : ScriptableObject
             } while (current != edge);
         }
     }
-    
+
     public Face DetermineOutsideFace(List<Face> faces)
     {
         Face outsideFace = null;
@@ -169,7 +266,4 @@ public class BoardLayout : ScriptableObject
 
         return outsideFace;
     }
-    
-    
-    
 }

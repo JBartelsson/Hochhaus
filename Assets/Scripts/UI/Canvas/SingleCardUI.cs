@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -15,11 +16,15 @@ public class SingleCardUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
 
     private Transform parentAfterDrag;
     [SerializeField] private Transform parentDuringDrag;
+    
+    //Texts
+    [SerializeField] private TextMeshProUGUI pointsText;
     public void SetCardUI(Card card, Transform canvas, UIController uiController)
     {
         _card = card;
         cardColorArea.color = card.ColorReference.RGBColor;
         parentDuringDrag = canvas.transform;
+        pointsText.text = card.RuntimePoints.ToString();
         this.uiController = uiController;
     }
 
@@ -53,7 +58,7 @@ public class SingleCardUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         if (droppedObject.TryGetComponent(out SingleCardUI otherCard))
         {
             SingleCardUI droppedCardUI = droppedObject.GetComponent<SingleCardUI>();
-            EnvironmentManager.Instance.GetActiveEnvironment().MixHandCards(this.Card, otherCard.Card);
+            EnvironmentManager.Instance.GetActiveEnvironment().MixHandCards(otherCard.Card, this.Card);
 
         }
         

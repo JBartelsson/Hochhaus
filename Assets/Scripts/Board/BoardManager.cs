@@ -31,7 +31,6 @@ public class BoardManager : MonoBehaviour
         int scale = 4;
         foreach (var face in _dcel.Faces)
         {
-            Debug.Log("face step");
             _boardFields.Add(new BoardField(face));
         }
         OnInit?.Invoke(this, this);

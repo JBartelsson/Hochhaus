@@ -8,7 +8,14 @@ public class CustomColor : ScriptableObject
     [SerializeField] private string colorName; // Name of the color
     [SerializeField] private Color rgbColor;
     [SerializeField] private bool isPrimaryColor = false;// RGB representation of the color
+
+
     [SerializeField] private CMYKColor cmykColor;
+
+    [SerializeField] private int points = 0;
+
+    public bool IsPrimaryColor => isPrimaryColor;
+    public int Points => points;
 
     public CMYKColor CmykColor => cmykColor;
 

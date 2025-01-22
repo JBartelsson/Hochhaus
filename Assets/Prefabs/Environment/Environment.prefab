@@ -77,8 +77,58 @@ Transform:
   m_Children:
   - {fileID: 2379360347392127670}
   - {fileID: 1932544206483047292}
+  - {fileID: 5288234314380094447}
   m_Father: {fileID: 2336961286575911406}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7361956599390106347
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5288234314380094447}
+  - component: {fileID: 5711018469555432382}
+  m_Layer: 0
+  m_Name: ArtPersonDatabase
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5288234314380094447
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7361956599390106347}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5585247038950510240}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5711018469555432382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7361956599390106347}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21f1ca28740943944bfdb52b7b226eea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  artPersonData:
+  - {fileID: 11400000, guid: 6fd6ea85ded4b88418919b13c802d9ed, type: 2}
+  - {fileID: 11400000, guid: d9d4aa7383002d0429fc28f9c38988cb, type: 2}
+  - {fileID: 11400000, guid: 5cee8386f95f7af49a65400d84cf4532, type: 2}
+  - {fileID: 11400000, guid: b346434cc847d394aa49c29f658c010d, type: 2}
 --- !u!1 &7538002792271685630
 GameObject:
   m_ObjectHideFlags: 0
@@ -177,3 +227,4 @@ MonoBehaviour:
     AmountOfDiscards: 3
     HandSize: 9
   boardManager: {fileID: 268218152698517515}
+  artPersonLibrary: {fileID: 5711018469555432382}

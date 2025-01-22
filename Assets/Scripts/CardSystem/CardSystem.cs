@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Random = UnityEngine.Random;
 
+[Serializable]
 public class CardSystem {
     List<Card> drawPile;
     List<Card> discardPile;
@@ -54,6 +55,7 @@ public class CardSystem {
         if (newCard == null) return;
         hand.Remove(topCard);
         int bottomCardIndex = hand.IndexOf(bottomCard);
+        Debug.Log($"BOTTOM CARD INDEX: " + bottomCardIndex);
         hand.Remove(bottomCard);
         hand.Insert(bottomCardIndex, newCard);
         OnCardSystemChanged?.Invoke(this, this);
@@ -72,7 +74,6 @@ public class CardSystem {
             drawPile.RemoveAt(0);
         }
         hand.AddRange(drawnCards);
-        Debug.Log($"Remaining Cards: {drawPile.Count}");
         OnCardSystemChanged?.Invoke(this, this);
 
     }
@@ -135,7 +136,6 @@ public class CardSystem {
             for (int i = 0; i < colorEntry.Amount; i++)
             {
                 AddCard(new Card(colorEntry.Color));
-                Debug.Log("Adding Card");
             }
         }
         drawPile.AddRange(fullDeck);

@@ -52,7 +52,6 @@ public class CMYKColor
 
     public CMYKColor Mix(CMYKColor other)
     {
-        Debug.Log($"Trying to Mix {this} and {other}");
         return new CMYKColor((this.c + other.c) / 2f, (this.m + other.m) / 2f, (this.y + other.y) / 2f, 0);
     }
 

@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colorName: Cyan
   rgbColor: {r: 0, g: 1, b: 1, a: 1}
-  isPrimaryColor: 0
+  isPrimaryColor: 1
   cmykColor:
     c: 1
     m: 0
     y: 0
     k: 0
+  points: 10

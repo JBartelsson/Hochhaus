@@ -4,9 +4,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "ColorMixingDatabase", menuName = "ColorSystem/ColorMixingDatabase", order = 2)]
 public class ColorMixingDatabase : ScriptableObject
 {
-    [SerializeField] private CustomColor black;// List of all color mixing rules
-    [Header("Mixing Rules")]
-    public List<MixEntry> mixingEntries;
+    [SerializeField] private CustomColor black; // List of all color mixing rules
+
+    [Header("Mixing Rules")] public List<MixEntry> mixingEntries;
 
     [System.Serializable]
     public class MixEntry
@@ -23,7 +23,7 @@ public class ColorMixingDatabase : ScriptableObject
         if (c2.RuntimeCMYK.IsUnset()) c2.RuntimeCMYK = c2.CmykColor;
 
         if (c1.RuntimeCMYK.Mix(c2.RuntimeCMYK).IsBlack()) return black;
-        
+
         foreach (var entry in mixingEntries)
         {
             // Check both (c1 + c2) and (c2 + c1) for symmetry
@@ -33,6 +33,7 @@ public class ColorMixingDatabase : ScriptableObject
                 return entry.result;
             }
         }
+
         return null; // No mix found
     }
 
@@ -40,9 +41,20 @@ public class ColorMixingDatabase : ScriptableObject
     {
         CustomColor customColor = GetMixResult(card1.ColorReference, card2.ColorReference);
         if (customColor == null) return null;
-        return new Card(customColor);
+        Card newCard = new Card(customColor);
+        if (customColor != black)
+        {
+            newCard.RuntimePoints = card1.RuntimePoints + card2.RuntimePoints;
+        }
+        else
+        {
+            newCard.RuntimePoints = black.Points;
+        }
+
+        Debug.Log($"New Card {newCard.RuntimePoints}");
+        return newCard;
     }
-    
+
     // Singleton instance
     private static ColorMixingDatabase _instance;
 
@@ -56,12 +68,15 @@ public class ColorMixingDatabase : ScriptableObject
             if (_instance == null)
             {
                 // Load the database if it hasn't been assigned
-                _instance = Resources.Load<ColorMixingDatabase>("Assets/ScriptableObjects/ColorDatabase/ColorMixingDatabase.asset");
+                _instance = Resources.Load<ColorMixingDatabase>(
+                    "Assets/ScriptableObjects/ColorDatabase/ColorMixingDatabase.asset");
                 if (_instance == null)
                 {
-                    Debug.LogError("No ColorMixingDatabase found in Resources! Please create one and place it in a Resources folder.");
+                    Debug.LogError(
+                        "No ColorMixingDatabase found in Resources! Please create one and place it in a Resources folder.");
                 }
             }
+
             return _instance;
         }
     }
