@@ -13,4 +13,11 @@ MonoBehaviour:
   m_Name: Black
   m_EditorClassIdentifier: 
   colorName: Black
-  rgbColor: {r: 0, g: 0, b: 0, a: 1}
+  rgbColor: {r: 0.052615, g: 0.054234244, b: 0.085, a: 1}
+  isPrimaryColor: 0
+  cmykColor:
+    c: 0
+    m: 0
+    y: 0
+    k: 0
+  points: 0

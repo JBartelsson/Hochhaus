@@ -1,5 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
+using WeekSystem;
 
 namespace UI.Canvas
 {
@@ -7,31 +9,40 @@ namespace UI.Canvas
     {
         [SerializeField] TextMeshProUGUI pointsText;
         [SerializeField] TextMeshProUGUI multText;
+        [FormerlySerializedAs("totalText")] [SerializeField] TextMeshProUGUI paintingScoreText;
         [SerializeField] TextMeshProUGUI totalText;
+        [SerializeField] TextMeshProUGUI targetText;
         
         public void InitSubscriptions()
         {
             Environment env = EnvironmentManager.Instance.GetActiveEnvironment();
-            env.Score.OnPointsChanged += ScoreOnOnPointsChanged;
-            env.Score.OnMultiplierChanged += ScoreOnOnMultiplierChanged;
-            env.Score.OnScoreChanged += ScoreOnOnScoreChanged;
+            env.RoundStats.Score.OnPointsChanged += ScoreOnOnPointsChanged;
+            env.RoundStats.Score.OnMultiplierChanged += ScoreOnOnMultiplierChanged;
+            env.RoundStats.Score.OnScoreChanged += ScoreOnOnScoreChanged;
+            env.WeekManager.OnWeekChanged += OnWeekChanged;
 
         }
 
-        private void ScoreOnOnScoreChanged(object sender, float e)
+        private void OnWeekChanged(object sender, WeekManager e)
         {
-            totalText.text = e.ToString();
+            targetText.text = e.GetCurrentWeekInfo().ToString();
         }
 
-        private void ScoreOnOnMultiplierChanged(object sender, float e)
+        private void ScoreOnOnScoreChanged(object sender, Score score)
         {
-            multText.text = e.ToString();
+            paintingScoreText.text = score.PaintingScore.ToString();
+            totalText.text = score.TotalScore.ToString();
+        }
+
+        private void ScoreOnOnMultiplierChanged(object sender, Score score)
+        {
+            multText.text = score.Mult.ToString();
 
         }
 
-        private void ScoreOnOnPointsChanged(object sender, int e)
+        private void ScoreOnOnPointsChanged(object sender, Score score)
         {
-            pointsText.text = e.ToString();
+            pointsText.text = score.Points.ToString();
 
         }
 
@@ -39,9 +50,9 @@ namespace UI.Canvas
         {
             Environment env = EnvironmentManager.Instance.GetActiveEnvironment();
 
-            env.Score.OnPointsChanged -= ScoreOnOnPointsChanged;
-            env.Score.OnMultiplierChanged -= ScoreOnOnMultiplierChanged;
-            env.Score.OnScoreChanged -= ScoreOnOnScoreChanged;
+            env.RoundStats.Score.OnPointsChanged -= ScoreOnOnPointsChanged;
+            env.RoundStats.Score.OnMultiplierChanged -= ScoreOnOnMultiplierChanged;
+            env.RoundStats.Score.OnScoreChanged -= ScoreOnOnScoreChanged;
         }
     }
 }

@@ -1,17 +1,23 @@
 ﻿
     using System;
     using UnityEngine;
+    using Utility;
 
-    public class Score
+    public class Score: ISellPaintingHandler
     {
         // The current points and multiplier
         private int points;
+
+        public int Points => points;
+
+        public float Mult => mult;
+
         private float mult;
 
         // Events to notify UI or other systems
-        public event EventHandler<int> OnPointsChanged;    // Triggered when points change
-        public event EventHandler<float> OnMultiplierChanged; // Triggered when multiplier changes
-        public event EventHandler<float> OnScoreChanged;     // Triggered when total score changes
+        public event EventHandler<Score> OnPointsChanged;    // Triggered when points change
+        public event EventHandler<Score> OnMultiplierChanged; // Triggered when multiplier changes
+        public event EventHandler<Score> OnScoreChanged;     // Triggered when total score changes
 
         // Constructor to initialize default values
         public Score()
@@ -21,7 +27,11 @@
         }
 
         // Public getter for total score
-        public float TotalScore => points * mult;
+        public float PaintingScore => points * mult;
+
+        private float totalScore;
+        public float TotalScore => totalScore;
+
 
         // Add points to the current score
         public void AddPoints(int amount)
@@ -33,8 +43,8 @@
             }
 
             points += amount;
-            OnPointsChanged?.Invoke(this, points);
-            OnScoreChanged?.Invoke(this, TotalScore); // Notify score update
+            OnPointsChanged?.Invoke(this, this);
+            OnScoreChanged?.Invoke(this, this); // Notify score update
         }
         
         // Remove points to the current score
@@ -47,8 +57,8 @@
             }
 
             points -= amount;
-            OnPointsChanged?.Invoke(this, points);
-            OnScoreChanged?.Invoke(this, TotalScore); // Notify score update
+            OnPointsChanged?.Invoke(this, this);
+            OnScoreChanged?.Invoke(this, this); // Notify score update
         }
 
         // Add to the multiplier
@@ -61,8 +71,13 @@
             }
 
             mult += amount;
-            OnMultiplierChanged?.Invoke(this,mult);
-            OnScoreChanged?.Invoke(this, TotalScore); // Notify score update
+            OnMultiplierChanged?.Invoke(this,this);
+            OnScoreChanged?.Invoke(this, this); // Notify score update
+        }
+
+        public void CalculateScore()
+        {
+            totalScore += PaintingScore;
         }
 
         // Reset the score and multiplier
@@ -72,8 +87,15 @@
             mult = 1;
 
             // Notify all listeners about the reset
-            OnPointsChanged?.Invoke(this, points);
-            OnMultiplierChanged?.Invoke(this, mult);
-            OnScoreChanged?.Invoke(this, TotalScore);
+            OnPointsChanged?.Invoke(this, this);
+            OnMultiplierChanged?.Invoke(this, this);
+            OnScoreChanged?.Invoke(this, this);
+        }
+
+        public void SellPainting()
+        {
+            CalculateScore();
+            ResetScore();
+
         }
     }

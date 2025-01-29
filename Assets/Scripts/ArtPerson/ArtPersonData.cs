@@ -9,8 +9,19 @@ namespace Art
         [Header("General Settings")]
 
         [SerializeField] private string displayName;
+
+
         [SerializeField] private string description;
         [SerializeField] ArtPersonType artPersonType;
+        public string DisplayNameEditor
+        {
+            set => displayName = value;
+        }
+
+        public ArtPersonType ArtPersonTypeEditor
+        {
+            set => artPersonType = value;
+        }
 
         [Header("Effect Settings")] 
         [SerializeField] private float pointEffect;

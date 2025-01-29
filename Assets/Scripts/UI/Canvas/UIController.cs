@@ -5,6 +5,7 @@ using UI;
 using UI.Canvas;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class UIController : MonoBehaviour, ISubscriber
 {
@@ -15,6 +16,7 @@ public class UIController : MonoBehaviour, ISubscriber
 
     [SerializeField] private ScoreView scoreView;
     [SerializeField] ArtistCardArea artistCardArea;
+    [FormerlySerializedAs("canvasasLeftUI")] [SerializeField] StatsUI statsUI;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,6 +28,7 @@ public class UIController : MonoBehaviour, ISubscriber
         env.CardSystem.OnCardSystemChanged += EnvOnOnCardSystemChanged;
         scoreView.InitSubscriptions();
         artistCardArea.InitSubscriptions();
+        statsUI.InitSubscriptions();
     }
 
     public void ResetSubscriptions()
@@ -34,6 +37,7 @@ public class UIController : MonoBehaviour, ISubscriber
         env.CardSystem.OnCardSystemChanged -= EnvOnOnCardSystemChanged;
         scoreView.ResetSubscriptions();
         artistCardArea.ResetSubscriptions();
+        statsUI.ResetSubscriptions();
     }
 
     private void EnvOnOnCardSystemChanged(object sender, CardSystem cardSystem)

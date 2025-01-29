@@ -15,6 +15,12 @@ public class Card: ICloneable
         this.RuntimePoints = this.colorReference.Points;
     }
 
+    public Card(CustomColor colorReference, int runtimePoints)
+    {
+        this.colorReference = colorReference;
+        this.RuntimePoints = runtimePoints;
+    }
+
 
     public override string ToString()
     {
@@ -24,11 +30,12 @@ public class Card: ICloneable
     public void ChangeColor(CustomColor color)
     {
         this.colorReference = color;
+        this.RuntimePoints = this.colorReference.Points;
     }
 
     public object Clone()
     {
-        return new Card(colorReference);
+        return new Card(colorReference, this.RuntimePoints);
     }
 
     public int RuntimePoints { get; set; }

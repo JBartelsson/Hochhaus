@@ -13,4 +13,11 @@ MonoBehaviour:
   m_Name: Violet
   m_EditorClassIdentifier: 
   colorName: Violet
-  rgbColor: {r: 0.5019608, g: 0, b: 1, a: 1}
+  rgbColor: {r: 0.3647059, g: 0.078431375, b: 0.28627452, a: 1}
+  isPrimaryColor: 0
+  cmykColor:
+    c: 0
+    m: 0
+    y: 0
+    k: 0
+  points: 30

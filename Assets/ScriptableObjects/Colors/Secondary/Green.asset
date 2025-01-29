@@ -13,4 +13,11 @@ MonoBehaviour:
   m_Name: Green
   m_EditorClassIdentifier: 
   colorName: Green
-  rgbColor: {r: 0, g: 1, b: 0, a: 1}
+  rgbColor: {r: 0.23921569, g: 0.56078434, b: 0.28627452, a: 1}
+  isPrimaryColor: 0
+  cmykColor:
+    c: 0
+    m: 0
+    y: 0
+    k: 0
+  points: 20

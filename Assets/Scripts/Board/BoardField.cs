@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class BoardField
+public class BoardField : IResetHandler
 {
     public Face DCELFace;
     public List<PaintedCard> paintStack = new();
@@ -66,7 +66,6 @@ public class BoardField
         foreach (var faceEdge in faceEdges)
         {
             if (faceEdge.Twin.Face == null) continue;
-            Debug.Log(faceEdge.Twin.Face.GetOriginsFromFace().ToFormattedString());
             BoardField neighborBoardField = faceEdge.Twin.Face.BoardField;
             if (!filter(neighborBoardField)) continue;
             
@@ -74,5 +73,11 @@ public class BoardField
         }
 
         return neighbors;
+    }
+
+    public void Reset()
+    {
+        paintStack.Clear();
+        Update();
     }
 }

@@ -7,10 +7,12 @@
     [CustomEditor(typeof(ArtPersonLibrary))]
     public class ArtPersonManagerEditor : Editor
     {
-        private readonly string folderPath = "Assets/ScriptableObjects/ArtPersonData"; // Default folder path
+        public static string folderPath = "Assets/ScriptableObjects/ArtPersonData"; // Default folder path
 
         public override void OnInspectorGUI()
         {
+            ArtPersonLibrary manager = (ArtPersonLibrary)target;
+
             // Draw the default inspector first
             DrawDefaultInspector();
 
@@ -23,16 +25,29 @@
             GUI.backgroundColor = Color.green;
             if (GUILayout.Button("Load ArtPersonData from Folder"))
             {
-                LoadArtPersonDataFromFolder(folderPath);
+               LoadArtPersonDataIntoManager(manager);
+
             }
         }
-       
 
-        private void LoadArtPersonDataFromFolder(string path)
+        public static void LoadArtPersonDataIntoManager(ArtPersonLibrary manager)
+        {
+            List<ArtPersonData> loadedData = LoadArtPersonDataFromFolder();
+
+            Undo.RecordObject(manager, "Load ArtPersonData"); // Allow Undo
+            manager.GetType().GetField("artPersonData",
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                ?.SetValue(manager, loadedData);
+
+            // Mark the object as dirty to save the changes
+            EditorUtility.SetDirty(manager);
+        }
+
+
+        public static List<ArtPersonData> LoadArtPersonDataFromFolder()
         {
             // Get the target object (ArtPersonManager)
-            ArtPersonLibrary manager = (ArtPersonLibrary)target;
-
+            string path = folderPath;
             // Find all ScriptableObjects of type ArtPersonData in the specified folder
             string[] guids = AssetDatabase.FindAssets("t:ArtPersonData", new[] { path });
             List<ArtPersonData> loadedData = new List<ArtPersonData>();
@@ -48,16 +63,8 @@
                 }
             }
 
-            // Assign the loaded data to the artPersonData list
-            Undo.RecordObject(manager, "Load ArtPersonData"); // Allow Undo
-            manager.GetType().GetField("artPersonData", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                ?.SetValue(manager, loadedData);
 
-            // Mark the object as dirty to save the changes
-            EditorUtility.SetDirty(manager);
-
-            Debug.Log($"Loaded {loadedData.Count} ArtPersonData objects from folder: {path}");
+            return loadedData;
         }
     }
-
 }

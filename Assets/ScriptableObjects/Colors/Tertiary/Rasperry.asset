@@ -13,4 +13,11 @@ MonoBehaviour:
   m_Name: Rasperry
   m_EditorClassIdentifier: 
   colorName: Rasperry
-  rgbColor: {r: 1, g: 0, b: 0.5019608, a: 1}
+  rgbColor: {r: 0.79607844, g: 0.3764706, b: 0.45882353, a: 1}
+  isPrimaryColor: 0
+  cmykColor:
+    c: 0
+    m: 0
+    y: 0
+    k: 0
+  points: 30

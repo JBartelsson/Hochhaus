@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Yellow
   m_EditorClassIdentifier: 
   colorName: Yellow
-  rgbColor: {r: 1, g: 1, b: 0, a: 1}
+  rgbColor: {r: 0.9490196, g: 0.8, b: 0.40392157, a: 1}
   isPrimaryColor: 1
   cmykColor:
     c: 0

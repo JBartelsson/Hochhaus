@@ -5,13 +5,19 @@ using Art;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Utility;
+using WeekSystem;
 
 public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
 {
     [SerializeField] ColorMixingDatabase colorMixingDatabase;
     [SerializeField] private EnvSettings envSettings;
+
+
     [SerializeField] private BoardManager boardManager;
     [SerializeField] private ArtPersonLibrary artPersonLibrary;
+    [SerializeField] private WeekManager _weekManager;
+
+    public WeekManager WeekManager => _weekManager;
 
 
     public BoardManager BoardManager
@@ -23,11 +29,12 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
     private CardSystem _cardSystem;
 
     public CardSystem CardSystem => _cardSystem;
-    
+
     private ArtPersonGroup artPersonGroup;
     public ArtPersonLibrary ArtPersonLibrary => artPersonLibrary;
 
     public ArtPersonGroup ArtPersonGroup => artPersonGroup;
+    public EnvSettings EnvSettings => envSettings;
 
     //Events
 
@@ -35,19 +42,25 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
     {
         MIX_CARDS,
         PAINT_ON_FACE,
-        DRAW_CARDS
+        DRAW_CARDS,
+        MAIN_SCORING
     }
 
-   
 
-    private Score _score;
+    private RoundStats _roundStats;
 
-    public Score Score => _score;
+    public RoundStats RoundStats => _roundStats;
+
+
+    private Context ctx;
+
+    public Context Ctx => ctx;
 
     public void Init()
     {
-        _score = new Score();
-        _cardSystem = new CardSystem(colorMixingDatabase, envSettings);
+        ctx = new Context(this);
+        _roundStats = new RoundStats(envSettings);
+        _cardSystem = new CardSystem(colorMixingDatabase, this);
         artPersonGroup = new ArtPersonGroup(artPersonLibrary);
     }
 
@@ -55,48 +68,61 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
     {
         _cardSystem.Shuffle();
         _cardSystem.DrawFullHand();
-        _score.ResetScore();
-        artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.Repainter));
-        artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.TheBlue));
-        artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.LoudNeighbors));
-        artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.DrawingAssistant));
+        _roundStats.Init();
+        _weekManager.Init();
+        // artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.BasicPoints));
+        // artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.DrawingAssistant));
+        // artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.Repainter));
+        // artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.TheBlue));
+        // artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.LoudNeighbors));
         boardManager.InitBoard();
     }
 
     public void MixHandCards(Card topCard, Card bottomCard)
     {
-        _cardSystem.MixHandCards(topCard, bottomCard);
-        Context ctx = new Context(this)
-        {
-           CardMixingContext = new Context.CardMixingContextClass()
-           {
-               TopCard = topCard,
-               BottomCard = bottomCard
-           }
-        };
+        if(!_cardSystem.MixHandCards(topCard, bottomCard)) return;
+        ctx.CardMixingContext = new Context.CardMixingContextClass()
+            {
+                TopCard = topCard,
+                BottomCard = bottomCard
+            };
         GameUpdate(GameEventType.MIX_CARDS, ctx);
     }
 
     public void AddCardColorToFace(Card card, BoardField boardField)
     {
-        Score.AddPoints(card.RuntimePoints);
         boardField.AddCard(card);
-        Context ctx = new Context(this)
+        ctx.PaintOnContext = new Context.PaintOnContextClass()
         {
-            PaintOnContext = new Context.PaintOnContextClass()
-            {
-                BoardField = boardField
-            }
+            BoardField = boardField
         };
         _cardSystem.DiscardCard(card);
         GameUpdate(GameEventType.PAINT_ON_FACE, ctx);
     }
 
+    public void SellCurrentPainting()
+    {
+        for (var i = 0; i < BoardManager.BoardFields.Count; i++)
+        {
+            // if ()
+            // _roundStats.Score.AddPoints(card.RuntimePoints);
+
+            ctx.MainPhaseContext.ScoringBoardField = BoardManager.BoardFields[i];
+            ctx = GameUpdate(GameEventType.MAIN_SCORING, ctx);
+        }
+        _roundStats.SellPainting();
+        if (_weekManager.IsLevelSuccessful(_roundStats.Score))
+        {
+            _weekManager.NextWeek();
+        }
+        
+        boardManager.Reset();
+    }
 
 
     public Context GameUpdate(GameEventType gameEventType, Context context)
     {
-        artPersonGroup.GameUpdate(gameEventType, context);
+        context = artPersonGroup.GameUpdate(gameEventType, context);
         return context;
     }
 }

@@ -16,6 +16,8 @@ public class BoardFieldVisual : MonoBehaviour, IPointerEnterHandler, IPointerExi
 
         [Header("Hover Effect")]
         [SerializeField] Material _hoverMaterial;
+        [Header("Color Settings")]
+        [SerializeField] Color standardColor = Color.white;
         private BoardField _boardField;
         private Material _originalMaterial;
         public float Scale
@@ -40,7 +42,11 @@ public class BoardFieldVisual : MonoBehaviour, IPointerEnterHandler, IPointerExi
 
         private void BoardFieldOnOnUpdate(object sender, EventArgs e)
         {
-            if (_boardField.paintStack.Count == 0) return;
+            if (_boardField.paintStack.Count == 0)
+            {
+                faceRenderer.material.color = standardColor;
+                return;
+            }
             faceRenderer.material.color = _boardField.paintStack.Last().CardCopy.ColorReference.RGBColor;
         }
         

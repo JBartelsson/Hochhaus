@@ -13,15 +13,11 @@ MonoBehaviour:
   m_Name: Ocean
   m_EditorClassIdentifier: 
   colorName: Ocean
-  rgbColor: {r: 0, g: 0.5019608, b: 1, a: 1}
+  rgbColor: {r: 0.18039216, g: 0.47058824, b: 0.72156864, a: 1}
   isPrimaryColor: 0
   cmykColor:
     c: 0
     m: 0
     y: 0
     k: 0
-  RuntimeCMYK:
-    c: 0
-    m: 0
-    y: 0
-    k: 0
+  points: 30

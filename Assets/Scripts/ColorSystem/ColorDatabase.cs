@@ -23,7 +23,7 @@ public class ColorMixingDatabase : ScriptableObject
         if (c2.RuntimeCMYK.IsUnset()) c2.RuntimeCMYK = c2.CmykColor;
 
         if (c1.RuntimeCMYK.Mix(c2.RuntimeCMYK).IsBlack()) return black;
-
+    
         foreach (var entry in mixingEntries)
         {
             // Check both (c1 + c2) and (c2 + c1) for symmetry
@@ -45,6 +45,7 @@ public class ColorMixingDatabase : ScriptableObject
         if (customColor != black)
         {
             newCard.RuntimePoints = card1.RuntimePoints + card2.RuntimePoints;
+            Debug.Log($"{newCard} runtime Points are {newCard.RuntimePoints}");
         }
         else
         {

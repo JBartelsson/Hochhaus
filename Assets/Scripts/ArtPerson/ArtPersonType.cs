@@ -6,6 +6,8 @@
         TheBlue = 1,
         Repainter = 2,
         LoudNeighbors =3,
-        DrawingAssistant = 4
+        DrawingAssistant = 4,
+        BasicPoints = 5,
+        PinkSkies,
     }
 }

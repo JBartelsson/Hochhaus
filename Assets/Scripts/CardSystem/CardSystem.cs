@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using Random = UnityEngine.Random;
 
 [Serializable]
-public class CardSystem {
+public class CardSystem
+{
+    private Environment _environment;
     List<Card> drawPile;
     List<Card> discardPile;
     private List<Card> fullDeck;
@@ -20,18 +22,18 @@ public class CardSystem {
 
     public List<Card> Hand => hand;
 
-    private EnvSettings _envSettings;
+    private Environment _env;
     
     public event EventHandler<CardSystem> OnCardSystemChanged; 
 
 
-    public CardSystem(ColorMixingDatabase colorMixingDatabase, EnvSettings envSettings)
+    public CardSystem(ColorMixingDatabase colorMixingDatabase, Environment env)
     {
         drawPile = new List<Card>();
         hand = new List<Card>();
         discardPile = new List<Card>();
         fullDeck = new List<Card>();
-        _envSettings = envSettings;
+        _env = env;
         _colorMixingDatabase = colorMixingDatabase;
         Reset();
     }
@@ -49,10 +51,10 @@ public class CardSystem {
         }
     }
 
-    public void MixHandCards(Card topCard, Card bottomCard)
+    public bool MixHandCards(Card topCard, Card bottomCard)
     {
         Card newCard = _colorMixingDatabase.MixCards(topCard, bottomCard);
-        if (newCard == null) return;
+        if (newCard == null) return false;
         hand.Remove(topCard);
         int bottomCardIndex = hand.IndexOf(bottomCard);
         Debug.Log($"BOTTOM CARD INDEX: " + bottomCardIndex);
@@ -60,6 +62,7 @@ public class CardSystem {
         hand.Insert(bottomCardIndex, newCard);
         OnCardSystemChanged?.Invoke(this, this);
         Draw();
+        return true;
     }
 
     // Return a list of drawn Cards from deck
@@ -74,13 +77,14 @@ public class CardSystem {
             drawPile.RemoveAt(0);
         }
         hand.AddRange(drawnCards);
+        _env.GameUpdate(Environment.GameEventType.DRAW_CARDS, _env.Ctx);
         OnCardSystemChanged?.Invoke(this, this);
 
     }
 
     public void DrawFullHand()
     {
-        for (int i = hand.Count; i < _envSettings.HandSize; i++)
+        for (int i = hand.Count; i < _env.RoundStats.Stats.HandSize; i++)
         {
             Draw();
         }
@@ -130,7 +134,7 @@ public class CardSystem {
 
     public void Reset()
     {
-        StartDeck startDeck = _envSettings.StartDeck;
+        StartDeck startDeck = _env.EnvSettings.StartDeck;
         foreach (var colorEntry in startDeck.Deck)
         {
             for (int i = 0; i < colorEntry.Amount; i++)

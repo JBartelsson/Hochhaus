@@ -13,4 +13,11 @@ MonoBehaviour:
   m_Name: Orange
   m_EditorClassIdentifier: 
   colorName: Orange
-  rgbColor: {r: 1, g: 0.5019608, b: 0, a: 1}
+  rgbColor: {r: 0.9529412, g: 0.5254902, b: 0.12941177, a: 1}
+  isPrimaryColor: 0
+  cmykColor:
+    c: 0
+    m: 0
+    y: 0
+    k: 0
+  points: 30

@@ -22,4 +22,4 @@ MonoBehaviour:
   effectColor1: {fileID: 0}
   effectColor2: {fileID: 0}
   effectColor3: {fileID: 0}
-  floatValue: 0.2
+  floatValue: 1

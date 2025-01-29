@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Video;
 
-public class BoardManager : MonoBehaviour
+public class BoardManager : MonoBehaviour, IResetHandler
 {
     [SerializeField] private BoardLayout _boardLayout;
     DCEL _dcel;
@@ -48,5 +48,13 @@ public class BoardManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void Reset()
+    {
+        foreach (var boardField in _boardFields)
+        {
+            boardField.Reset();
+        }
     }
 }
