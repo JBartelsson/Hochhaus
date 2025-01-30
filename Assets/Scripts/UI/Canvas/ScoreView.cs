@@ -30,6 +30,10 @@ namespace UI.Canvas
 
         private void ScoreOnOnScoreChanged(object sender, Score score)
         {
+            
+            Debug.Log(score.Points);
+            Debug.Log(score.Mult);
+            Debug.Log(score.PaintingScore);
             paintingScoreText.text = score.PaintingScore.ToString();
             totalText.text = score.TotalScore.ToString();
         }

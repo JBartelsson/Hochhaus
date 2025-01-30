@@ -5,6 +5,9 @@ using UnityEngine;
 public class ColorMixingDatabase : ScriptableObject
 {
     [SerializeField] private CustomColor black; // List of all color mixing rules
+    [SerializeField] private CustomColor white; // List of all color mixing rules
+
+    public CustomColor White => white;
 
     [Header("Mixing Rules")] public List<MixEntry> mixingEntries;
 

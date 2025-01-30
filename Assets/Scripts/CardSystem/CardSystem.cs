@@ -2,10 +2,11 @@ using System;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Utility;
 using Random = UnityEngine.Random;
 
 [Serializable]
-public class CardSystem
+public class CardSystem : IResetHandler, IInitHandler
 {
     private Environment _environment;
     List<Card> drawPile;
@@ -35,7 +36,7 @@ public class CardSystem
         fullDeck = new List<Card>();
         _env = env;
         _colorMixingDatabase = colorMixingDatabase;
-        Reset();
+        Init();
     }
 
 
@@ -132,7 +133,7 @@ public class CardSystem
         Shuffle();
     }
 
-    public void Reset()
+    public void Init()
     {
         StartDeck startDeck = _env.EnvSettings.StartDeck;
         foreach (var colorEntry in startDeck.Deck)
@@ -142,7 +143,7 @@ public class CardSystem
                 AddCard(new Card(colorEntry.Color));
             }
         }
-        drawPile.AddRange(fullDeck);
+        Reset();
     }
 
     public void AddCard(Card card)
@@ -151,7 +152,8 @@ public class CardSystem
         OnCardSystemChanged?.Invoke(this, this);
 
     }
-
+    
+    
     public override string ToString()
     {
         string s = "";
@@ -181,5 +183,15 @@ public class CardSystem
         }
         s.Remove(s.Length - 2, 2);
         return s;
+    }
+
+    public void Reset()
+    {
+        drawPile.Clear();
+        discardPile.Clear();
+        hand.Clear();
+        drawPile.AddRange(fullDeck);
+        Shuffle();
+        OnCardSystemChanged?.Invoke(this, this);
     }
 }

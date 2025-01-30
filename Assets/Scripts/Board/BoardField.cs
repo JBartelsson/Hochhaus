@@ -78,6 +78,7 @@ public class BoardField : IResetHandler
     public void Reset()
     {
         paintStack.Clear();
+        lastPaintedCard = null;
         Update();
     }
 }

@@ -16,10 +16,10 @@ MonoBehaviour:
   description: 
   artPersonType: 6
   pointEffect: 0
-  multEffect: 0
+  multEffect: 1
   pointGain: 0
   multGain: 0
-  effectColor1: {fileID: 0}
-  effectColor2: {fileID: 0}
+  effectColor1: {fileID: 11400000, guid: fdf4e1d7f67357046a50bd26993b4fc6, type: 2}
+  effectColor2: {fileID: 11400000, guid: afa1c7238bfcf7d45b77ed3c22650b6e, type: 2}
   effectColor3: {fileID: 0}
   floatValue: 0

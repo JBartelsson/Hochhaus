@@ -8,6 +8,9 @@ public class Face
     public HalfEdge OuterEdge; // One of the half-edges on the boundary
     public List<List<Vector2>> triangles;
     public BoardField BoardField;
+    
+    //used for traversal
+    public bool IsVisited;
 
     public List<HalfEdge> GetEdgesFromFace()
     {
@@ -168,5 +171,11 @@ public class Face
         }
 
         return Mathf.Abs(area) * 0.5f; // Return the absolute value of the area
+    }
+
+    public override string ToString()
+    {
+        if (BoardField.TopPaintedCard == null) return "Canvas White";
+        return $"Canvas {BoardField.TopPaintedCard.CardCopy.ColorReference.ToString()}";
     }
 }

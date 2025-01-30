@@ -16,12 +16,13 @@ public class RoundStats : IInitHandler, ISellPaintingHandler, IResetHandler
         startStats = envSettings.startEnvStats;
         stats = (EnvStats)envSettings.startEnvStats.Clone();
         _score = new Score();
+        Reset();
     }
 
 
     public void Init()
     {
-        _score.ResetScore();
+        Reset();
     }
 
     public void SellPainting()
@@ -33,6 +34,6 @@ public class RoundStats : IInitHandler, ISellPaintingHandler, IResetHandler
     public void Reset()
     {
         stats.Reset(startStats);
-        _score.ResetScore();
+        _score.ResetTotalScore();
     }
 }

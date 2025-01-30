@@ -7,6 +7,7 @@ namespace WeekSystem
     public class WeekManager : MonoBehaviour, IInitHandler, IResetHandler
     {
         [SerializeField] WeekData weekData;
+        [SerializeField] private Environment env;
         private int currentWeek = 0;
 
         public int CurrentWeek => currentWeek;
@@ -26,6 +27,10 @@ namespace WeekSystem
         public void NextWeek()
         {
             currentWeek++;
+            env.CardSystem.Reset();
+            env.CardSystem.DrawFullHand();
+            env.RoundStats.Reset();
+            env.BoardManager.Reset();
             OnWeekChanged?.Invoke(this, this);
 
         }

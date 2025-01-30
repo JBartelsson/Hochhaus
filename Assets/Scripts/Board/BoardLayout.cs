@@ -126,7 +126,7 @@ public class BoardLayout : ScriptableObject
         {
             dcelFace.Triangulate();
         }
-
+        dcel.SetBoundaries();
         return dcel;
     }
 

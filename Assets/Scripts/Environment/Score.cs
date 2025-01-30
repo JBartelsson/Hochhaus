@@ -78,18 +78,25 @@
         public void CalculateScore()
         {
             totalScore += PaintingScore;
+            Debug.Log($"Painting is worth {points} x {mult} = {PaintingScore} and total Score is {totalScore}");
         }
 
         // Reset the score and multiplier
         public void ResetScore()
         {
             points = 0;
-            mult = 1;
-
+            mult = 1f;
+            Debug.Log("Resetting Score");
             // Notify all listeners about the reset
             OnPointsChanged?.Invoke(this, this);
             OnMultiplierChanged?.Invoke(this, this);
             OnScoreChanged?.Invoke(this, this);
+        }
+
+        public void ResetTotalScore()
+        {
+            totalScore = 0;
+            ResetScore();
         }
 
         public void SellPainting()

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Art;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using Utility;
 using WeekSystem;
@@ -66,11 +67,11 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
 
     public void StartEnvironment()
     {
-        _cardSystem.Shuffle();
         _cardSystem.DrawFullHand();
         _roundStats.Init();
         _weekManager.Init();
         // artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.BasicPoints));
+        artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.PinkSkies));
         // artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.DrawingAssistant));
         // artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.Repainter));
         // artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.TheBlue));
@@ -80,12 +81,12 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
 
     public void MixHandCards(Card topCard, Card bottomCard)
     {
-        if(!_cardSystem.MixHandCards(topCard, bottomCard)) return;
+        if (!_cardSystem.MixHandCards(topCard, bottomCard)) return;
         ctx.CardMixingContext = new Context.CardMixingContextClass()
-            {
-                TopCard = topCard,
-                BottomCard = bottomCard
-            };
+        {
+            TopCard = topCard,
+            BottomCard = bottomCard
+        };
         GameUpdate(GameEventType.MIX_CARDS, ctx);
     }
 
@@ -102,21 +103,30 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
 
     public void SellCurrentPainting()
     {
-        for (var i = 0; i < BoardManager.BoardFields.Count; i++)
-        {
-            // if ()
-            // _roundStats.Score.AddPoints(card.RuntimePoints);
-
-            ctx.MainPhaseContext.ScoringBoardField = BoardManager.BoardFields[i];
-            ctx = GameUpdate(GameEventType.MAIN_SCORING, ctx);
-        }
+        ctx = GameUpdate(GameEventType.MAIN_SCORING, ctx);
+        
         _roundStats.SellPainting();
         if (_weekManager.IsLevelSuccessful(_roundStats.Score))
         {
+            Debug.Log("Next Week!");
             _weekManager.NextWeek();
+            return;
         }
-        
+
+        if (_roundStats.Stats.AmountOfPaintings <= 0)
+        {
+            GameOver();
+            return;
+        }
+
+        _cardSystem.DrawFullHand();
         boardManager.Reset();
+    }
+
+    private void GameOver()
+    {
+        Debug.Log("Game Over!");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
 

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: ColorMixingDatabase
   m_EditorClassIdentifier: 
   black: {fileID: 11400000, guid: 7d6dc404f52b85c45914796ffc611454, type: 2}
+  white: {fileID: 11400000, guid: afe482ea2f03cba4182ce20054050609, type: 2}
   mixingEntries:
   - color1: {fileID: 11400000, guid: 019e1fcf3e59de3408077b327a688182, type: 2}
     color2: {fileID: 11400000, guid: 188a7496ebd2d574fb0a8221e38be119, type: 2}
