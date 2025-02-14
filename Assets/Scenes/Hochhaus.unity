@@ -1129,6 +1129,7 @@ MonoBehaviour:
   cardUIPrefab: {fileID: 5201421010021114106, guid: ad293e9eb84051f44821c8438807a5e0, type: 3}
   cardsSpawnTarget: {fileID: 562769501}
   scoreUI: {fileID: 1599432614}
+  towerVisual: {fileID: 1849877384}
   baseUIs:
   - {fileID: 239597702}
   - {fileID: 1599432614}

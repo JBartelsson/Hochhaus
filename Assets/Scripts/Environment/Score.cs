@@ -13,6 +13,10 @@
         public float Mult => mult;
 
         private float mult;
+        
+        public float XMult => xmult;
+
+        private float xmult;
 
         // Events to notify UI or other systems
         public event EventHandler<Score> OnPointsChanged;    // Triggered when points change
@@ -26,15 +30,33 @@
         {
             points = 0;
             mult = 1f; // Multiplier starts at 1 to avoid 0 scores
+            xmult = 1f;
         }
 
         // Public getter for total score
-        public float StoryScore => points * mult;
+        public float StoryScore => points * mult * xmult;
 
         private float totalScore;
         public float TotalScore => totalScore;
 
 
+        public void UpdateScore(ScoreType scoreType, float value)
+        {
+            switch (scoreType)
+            {
+                case ScoreType.POINTS:
+                    AddPoints(value);
+                    break;
+                case ScoreType.MULT:
+                    AddMultiplier(value);
+                    break;
+                case ScoreType.xMULT:
+                    MultiplyXMult(value);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(scoreType), scoreType, null);
+            }
+        }
         // Add points to the current score
         public void AddPoints(float amount)
         {
@@ -76,6 +98,30 @@
             OnMultiplierChanged?.Invoke(this,this);
             OnScoreChanged?.Invoke(this, this); // Notify score update
         }
+        
+        public void AddXMult(float amount)
+        {
+            if (amount < 0)
+            {
+                Debug.LogWarning("Cannot add negative xmult!");
+                return;
+            }
+
+            xmult += amount;
+            OnScoreChanged?.Invoke(this, this); // Notify score update
+        }
+
+        public void MultiplyXMult(float factor)
+        {
+            if (factor < 0)
+            {
+                Debug.LogWarning("Cannot multiply by a negative factor!");
+                return;
+            }
+
+            xmult *= factor;
+            OnScoreChanged?.Invoke(this, this); // Notify score update
+        }
 
         public void CalculateScore()
         {
@@ -111,5 +157,10 @@
         public object Clone()
         {
             return this.MemberwiseClone();
+        }
+
+        public enum ScoreType
+        {
+            POINTS, MULT, xMULT
         }
     }

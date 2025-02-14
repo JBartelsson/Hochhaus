@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using CommandSystem.Commands;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
@@ -6,32 +7,19 @@ namespace CommandSystem.AnimationCommands
 {
     public class AnimationUpdatePoints : AnimationCommand
     {
-        private int towerRoomIndex;
-        private TowerRoom _towerRoom;
-        private TowerManager _towerManager;
+        private UpdateScoreCommand _updateScoreCommand;
         private UIController _uiController;
 
-        public AnimationUpdatePoints(UIController ui, int towerRoomIndex, TowerRoom towerRoom, TowerManager towerManager)
+        public AnimationUpdatePoints(UIController ui, UpdateScoreCommand updateScoreCommand)
         {
-            this.towerRoomIndex = towerRoomIndex;
-            _towerRoom = towerRoom;
-            _towerManager = towerManager;
             _uiController = ui;
+            _updateScoreCommand = updateScoreCommand;
         }
 
 
         public override void Execute()
         {
-            float totalScore = 0;
-            Debug.Log("NEW ROOM");
-            for (int i = 0; i <= towerRoomIndex; i++)
-            {
-                totalScore += _towerManager.TowerAppartments[i].Score.StoryScore;
-                Debug.Log($"ADDING {_towerManager.TowerAppartments[i].Score.StoryScore}");
-            }
-            Debug.Log($"TOTAL = {totalScore}");
-
-            _uiController.ScoreUI.ScoreText.text = totalScore.ToString();
+            _uiController.ScoreUI.ScoreText.text = _updateScoreCommand.NewScore.TotalScore.ToString();
             base.Execute();
         }
         

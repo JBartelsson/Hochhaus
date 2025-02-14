@@ -15,6 +15,9 @@ public class UIController : UIBase, ISubscriber
     [SerializeField] private SingleCardUI cardUIPrefab;
     [SerializeField] private Transform cardsSpawnTarget;
     [SerializeField] ScoreUI scoreUI;
+    [SerializeField] TowerVisual towerVisual;
+
+    public TowerVisual TowerVisual => towerVisual;
 
     public ScoreUI ScoreUI => scoreUI;
 
@@ -32,6 +35,8 @@ public class UIController : UIBase, ISubscriber
     public override void InitSubscriptions(UIController uiController)
     {
         base.InitSubscriptions(uiController);
+        animationCommandInvoker.InitSubscriptions(this);
+        towerVisual.InitSubscriptions(this);
 
         Environment env = EnvironmentManager.Instance.GetActiveEnvironment();
         env.CardSystem.OnCardSystemChanged += EnvOnOnCardSystemChanged;

@@ -8,7 +8,7 @@ using UnityEngine.Serialization;
 using Utility;
 using WeekSystem;
 
-public class Environment : MonoBehaviour, IInitHandler
+public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
 {
     private CommandInvoker _commandInvoker;
     [SerializeField] private EnvSettings envSettings;
@@ -39,7 +39,7 @@ public class Environment : MonoBehaviour, IInitHandler
 
     //Events
 
-    public enum GameEventType
+    public enum GameStateType
     {
         BUILD_ROOM
     }
@@ -53,6 +53,8 @@ public class Environment : MonoBehaviour, IInitHandler
     private Context ctx;
 
     public Context Ctx => ctx;
+
+    public event Action<Environment, GameStateType> GameStateUpdate; 
 
     public void Init()
     {
@@ -111,11 +113,12 @@ public class Environment : MonoBehaviour, IInitHandler
     }
 
 
-    public Context CalculateRoom(GameEventType gameEventType)
+    public Context GameUpdate(GameStateType gameStateType, Context context = null)
     {
-        Context context = new Context(this){};
-        context = _inventory.GameUpdate(gameEventType, context);
+        context = new Context(this){};
+        context = _inventory.GameUpdate(gameStateType, context);
         PlayerStats.Score.EndRoomBuilding();
+        GameStateUpdate?.Invoke(this, gameStateType);
         return context;
     }
 }

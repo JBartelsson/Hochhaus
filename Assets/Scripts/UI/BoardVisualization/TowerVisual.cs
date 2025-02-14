@@ -31,10 +31,7 @@ public class TowerVisual : UIBase, ISubscriber
 
     private void TowerManagerOnOnAddedAppartment(TowerManager towerManager, int i, TowerRoom arg3)
     {
-        AnimationUpdatePoints animationUpdatePoints = new AnimationUpdatePoints(UIController, i, arg3, towerManager);
-        UIController.AnimationCommandInvoker.ExecuteAnimationCommand(animationUpdatePoints, true);
-        AnimationCreateTowerCommand animationCreateTowerCommand = new AnimationCreateTowerCommand(this, arg3);
-        UIController.AnimationCommandInvoker.ExecuteAnimationCommand(animationCreateTowerCommand);
+        
     }
 
     public override void InitSubscriptions(UIController uiController)

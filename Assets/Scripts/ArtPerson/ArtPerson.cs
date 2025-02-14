@@ -22,14 +22,14 @@ namespace Art
             _artPersonData = artPersonData;
         }
         
-        public Context GameUpdate(Environment.GameEventType gameEventType, Context context)
+        public Context GameUpdate(Environment.GameStateType gameStateType, Context context)
         {
             if (_updateFunction == null)
             {
                 Debug.Log("Art Person has no ability! just like you!");
                 return null;
             }
-            return _updateFunction.GameUpdate(gameEventType, context);
+            return _updateFunction.GameUpdate(gameStateType, context);
         }
     }
 }

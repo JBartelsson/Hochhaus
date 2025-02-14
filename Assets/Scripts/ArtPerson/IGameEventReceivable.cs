@@ -2,6 +2,6 @@
 {
     public interface IGameEventReceivable
     {
-        public Context GameUpdate(Environment.GameEventType gameEventType, Context context);
+        public Context GameUpdate(Environment.GameStateType gameStateType, Context context = null);
     }
 }

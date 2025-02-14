@@ -8,10 +8,10 @@ using UnityEngine.Video;
 
 public class TowerManager : MonoBehaviour, IResetHandler
 {
-    private List<TowerRoom> _towerAppartments = new List<TowerRoom>();
+    private List<TowerRoom> _towerRooms = new List<TowerRoom>();
 
     
-    public List<TowerRoom> TowerAppartments => _towerAppartments;
+    public List<TowerRoom> TowerRooms => _towerRooms;
 
     private Environment env;
 
@@ -32,7 +32,7 @@ public class TowerManager : MonoBehaviour, IResetHandler
 
     private void UpdateAllFields()
     {
-        foreach (var boardField in _towerAppartments)
+        foreach (var boardField in _towerRooms)
         {
             boardField.Update();
         }
@@ -40,18 +40,14 @@ public class TowerManager : MonoBehaviour, IResetHandler
 
     public void CreateTower(Card card)
     {
-        TowerRoom newRoom = new TowerRoom(card, (Score)env.PlayerStats.Score.Clone());
-        _towerAppartments.Add(newRoom);
-        AddPointsCommand addPoints = new AddPointsCommand(env, newRoom.Score.Points);
-        env.CommandInvoker.ExecuteAndRecord(addPoints);
-        env.CalculateRoom(Environment.GameEventType.BUILD_ROOM);
+        
 
-        OnAddedAppartment?.Invoke(this, _towerAppartments.Count - 1, newRoom);
+        // OnAddedAppartment?.Invoke(this, _towerAppartments.Count - 1, newRoom);
     }
 
     public void Reset()
     {
-        foreach (var boardField in _towerAppartments)
+        foreach (var boardField in _towerRooms)
         {
             boardField.Reset();
         }

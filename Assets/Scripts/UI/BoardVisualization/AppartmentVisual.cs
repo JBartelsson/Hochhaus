@@ -31,7 +31,6 @@ public class AppartmentVisual : UIBase
     public void Init(TowerRoom towerRoom, float scale = 1f)
     {
         this._towerRoom = towerRoom;
-        Debug.Log(towerRoom._PlacedCard.CardCopy.AppartmentReference.AppartmentColor);
         sprite.color = towerRoom._PlacedCard.CardCopy.AppartmentReference.AppartmentColor;
         this.transform.localScale = new Vector2(transform.localScale.x, towerRoom._PlacedCard.CardCopy.AppartmentReference.Height * transform.localScale.y);
         _towerRoom.OnUpdate += TowerRoomOnOnUpdate;

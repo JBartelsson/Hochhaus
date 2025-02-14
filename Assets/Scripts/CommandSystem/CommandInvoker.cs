@@ -1,10 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 using Utility;
-
+[Serializable]
 public class CommandInvoker
 {
     private List<ICommand> _replayCommands = new List<ICommand>();
     private Stack<ICommand> _commandHistory = new Stack<ICommand>();
+
+    public List<ICommand> ReplayCommands => _replayCommands;
+
+    public Stack<ICommand> CommandHistory => _commandHistory;
 
     private Environment env;
 
@@ -30,8 +36,9 @@ public class CommandInvoker
 
     public void ExecuteAndRecord(ICommand command)
     {
-        command.Execute();
         _replayCommands.Add(command);
+        command.Execute();
+
     }
 
     public void Replay()

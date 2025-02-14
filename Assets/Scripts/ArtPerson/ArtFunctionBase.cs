@@ -25,7 +25,7 @@ namespace Art
             return this;
         }
 
-        public Context GameUpdate(Environment.GameEventType gameEventType, Context context)
+        public Context GameUpdate(Environment.GameStateType gameStateType, Context context)
         {
             Debug.LogError("Base ArtPerson Executed! This is bad!");
             return context;

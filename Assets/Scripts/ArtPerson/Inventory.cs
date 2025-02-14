@@ -69,11 +69,11 @@ namespace Art
         //     return new List<ArtPerson>(artPersons);
         // }
 
-        public Context GameUpdate(Environment.GameEventType gameEventType, Context context)
+        public Context GameUpdate(Environment.GameStateType gameStateType, Context context)
         {
             foreach (var item in items)
             {
-                context = item.GameUpdate(gameEventType, context);
+                context = item.GameUpdate(gameStateType, context);
             }
 
             return context;
