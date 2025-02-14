@@ -6,59 +6,60 @@ using UI;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class ArtistCardArea : MonoBehaviour, ISubscriber
+public class ArtistCardArea : UIBase, ISubscriber
 {
     List<ArtistCardUI> artistCardUis = new List<ArtistCardUI>();
 
     [FormerlySerializedAs("cardUIPrefab")] [SerializeField] private ArtistCardUI artistCardUIPrefab;
     [SerializeField] private Transform cardsSpawnTarget;
     
-    public void InitSubscriptions()
+    public override void InitSubscriptions(UIController uiController)
     {
+        base.InitSubscriptions(uiController);
         Environment env = EnvironmentManager.Instance.GetActiveEnvironment();
-        env.ArtPersonGroup.OnArtPersonAdded += ArtPersonGroupOnOnArtPersonAdded;
-        env.ArtPersonGroup.OnArtPersonRemoved += ArtPersonGroupOnOnArtPersonRemoved;
-        env.ArtPersonGroup.OnArtPersonsCleared += ArtPersonGroupOnOnArtPersonsCleared;
+        env.Inventory.OnArtPersonAdded += InventoryOnOnArtPersonAdded;
+        env.Inventory.OnArtPersonRemoved += InventoryOnOnArtPersonRemoved;
+        env.Inventory.OnArtPersonsCleared += InventoryOnOnArtPersonsCleared;
     }
 
-    private void ArtPersonGroupOnOnArtPersonsCleared(object sender, EventArgs e)
+    private void InventoryOnOnArtPersonsCleared(object sender, EventArgs e)
     {
         UpdateArtistCards(null);
     }
 
-    private void ArtPersonGroupOnOnArtPersonRemoved(object sender, ArtPersonGroup artPersonGroup)
+    private void InventoryOnOnArtPersonRemoved(object sender, Inventory inventory)
     {
-        UpdateArtistCards(artPersonGroup);
+        UpdateArtistCards(inventory);
 
     }
 
-    private void ArtPersonGroupOnOnArtPersonAdded(object sender, ArtPersonGroup artPersonGroup)
+    private void InventoryOnOnArtPersonAdded(object sender, Inventory inventory)
     {
-        UpdateArtistCards(artPersonGroup);
+        UpdateArtistCards(inventory);
 
     }
 
-    private void UpdateArtistCards(ArtPersonGroup artPersonGroup)
+    private void UpdateArtistCards(Inventory inventory)
     {
         foreach (var singleCardUI in artistCardUis)
         {
             Destroy(singleCardUI.gameObject);
         }
         artistCardUis.Clear();
-        if (artPersonGroup == null) return;
-        for (int i = 0; i < artPersonGroup.GetCount(); i++)
+        if (inventory == null) return;
+        for (int i = 0; i < inventory.GetCount(); i++)
         {
             ArtistCardUI singleCardUI = Instantiate(artistCardUIPrefab, cardsSpawnTarget);
-            singleCardUI.SetCardUI(artPersonGroup.ArtPersons[i]);
+            singleCardUI.SetCardUI(inventory.Items[i]);
             artistCardUis.Add(singleCardUI);
         }
     }
 
-    public void ResetSubscriptions()
+    public override void ResetSubscriptions()
     {
         Environment env = EnvironmentManager.Instance.GetActiveEnvironment();
-        env.ArtPersonGroup.OnArtPersonAdded -= ArtPersonGroupOnOnArtPersonAdded;
-        env.ArtPersonGroup.OnArtPersonRemoved -= ArtPersonGroupOnOnArtPersonRemoved;
-        env.ArtPersonGroup.OnArtPersonsCleared -= ArtPersonGroupOnOnArtPersonsCleared;
+        env.Inventory.OnArtPersonAdded -= InventoryOnOnArtPersonAdded;
+        env.Inventory.OnArtPersonRemoved -= InventoryOnOnArtPersonRemoved;
+        env.Inventory.OnArtPersonsCleared -= InventoryOnOnArtPersonsCleared;
     }
 }

@@ -5,13 +5,15 @@ using UI;
 using UnityEngine;
 using WeekSystem;
 
-public class StatsUI : MonoBehaviour, ISubscriber
+public class StatsUI : UIBase, ISubscriber
 {
    [SerializeField] TextMeshProUGUI canvasText;
    [SerializeField] TextMeshProUGUI weekText;
-    public void InitSubscriptions()
+    public override void InitSubscriptions(UIController uiController)
     {
-        EnvironmentManager.Instance.GetActiveEnvironment().RoundStats.Stats.UpdateStats += UpdateStats;
+        base.InitSubscriptions(uiController);
+
+        EnvironmentManager.Instance.GetActiveEnvironment().PlayerStats.Stats.UpdateStats += UpdateStats;
         EnvironmentManager.Instance.GetActiveEnvironment().WeekManager.OnWeekChanged += OnWeekChanged;
     }
 
@@ -22,12 +24,11 @@ public class StatsUI : MonoBehaviour, ISubscriber
 
     private void UpdateStats(object sender, EnvStats e)
     {
-        canvasText.text = e.AmountOfPaintings.ToString();
     }
 
-    public void ResetSubscriptions()
+    public override void ResetSubscriptions()
     {
-        EnvironmentManager.Instance.GetActiveEnvironment().RoundStats.Stats.UpdateStats -= UpdateStats;
+        EnvironmentManager.Instance.GetActiveEnvironment().PlayerStats.Stats.UpdateStats -= UpdateStats;
         EnvironmentManager.Instance.GetActiveEnvironment().WeekManager.OnWeekChanged -= OnWeekChanged;
 
 

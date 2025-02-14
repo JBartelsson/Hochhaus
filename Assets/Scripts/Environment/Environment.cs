@@ -8,49 +8,46 @@ using UnityEngine.Serialization;
 using Utility;
 using WeekSystem;
 
-public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
+public class Environment : MonoBehaviour, IInitHandler
 {
-    [SerializeField] ColorMixingDatabase colorMixingDatabase;
+    private CommandInvoker _commandInvoker;
     [SerializeField] private EnvSettings envSettings;
 
 
-    [SerializeField] private BoardManager boardManager;
-    [SerializeField] private ArtPersonLibrary artPersonLibrary;
+    [FormerlySerializedAs("boardManager")] [SerializeField] private TowerManager towerManager;
+    [FormerlySerializedAs("artPersonLibrary")] [SerializeField] private ItemLibrary itemLibrary;
     [SerializeField] private WeekManager _weekManager;
 
     public WeekManager WeekManager => _weekManager;
+    
+    public CommandInvoker CommandInvoker => _commandInvoker;
 
 
-    public BoardManager BoardManager
-    {
-        get => boardManager;
-        set => boardManager = value;
-    }
+    public TowerManager TowerManager => towerManager;
 
     private CardSystem _cardSystem;
 
     public CardSystem CardSystem => _cardSystem;
 
-    private ArtPersonGroup artPersonGroup;
-    public ArtPersonLibrary ArtPersonLibrary => artPersonLibrary;
+    private Inventory _inventory;
+    public ItemLibrary ItemLibrary => itemLibrary;
 
-    public ArtPersonGroup ArtPersonGroup => artPersonGroup;
+    public Inventory Inventory => _inventory;
     public EnvSettings EnvSettings => envSettings;
+    
+    public bool BlockActions { get; set; }
 
     //Events
 
     public enum GameEventType
     {
-        MIX_CARDS,
-        PAINT_ON_FACE,
-        DRAW_CARDS,
-        MAIN_SCORING
+        BUILD_ROOM
     }
 
 
-    private RoundStats _roundStats;
+    private PlayerStats _playerStats;
 
-    public RoundStats RoundStats => _roundStats;
+    public PlayerStats PlayerStats => _playerStats;
 
 
     private Context ctx;
@@ -60,68 +57,52 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
     public void Init()
     {
         ctx = new Context(this);
-        _roundStats = new RoundStats(envSettings);
-        _cardSystem = new CardSystem(colorMixingDatabase, this);
-        artPersonGroup = new ArtPersonGroup(artPersonLibrary);
+        _commandInvoker = new CommandInvoker(this);
+        _playerStats = new PlayerStats(envSettings);
+        _cardSystem = new CardSystem(this);
+        _inventory = new Inventory(itemLibrary);
     }
 
     public void StartEnvironment()
     {
-        _cardSystem.DrawFullHand();
-        _roundStats.Init();
-        _weekManager.Init();
+        _playerStats.Init();
+        _cardSystem.DrawNewHand();
+        towerManager.SetEnvironment(this);
         // artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.BasicPoints));
-        artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.PinkSkies));
+        // _inventory.AddArtPerson(itemLibrary.CreateArtPerson(ArtPersonType.PinkSkies));
         // artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.DrawingAssistant));
         // artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.Repainter));
         // artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.TheBlue));
         // artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.LoudNeighbors));
-        boardManager.InitBoard();
+        // towerManager.InitTower();
     }
 
-    public void MixHandCards(Card topCard, Card bottomCard)
+    private void Update()
     {
-        if (!_cardSystem.MixHandCards(topCard, bottomCard)) return;
-        ctx.CardMixingContext = new Context.CardMixingContextClass()
+        if (_cardSystem.DrawsEmpty())
         {
-            TopCard = topCard,
-            BottomCard = bottomCard
-        };
-        GameUpdate(GameEventType.MIX_CARDS, ctx);
-    }
-
-    public void AddCardColorToFace(Card card, BoardField boardField)
-    {
-        boardField.AddCard(card);
-        ctx.PaintOnContext = new Context.PaintOnContextClass()
-        {
-            BoardField = boardField
-        };
-        _cardSystem.DiscardCard(card);
-        GameUpdate(GameEventType.PAINT_ON_FACE, ctx);
-    }
-
-    public void SellCurrentPainting()
-    {
-        ctx = GameUpdate(GameEventType.MAIN_SCORING, ctx);
-        
-        _roundStats.SellPainting();
-        if (_weekManager.IsLevelSuccessful(_roundStats.Score))
-        {
-            Debug.Log("Next Week!");
-            _weekManager.NextWeek();
-            return;
+            Debug.Log("Gameover!");
+            BlockActions = true;
         }
-
-        if (_roundStats.Stats.AmountOfPaintings <= 0)
+        if (BlockActions) return;
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            GameOver();
-            return;
+            Debug.Log("Space Pressed");
+            PlayHand();
+            _cardSystem.DrawNewHand();
         }
-
-        _cardSystem.DrawFullHand();
-        boardManager.Reset();
     }
+
+    public void SetBlockActions(bool block)
+    {
+        BlockActions = block;
+    }
+
+    public void PlayHand()
+    {
+        _cardSystem.BuildHand();
+    }
+
 
     private void GameOver()
     {
@@ -130,9 +111,11 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
     }
 
 
-    public Context GameUpdate(GameEventType gameEventType, Context context)
+    public Context CalculateRoom(GameEventType gameEventType)
     {
-        context = artPersonGroup.GameUpdate(gameEventType, context);
+        Context context = new Context(this){};
+        context = _inventory.GameUpdate(gameEventType, context);
+        PlayerStats.Score.EndRoomBuilding();
         return context;
     }
 }

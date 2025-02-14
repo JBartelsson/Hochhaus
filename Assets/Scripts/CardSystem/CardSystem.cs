@@ -2,48 +2,52 @@ using System;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using CommandSystem.Commands;
 using Utility;
 using Random = UnityEngine.Random;
 
 [Serializable]
 public class CardSystem : IResetHandler, IInitHandler
 {
-    private Environment _environment;
     List<Card> drawPile;
     List<Card> discardPile;
     private List<Card> fullDeck;
     private List<Card> hand;
-    private ColorMixingDatabase _colorMixingDatabase;
 
     public List<Card> DrawPile => drawPile;
 
     public List<Card> DiscardPile => discardPile;
 
     public List<Card> FullDeck => fullDeck;
+    
+    public int Draws { get; set; }
 
     public List<Card> Hand => hand;
 
     private Environment _env;
-    
-    public event EventHandler<CardSystem> OnCardSystemChanged; 
+
+    public event EventHandler<CardSystem> OnCardSystemChanged;
 
 
-    public CardSystem(ColorMixingDatabase colorMixingDatabase, Environment env)
+    public CardSystem(Environment env)
     {
         drawPile = new List<Card>();
         hand = new List<Card>();
         discardPile = new List<Card>();
         fullDeck = new List<Card>();
         _env = env;
-        _colorMixingDatabase = colorMixingDatabase;
         Init();
     }
-
+    
+    public bool DrawsEmpty()
+    {
+        return Draws <= 0;
+    }
 
     // Shuffle the Current Deck of cards
     public void Shuffle()
     {
-        for (int i = drawPile.Count - 1; i > 0;--i)
+        for (int i = drawPile.Count - 1; i > 0; --i)
         {
             int j = Random.Range(0, i + 1);
             Card card = drawPile[j];
@@ -52,56 +56,69 @@ public class CardSystem : IResetHandler, IInitHandler
         }
     }
 
-    public bool MixHandCards(Card topCard, Card bottomCard)
-    {
-        Card newCard = _colorMixingDatabase.MixCards(topCard, bottomCard);
-        if (newCard == null) return false;
-        hand.Remove(topCard);
-        int bottomCardIndex = hand.IndexOf(bottomCard);
-        Debug.Log($"BOTTOM CARD INDEX: " + bottomCardIndex);
-        hand.Remove(bottomCard);
-        hand.Insert(bottomCardIndex, newCard);
-        OnCardSystemChanged?.Invoke(this, this);
-        Draw();
-        return true;
-    }
 
     // Return a list of drawn Cards from deck
-    public void Draw(int numberToDraw =  1)
+    public void Draw(int numberToDraw = 1, bool putBack = false)
     {
-        if (numberToDraw  > drawPile.Count)
+        if (numberToDraw > drawPile.Count)
             numberToDraw = drawPile.Count;
         List<Card> drawnCards = new List<Card>();
-        for (int i =0;i<numberToDraw;++i)
+        drawnCards.Add(drawPile[0]);
+        if (!putBack)
         {
-            drawnCards.Add(drawPile[0]);
-            drawPile.RemoveAt(0);
+            for (int i = 0; i < numberToDraw; ++i)
+            {
+                drawPile.RemoveAt(0);
+            }
         }
-        hand.AddRange(drawnCards);
-        _env.GameUpdate(Environment.GameEventType.DRAW_CARDS, _env.Ctx);
-        OnCardSystemChanged?.Invoke(this, this);
 
+        hand.AddRange(drawnCards);
+        OnCardSystemChanged?.Invoke(this, this);
+    }
+    
+    public void DrawRandom(int numberToDraw = 1)
+    {
+        if (numberToDraw > drawPile.Count)
+            numberToDraw = drawPile.Count;
+        List<Card> drawnCards = new List<Card>();
+        for (int i = 0; i < numberToDraw; ++i)
+        {
+            int randomIndex = Random.Range(0, drawPile.Count);
+            drawnCards.Add(drawPile[randomIndex]);
+            drawPile.RemoveAt(randomIndex);
+        }
+        drawPile.AddRange(drawnCards);
+        hand.AddRange(drawnCards);
+        OnCardSystemChanged?.Invoke(this, this);
     }
 
-    public void DrawFullHand()
+    public void DrawFullHand(bool putBack = true)
     {
-        for (int i = hand.Count; i < _env.RoundStats.Stats.HandSize; i++)
+        for (int i = hand.Count; i < _env.PlayerStats.Stats.HandSize; i++)
         {
-            Draw();
+            DrawRandom(1);
         }
+    }
+
+    public void DrawNewHand()
+    {
+        hand.Clear();
+        Draws--;
+        DrawFullHand();
     }
 
     // Return a list of drawn Cards from discard
-    public List<Card> DrawDiscard(int numberToDraw =  1)
+    public List<Card> DrawDiscard(int numberToDraw = 1)
     {
-        if (numberToDraw  > discardPile.Count)
+        if (numberToDraw > discardPile.Count)
             numberToDraw = discardPile.Count;
         List<Card> drawnCards = new List<Card>();
-        for (int i =0;i<numberToDraw;++i)
+        for (int i = 0; i < numberToDraw; ++i)
         {
             drawnCards.Add(discardPile[0]);
             discardPile.RemoveAt(0);
         }
+
         return drawnCards;
     }
 
@@ -120,15 +137,15 @@ public class CardSystem : IResetHandler, IInitHandler
         discardPile.Insert(0, card);
         hand.Remove(card);
         OnCardSystemChanged?.Invoke(this, this);
-
     }
 
     public void ShuffleDiscard()
     {
-        foreach(Card OneCard in discardPile)
+        foreach (Card OneCard in discardPile)
         {
             drawPile.Add(OneCard);
         }
+
         discardPile.Clear();
         Shuffle();
     }
@@ -136,6 +153,7 @@ public class CardSystem : IResetHandler, IInitHandler
     public void Init()
     {
         StartDeck startDeck = _env.EnvSettings.StartDeck;
+        Draws = _env.EnvSettings.startEnvStats.startDraws;
         foreach (var colorEntry in startDeck.Deck)
         {
             for (int i = 0; i < colorEntry.Amount; i++)
@@ -143,6 +161,7 @@ public class CardSystem : IResetHandler, IInitHandler
                 AddCard(new Card(colorEntry.Color));
             }
         }
+
         Reset();
     }
 
@@ -150,37 +169,50 @@ public class CardSystem : IResetHandler, IInitHandler
     {
         fullDeck.Add(card);
         OnCardSystemChanged?.Invoke(this, this);
-
     }
-    
-    
+
+    public void BuildHand()
+    {
+        foreach (var card in hand)
+        {
+            CreateTowerCommand createTowerCommand = new CreateTowerCommand(_env, card);
+            _env.CommandInvoker.ExecuteAndRecord(createTowerCommand);
+        }
+        // DrawNewHand();
+    }
+
+
     public override string ToString()
     {
         string s = "";
         s += "FULL DECK:";
         foreach (var card in fullDeck)
         {
-            s+= card.ToString() + ", ";
+            s += card.ToString() + ", ";
         }
+
         s += "--DRAW PILE:";
         foreach (var card in drawPile)
         {
-            s+= card.ToString() + ", ";
+            s += card.ToString() + ", ";
         }
+
         s.Remove(s.Length - 2, 2);
-        
+
         s += "--HAND:";
         foreach (var card in hand)
         {
-            s+= card.ToString() + ", ";
+            s += card.ToString() + ", ";
         }
+
         s.Remove(s.Length - 2, 2);
-        
+
         s += "--DISCARD PILE:";
         foreach (var card in discardPile)
         {
-            s+= card.ToString() + ", ";
+            s += card.ToString() + ", ";
         }
+
         s.Remove(s.Length - 2, 2);
         return s;
     }

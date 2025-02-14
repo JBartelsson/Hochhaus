@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class SingleCardUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
+public class SingleCardUI : UIBase, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
 {
     [SerializeField] private Image cardColorArea;
     private Card _card;
@@ -22,45 +23,35 @@ public class SingleCardUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     public void SetCardUI(Card card, Transform canvas, UIController uiController)
     {
         _card = card;
-        cardColorArea.color = card.ColorReference.RGBColor;
+        cardColorArea.color = card.AppartmentReference.AppartmentColor;
         parentDuringDrag = canvas.transform;
-        pointsText.text = card.RuntimePoints.ToString();
+        pointsText.text = card.AppartmentReference.AppartmentName;
         this.uiController = uiController;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        //Get sibling index first and THEN change parent lol
-        originalSiblingIndex = transform.GetSiblingIndex();
-        parentAfterDrag = transform.parent;
-        transform.SetParent(parentDuringDrag);
-        cardColorArea.raycastTarget = false;
+        
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        transform.position = Input.mousePosition;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        transform.SetParent(parentAfterDrag);
-        transform.SetSiblingIndex(originalSiblingIndex);
-        cardColorArea.raycastTarget = true;
+        
 
     }
 
     public void OnDrop(PointerEventData eventData)
     {
-        GameObject droppedObject = eventData.pointerDrag;
-      
-
-        if (droppedObject.TryGetComponent(out SingleCardUI otherCard))
-        {
-            SingleCardUI droppedCardUI = droppedObject.GetComponent<SingleCardUI>();
-            EnvironmentManager.Instance.GetActiveEnvironment().MixHandCards(otherCard.Card, this.Card);
-
-        }
+     
         
+    }
+
+    public override void ResetSubscriptions()
+    {
+        throw new System.NotImplementedException();
     }
 }

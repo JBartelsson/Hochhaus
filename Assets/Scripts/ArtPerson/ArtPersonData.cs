@@ -28,9 +28,9 @@ namespace Art
         [SerializeField] private float multEffect;
         [SerializeField] private float pointGain;
         [SerializeField] private float multGain;
-        [SerializeField] private CustomColor effectColor1;
-        [SerializeField] private CustomColor effectColor2;
-        [SerializeField] private CustomColor effectColor3;
+        [SerializeField] private AppartmentSO effectColor1;
+        [SerializeField] private AppartmentSO effectColor2;
+        [SerializeField] private AppartmentSO effectColor3;
         [SerializeField] private float floatValue;
 
 
@@ -48,11 +48,11 @@ namespace Art
 
         public float MultGain => multGain;
 
-        public CustomColor EffectColor1 => effectColor1;
+        public AppartmentSO EffectColor1 => effectColor1;
 
-        public CustomColor EffectColor2 => effectColor2;
+        public AppartmentSO EffectColor2 => effectColor2;
 
-        public CustomColor EffectColor3 => effectColor3;
+        public AppartmentSO EffectColor3 => effectColor3;
         public float FloatValue => floatValue;
     }
 }

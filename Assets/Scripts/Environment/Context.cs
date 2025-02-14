@@ -7,7 +7,7 @@ public class Context
     public Environment Env;
     public class PaintOnContextClass
     {
-        public BoardField BoardField;
+        public TowerRoom TowerRoom;
     }
 
     public class CardMixingContextClass
@@ -18,13 +18,13 @@ public class Context
     
     public class MainPhaseContextClass
     {
-        public BoardField ScoringBoardField;
+        public TowerRoom ScoringTowerRoom;
     }
 
     public PaintOnContextClass PaintOnContext;
     public CardMixingContextClass CardMixingContext;
     public MainPhaseContextClass MainPhaseContext;
-    public RoundStats RoundStats;
+    public PlayerStats PlayerStats;
 
     public Context(Environment env)
     {
@@ -32,7 +32,7 @@ public class Context
         PaintOnContext = new PaintOnContextClass();
         CardMixingContext = new CardMixingContextClass();
         MainPhaseContext = new MainPhaseContextClass();
-        this.RoundStats = env.RoundStats;
+        this.PlayerStats = env.PlayerStats;
         if (env == null)
         {
             Debug.LogError($"ENVIRONMENT ISNT PASSED!!!");

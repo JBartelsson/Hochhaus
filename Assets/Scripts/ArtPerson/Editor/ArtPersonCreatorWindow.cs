@@ -84,7 +84,7 @@ namespace Art.Editor
             selectedOption = ArtPersonType.None;
             
             //Refresh ArtPersonLibraries
-            ArtPersonLibrary[] artPerson = FindObjectsOfType<ArtPersonLibrary>();
+            ItemLibrary[] artPerson = FindObjectsOfType<ItemLibrary>();
             foreach (var artPersonLibrary in artPerson)
             {
                 ArtPersonManagerEditor.LoadArtPersonDataIntoManager(artPersonLibrary);

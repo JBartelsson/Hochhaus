@@ -4,14 +4,14 @@
     using UnityEditor;
     using UnityEngine;
 
-    [CustomEditor(typeof(ArtPersonLibrary))]
+    [CustomEditor(typeof(ItemLibrary))]
     public class ArtPersonManagerEditor : Editor
     {
         public static string folderPath = "Assets/ScriptableObjects/ArtPersonData"; // Default folder path
 
         public override void OnInspectorGUI()
         {
-            ArtPersonLibrary manager = (ArtPersonLibrary)target;
+            ItemLibrary manager = (ItemLibrary)target;
 
             // Draw the default inspector first
             DrawDefaultInspector();
@@ -30,7 +30,7 @@
             }
         }
 
-        public static void LoadArtPersonDataIntoManager(ArtPersonLibrary manager)
+        public static void LoadArtPersonDataIntoManager(ItemLibrary manager)
         {
             List<ArtPersonData> loadedData = LoadArtPersonDataFromFolder();
 

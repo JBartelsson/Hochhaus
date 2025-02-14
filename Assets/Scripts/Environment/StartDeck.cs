@@ -7,7 +7,7 @@ public class StartDeck : ScriptableObject
     [Serializable]
     public class ColorEntry
     {
-        public CustomColor Color;
+        public AppartmentSO Color;
         public int Amount;
     }
     [SerializeField] private List<ColorEntry> _deck;

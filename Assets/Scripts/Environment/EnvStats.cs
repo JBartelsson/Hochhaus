@@ -2,62 +2,44 @@
 [Serializable]
 public class EnvStats: ICloneable
 {
-    public int AmountOfStrokes;
-    public int AmountOfDiscards;
-    public int AmountOfPaintings = 4;
-    public int PaintingStartSize = 5;
-    public int HandSize;
+    public float dollarPerStory = 100;
+    public int HandSize = 2; 
+    public int startDraws = 20; 
+    public int startDollars = 0;  
     
     public EventHandler<EnvStats> UpdateStats;
 
-    // Add function (field-wise)
-    public void Add(
-        int? amountOfStrokes = null, 
-        int? amountOfDiscards = null, 
-        int? amountOfPaintings = null, 
-        int? paintingStartSize = null, 
-        int? handSize = null)
+    public void AddToDollarPerStory(float amount)
     {
-        if (amountOfStrokes.HasValue) AmountOfStrokes += amountOfStrokes.Value;
-        if (amountOfDiscards.HasValue) AmountOfDiscards += amountOfDiscards.Value;
-        if (amountOfPaintings.HasValue) AmountOfPaintings += amountOfPaintings.Value;
-        if (paintingStartSize.HasValue) PaintingStartSize += paintingStartSize.Value;
-        if (handSize.HasValue) HandSize += handSize.Value;
-
-        // Trigger the UpdateStats event
+        dollarPerStory += amount;
         UpdateStats?.Invoke(this, this);
     }
 
-    // Subtract function (field-wise)
-    public void Subtract(
-        int? amountOfStrokes = null, 
-        int? amountOfDiscards = null, 
-        int? amountOfPaintings = null, 
-        int? paintingStartSize = null, 
-        int? handSize = null)
+    public void SubtractFromDollarPerStory(float amount)
     {
-        if (amountOfStrokes.HasValue) AmountOfStrokes -= amountOfStrokes.Value;
-        if (amountOfDiscards.HasValue) AmountOfDiscards -= amountOfDiscards.Value;
-        if (amountOfPaintings.HasValue) AmountOfPaintings -= amountOfPaintings.Value;
-        if (paintingStartSize.HasValue) PaintingStartSize -= paintingStartSize.Value;
-        if (handSize.HasValue) HandSize -= handSize.Value;
-
-        // Trigger the UpdateStats event
+        dollarPerStory -= amount;
         UpdateStats?.Invoke(this, this);
     }
 
-    // Reset function
-    public void Reset(EnvStats startStats)
+    public void AddToHandSize(int amount)
     {
-        AmountOfStrokes = startStats.AmountOfStrokes;
-        AmountOfDiscards = startStats.AmountOfDiscards;
-        AmountOfPaintings = startStats.AmountOfPaintings;
-        PaintingStartSize = startStats.PaintingStartSize;
-        HandSize = startStats.HandSize;
-
-        // Trigger the UpdateStats event
+        HandSize += amount;
         UpdateStats?.Invoke(this, this);
     }
+
+    public void SubtractFromHandSize(int amount)
+    {
+        HandSize -= amount;
+        UpdateStats?.Invoke(this, this);
+    }
+
+    public void ResetStats()
+    {
+        dollarPerStory = 100;
+        HandSize = 2;
+        UpdateStats?.Invoke(this, this);
+    }
+   
     public object Clone()
     {
         return this.MemberwiseClone();

@@ -2,13 +2,13 @@
     using System;
     using UnityEngine;
     using Utility;
-
-    public class Score: ISellPaintingHandler
+[Serializable]
+    public class Score: ICloneable
     {
         // The current points and multiplier
-        private int points;
+        private float points;
 
-        public int Points => points;
+        public float Points => points;
 
         public float Mult => mult;
 
@@ -17,7 +17,9 @@
         // Events to notify UI or other systems
         public event EventHandler<Score> OnPointsChanged;    // Triggered when points change
         public event EventHandler<Score> OnMultiplierChanged; // Triggered when multiplier changes
-        public event EventHandler<Score> OnScoreChanged;     // Triggered when total score changes
+        public event EventHandler<Score> OnScoreChanged; 
+        
+        // Triggered when total score changes
 
         // Constructor to initialize default values
         public Score()
@@ -27,14 +29,14 @@
         }
 
         // Public getter for total score
-        public float PaintingScore => points * mult;
+        public float StoryScore => points * mult;
 
         private float totalScore;
         public float TotalScore => totalScore;
 
 
         // Add points to the current score
-        public void AddPoints(int amount)
+        public void AddPoints(float amount)
         {
             if (amount < 0)
             {
@@ -48,7 +50,7 @@
         }
         
         // Remove points to the current score
-        public void RemovePoints(int amount)
+        public void RemovePoints(float amount)
         {
             if (amount > 0)
             {
@@ -77,8 +79,8 @@
 
         public void CalculateScore()
         {
-            totalScore += PaintingScore;
-            Debug.Log($"Painting is worth {points} x {mult} = {PaintingScore} and total Score is {totalScore}");
+            totalScore += StoryScore;
+            Debug.Log($"Painting is worth {points} x {mult} = {StoryScore} and total Score is {totalScore}");
         }
 
         // Reset the score and multiplier
@@ -99,10 +101,15 @@
             ResetScore();
         }
 
-        public void SellPainting()
+        public void EndRoomBuilding()
         {
             CalculateScore();
             ResetScore();
 
+        }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
     }

@@ -13,9 +13,11 @@ MonoBehaviour:
   m_Name: Standard
   m_EditorClassIdentifier: 
   _deck:
-  - Color: {fileID: 11400000, guid: 019e1fcf3e59de3408077b327a688182, type: 2}
-    Amount: 17
-  - Color: {fileID: 11400000, guid: fdf4e1d7f67357046a50bd26993b4fc6, type: 2}
-    Amount: 17
-  - Color: {fileID: 11400000, guid: eef2f1fffd4e8d540ba1b94ef3076c42, type: 2}
-    Amount: 17
+  - Color: {fileID: 11400000, guid: 582a20bfd054756449833717b0021fc6, type: 2}
+    Amount: 10
+  - Color: {fileID: 11400000, guid: 6acde89f0f8c70c4f9ca858603624222, type: 2}
+    Amount: 20
+  - Color: {fileID: 11400000, guid: 85643627694547b4889f091e933b131b, type: 2}
+    Amount: 10
+  - Color: {fileID: 11400000, guid: 0c05ec859b7f10147b2d2a0f8ca1c734, type: 2}
+    Amount: 2

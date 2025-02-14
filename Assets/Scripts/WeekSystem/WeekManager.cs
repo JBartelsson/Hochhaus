@@ -29,8 +29,8 @@ namespace WeekSystem
             currentWeek++;
             env.CardSystem.Reset();
             env.CardSystem.DrawFullHand();
-            env.RoundStats.Reset();
-            env.BoardManager.Reset();
+            env.PlayerStats.Reset();
+            env.TowerManager.Reset();
             OnWeekChanged?.Invoke(this, this);
 
         }

@@ -2,6 +2,6 @@
 {
     public interface ISellPaintingHandler
     {
-        public void SellPainting();
+        public void EndRoomBuilding();
     }
 }

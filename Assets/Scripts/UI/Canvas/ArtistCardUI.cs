@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UI;
 using UnityEngine;
 
-public class ArtistCardUI : MonoBehaviour
+public class ArtistCardUI : UIBase
 {
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI descriptionText;
@@ -12,5 +13,10 @@ public class ArtistCardUI : MonoBehaviour
     {
         nameText.text = artPerson.ArtPersonData.DisplayName;
         descriptionText.text = artPerson.ArtPersonData.Description;
+    }
+
+    public override void ResetSubscriptions()
+    {
+        throw new System.NotImplementedException();
     }
 }

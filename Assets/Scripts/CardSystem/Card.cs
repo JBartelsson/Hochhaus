@@ -4,39 +4,33 @@ using UnityEngine;
 [Serializable]
 public class Card: ICloneable
 {
-    private CustomColor colorReference;
+    private AppartmentSO appartmentReference;
 
-    public CustomColor ColorReference => colorReference;
+    public AppartmentSO AppartmentReference => appartmentReference;
 
-    public Card(CustomColor colorReference)
+    public Card(AppartmentSO appartmentReference)
     {
-        this.colorReference = colorReference;
-        if (colorReference.IsPrimaryColor)
-        this.RuntimePoints = this.colorReference.Points;
+        this.appartmentReference = appartmentReference;
+        RuntimePoints = this.appartmentReference.Height;
     }
 
-    public Card(CustomColor colorReference, int runtimePoints)
+    public Card(AppartmentSO appartmentReference, float runtimePoints)
     {
-        this.colorReference = colorReference;
+        this.appartmentReference = appartmentReference;
         this.RuntimePoints = runtimePoints;
     }
 
 
     public override string ToString()
     {
-        return colorReference.ColorName;
+        return appartmentReference.AppartmentName;
     }
 
-    public void ChangeColor(CustomColor color)
-    {
-        this.colorReference = color;
-        this.RuntimePoints = this.colorReference.Points;
-    }
 
     public object Clone()
     {
-        return new Card(colorReference, this.RuntimePoints);
+        return new Card(appartmentReference, this.RuntimePoints);
     }
 
-    public int RuntimePoints { get; set; }
+    public float RuntimePoints { get; set; }
 }

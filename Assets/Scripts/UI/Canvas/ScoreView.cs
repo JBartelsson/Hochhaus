@@ -5,7 +5,7 @@ using WeekSystem;
 
 namespace UI.Canvas
 {
-    public class ScoreView : MonoBehaviour, ISubscriber
+    public class ScoreView : UIBase, ISubscriber
     {
         [SerializeField] TextMeshProUGUI pointsText;
         [SerializeField] TextMeshProUGUI multText;
@@ -13,12 +13,14 @@ namespace UI.Canvas
         [SerializeField] TextMeshProUGUI totalText;
         [SerializeField] TextMeshProUGUI targetText;
         
-        public void InitSubscriptions()
+        public override void InitSubscriptions(UIController uiController)
         {
+            base.InitSubscriptions(uiController);
+
             Environment env = EnvironmentManager.Instance.GetActiveEnvironment();
-            env.RoundStats.Score.OnPointsChanged += ScoreOnOnPointsChanged;
-            env.RoundStats.Score.OnMultiplierChanged += ScoreOnOnMultiplierChanged;
-            env.RoundStats.Score.OnScoreChanged += ScoreOnOnScoreChanged;
+            env.PlayerStats.Score.OnPointsChanged += ScoreOnOnPointsChanged;
+            env.PlayerStats.Score.OnMultiplierChanged += ScoreOnOnMultiplierChanged;
+            env.PlayerStats.Score.OnScoreChanged += ScoreOnOnScoreChanged;
             env.WeekManager.OnWeekChanged += OnWeekChanged;
 
         }
@@ -33,8 +35,8 @@ namespace UI.Canvas
             
             Debug.Log(score.Points);
             Debug.Log(score.Mult);
-            Debug.Log(score.PaintingScore);
-            paintingScoreText.text = score.PaintingScore.ToString();
+            Debug.Log(score.StoryScore);
+            paintingScoreText.text = score.StoryScore.ToString();
             totalText.text = score.TotalScore.ToString();
         }
 
@@ -50,13 +52,13 @@ namespace UI.Canvas
 
         }
 
-        public void ResetSubscriptions()
+        public override void ResetSubscriptions()
         {
             Environment env = EnvironmentManager.Instance.GetActiveEnvironment();
 
-            env.RoundStats.Score.OnPointsChanged -= ScoreOnOnPointsChanged;
-            env.RoundStats.Score.OnMultiplierChanged -= ScoreOnOnMultiplierChanged;
-            env.RoundStats.Score.OnScoreChanged -= ScoreOnOnScoreChanged;
+            env.PlayerStats.Score.OnPointsChanged -= ScoreOnOnPointsChanged;
+            env.PlayerStats.Score.OnMultiplierChanged -= ScoreOnOnMultiplierChanged;
+            env.PlayerStats.Score.OnScoreChanged -= ScoreOnOnScoreChanged;
         }
     }
 }

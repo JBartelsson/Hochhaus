@@ -2,7 +2,7 @@
 {
     public interface ISubscriber
     {
-        public void InitSubscriptions();
+        public void InitSubscriptions(UIController uiController);
         public void ResetSubscriptions();
     }
 }

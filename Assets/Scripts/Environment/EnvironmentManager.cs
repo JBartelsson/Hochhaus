@@ -3,13 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class EnvironmentManager : MonoBehaviourSingleton<EnvironmentManager>
 {
     private int activeEnvironment = 0;
     private List<Environment> activeEnvironments = new List<Environment>();
     [SerializeField] UIController uiController;
-    [SerializeField] BoardVisual boardVisual;
+    [SerializeField] TowerVisual towerVisual;
 
     private void Start()
     {
@@ -18,8 +19,8 @@ public class EnvironmentManager : MonoBehaviourSingleton<EnvironmentManager>
         {
             env.Init();
         }
-        uiController.InitSubscriptions();
-        boardVisual.InitSubscriptions();
+        uiController.InitSubscriptions(uiController);
+        towerVisual.InitSubscriptions(uiController);
         foreach (Environment env in activeEnvironments)
         {
             env.StartEnvironment();
@@ -29,7 +30,7 @@ public class EnvironmentManager : MonoBehaviourSingleton<EnvironmentManager>
     private void OnDisable()
     {
         uiController.ResetSubscriptions();
-        boardVisual.ResetSubscriptions();
+        towerVisual.ResetSubscriptions();
     }
 
     public Environment GetActiveEnvironment()
