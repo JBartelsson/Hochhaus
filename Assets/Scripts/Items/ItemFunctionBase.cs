@@ -1,25 +1,25 @@
 ﻿using UnityEngine;
 
-namespace Art
+namespace Items
 {
-    public class ArtFunctionBase : IGameEventReceivable
+    public class ItemFunctionBase : IGameEventReceivable
     {
 
         
     
 
-    public ArtPersonData effectData { get; set; }
+    public ItemData effectData { get; set; }
 
-        public ArtFunctionBase(ArtPersonData effectData)
+        public ItemFunctionBase(ItemData effectData)
         {
             this.effectData = effectData;
         }
 
-        protected ArtFunctionBase()
+        protected ItemFunctionBase()
         {
         }
 
-        public ArtFunctionBase SetEffectData(ArtPersonData effectData)
+        public ItemFunctionBase SetEffectData(ItemData effectData)
         {
             this.effectData = effectData;
             return this;

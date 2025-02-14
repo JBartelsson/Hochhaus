@@ -1,4 +1,4 @@
-﻿namespace Art
+﻿namespace Items
 {
     public interface IGameEventReceivable
     {

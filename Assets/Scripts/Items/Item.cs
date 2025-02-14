@@ -1,25 +1,24 @@
 ﻿using System;
-using Art.ArtPersonFunctions;
 using UnityEngine;
 
-namespace Art
+namespace Items
 {
-    public class ArtPerson: IGameEventReceivable
+    public class Item: IGameEventReceivable
     {
         private IGameEventReceivable _updateFunction;
         
-        private ArtPersonData _artPersonData;
+        private ItemData _itemData;
 
-        public ArtPersonData ArtPersonData => _artPersonData;
+        public ItemData ItemData => _itemData;
 
-        public ArtPerson(IGameEventReceivable updateFunction)
+        public Item(IGameEventReceivable updateFunction)
         {
             _updateFunction = updateFunction;
         }
 
-        public void SetArtPersonData(ArtPersonData artPersonData)
+        public void SetArtPersonData(ItemData itemData)
         {
-            _artPersonData = artPersonData;
+            _itemData = itemData;
         }
         
         public Context GameUpdate(Environment.GameStateType gameStateType, Context context)

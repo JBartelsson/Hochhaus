@@ -9,8 +9,6 @@ public class TowerRoom : IResetHandler
 {
     public PlacedCard _PlacedCard;
     
-    private Score _score;
-    public Score Score => _score;
 
     [FormerlySerializedAs("previousScore")] public Score lastScore;
 
@@ -37,8 +35,6 @@ public class TowerRoom : IResetHandler
     public TowerRoom(Card card, Score lastScore)
     {
         _PlacedCard = new PlacedCard(card);
-        _score = new Score();
-        _score.AddPoints(card.RuntimePoints);
         this.lastScore = lastScore;
     }
    
@@ -46,5 +42,10 @@ public class TowerRoom : IResetHandler
     {
         _PlacedCard = null;
         Update();
+    }
+
+    public override string ToString()
+    {
+        return _PlacedCard.CardCopy.AppartmentReference.AppartmentName;
     }
 }

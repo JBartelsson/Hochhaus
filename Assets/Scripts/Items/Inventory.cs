@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
-namespace Art
+namespace Items
 {
     public class Inventory : IGameEventReceivable
     {
-        List<ArtPerson> items = new ();
+        List<Item> items = new ();
 
-        public List<ArtPerson> Items => items;
+        public List<Item> Items => items;
 
         private ItemLibrary _itemLibrary;
         
@@ -22,7 +23,7 @@ namespace Art
         }
 
         // Add an ArtPerson to the list
-        public void AddArtPerson(ArtPerson artFunction)
+        public void AddArtPerson(Item artFunction)
         {
             if (artFunction == null)
             {
@@ -37,7 +38,7 @@ namespace Art
         }
 
         // Remove an ArtPerson from the list
-        public void RemoveArtPerson(ArtPerson artFunction)
+        public void RemoveArtPerson(Item artFunction)
         {
             if (artFunction == null)
             {
@@ -74,6 +75,7 @@ namespace Art
             foreach (var item in items)
             {
                 context = item.GameUpdate(gameStateType, context);
+                Debug.Log($"Scoring context on {item}");
             }
 
             return context;

@@ -2,31 +2,31 @@
 using System.IO;
 using System.Linq;
 
-namespace Art.Editor
+namespace Items.Editor
 {
     using UnityEngine;
     using UnityEditor;
 
-    public class ArtPersonCreatorWindow : EditorWindow
+    public class ItemDataCreatorWindow : EditorWindow
     {
-        private ArtPersonType selectedOption = ArtPersonType.None; // Default selection
-        private const string TEMPLATE_PATH = "Assets/Scripts/ArtPerson/Editor/ArtistTemplate.txt";
-        private const string ARTIST_SCRIPT_FOLDER = "Assets/Scripts/ArtPerson/ArtPersons";
-        [MenuItem("Tools/Create Artist Tool")]
+        private ItemType selectedOption = ItemType.None; // Default selection
+        private const string TEMPLATE_PATH = "Assets/Scripts/Items/Editor/ItemTemplate.txt";
+        private const string ARTIST_SCRIPT_FOLDER = "Assets/Scripts/Items/ItemFunctions";
+        [MenuItem("Tools/Create Item Tool")]
         public static void ShowWindow()
         {
-            GetWindow<ArtPersonCreatorWindow>("Enum Selector");
+            GetWindow<ItemDataCreatorWindow>("Enum Selector");
         }
 
         private void OnGUI()
         {
             GUILayout.Label("Choose an option:", EditorStyles.boldLabel);
             GUIContent label = new GUIContent("Select Option:");
-            List<ArtPersonType> existingArtPersons = ArtPersonManagerEditor.LoadArtPersonDataFromFolder()
-                .Select((x) => x.ArtPersonType).ToList();
+            List<ItemType> existingArtPersons = ItemLibraryEditor.LoadArtPersonDataFromFolder()
+                .Select((x) => x.ItemType).ToList();
             // Dropdown to select enum
-            selectedOption = (ArtPersonType)EditorGUILayout.EnumPopup(label, selectedOption,
-                (x) => { return !existingArtPersons.Contains((ArtPersonType)x); }, false);
+            selectedOption = (ItemType)EditorGUILayout.EnumPopup(label, selectedOption,
+                (x) => { return !existingArtPersons.Contains((ItemType)x); }, false);
 
             GUILayout.Space(10);
 
@@ -37,7 +37,7 @@ namespace Art.Editor
             }
         }
 
-        private void ExecuteAction(ArtPersonType option)
+        private void ExecuteAction(ItemType option)
         {
            CreateScriptFromTemplate(option);
         }
@@ -45,9 +45,9 @@ namespace Art.Editor
 
         
 
-        private void CreateScriptFromTemplate(ArtPersonType artPersonType)
+        private void CreateScriptFromTemplate(ItemType itemType)
         {
-            string className = artPersonType.ToString();
+            string className = itemType.ToString();
             // className = EditorUtility.SaveFilePanel("Create Script", ARTIST_SCRIPT_FOLDER, className, "cs");
 
             if (string.IsNullOrEmpty(className)) return;
@@ -77,17 +77,17 @@ namespace Art.Editor
             // Write new script
             File.WriteAllText(scriptPath, finalContent);
             Debug.Log($"Created script: {scriptPath}");
-            ArtPersonData newArtPerson = ScriptableObject.CreateInstance<ArtPersonData>();
-            newArtPerson.ArtPersonTypeEditor = artPersonType;
-            newArtPerson.DisplayNameEditor = className;
-            AssetDatabase.CreateAsset(newArtPerson, ArtPersonManagerEditor.folderPath + "/" + className + ".asset");
-            selectedOption = ArtPersonType.None;
+            ItemData newItem = ScriptableObject.CreateInstance<ItemData>();
+            newItem.ItemTypeEditor = itemType;
+            newItem.DisplayNameEditor = className;
+            AssetDatabase.CreateAsset(newItem, ItemLibraryEditor.folderPath + "/" + className + ".asset");
+            selectedOption = ItemType.None;
             
             //Refresh ArtPersonLibraries
             ItemLibrary[] artPerson = FindObjectsOfType<ItemLibrary>();
             foreach (var artPersonLibrary in artPerson)
             {
-                ArtPersonManagerEditor.LoadArtPersonDataIntoManager(artPersonLibrary);
+                ItemLibraryEditor.LoadArtPersonDataIntoManager(artPersonLibrary);
             }
             
             // Refresh the AssetDatabase

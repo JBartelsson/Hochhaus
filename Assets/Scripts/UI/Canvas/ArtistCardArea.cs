@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Art;
+using Items;
 using UI;
 using UnityEngine;
 using UnityEngine.Serialization;

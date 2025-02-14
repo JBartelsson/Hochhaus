@@ -1,4 +1,6 @@
-﻿namespace CommandSystem.Commands
+﻿using UnityEngine;
+
+namespace CommandSystem.Commands
 {
     public class UpdateScoreCommand : CommandBase
     {
@@ -27,8 +29,12 @@
         public override void Execute()
         {
             lastScore = (Score)_env.PlayerStats.Score.Clone();
+            Debug.Log($"Last Score {lastScore}");
             _env.PlayerStats.Score.UpdateScore(_scoreType, value);
             newScore = (Score)_env.PlayerStats.Score.Clone();
+            newScore.CalculateScore();
+            Debug.Log($"New Score {newScore}");
+
         }
 
         public override void Undo()

@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
-namespace Art
+namespace Items
 {
-    [CreateAssetMenu(fileName = "ArtPerson", menuName = "ArtPerson", order = 1)]
+    [CreateAssetMenu(fileName = "Item", menuName = "ItemData", order = 1)]
 
-    public class ArtPersonData : ScriptableObject
+    public class ItemData : ScriptableObject
     {
         [Header("General Settings")]
 
@@ -12,15 +13,15 @@ namespace Art
 
 
         [SerializeField] private string description;
-        [SerializeField] ArtPersonType artPersonType;
+        [FormerlySerializedAs("artPersonType")] [SerializeField] ItemType itemType;
         public string DisplayNameEditor
         {
             set => displayName = value;
         }
 
-        public ArtPersonType ArtPersonTypeEditor
+        public ItemType ItemTypeEditor
         {
-            set => artPersonType = value;
+            set => itemType = value;
         }
 
         [Header("Effect Settings")] 
@@ -32,13 +33,16 @@ namespace Art
         [SerializeField] private AppartmentSO effectColor2;
         [SerializeField] private AppartmentSO effectColor3;
         [SerializeField] private float floatValue;
+        [SerializeField] private int intValue;
+
+        public int INTValue => intValue;
 
 
         public string DisplayName => displayName;
 
         public string Description => description;
 
-        public ArtPersonType ArtPersonType => artPersonType;
+        public ItemType ItemType => itemType;
 
         public float PointEffect => pointEffect;
 

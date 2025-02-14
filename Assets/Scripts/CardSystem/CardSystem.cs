@@ -170,6 +170,12 @@ public class CardSystem : IResetHandler, IInitHandler
         fullDeck.Add(card);
         OnCardSystemChanged?.Invoke(this, this);
     }
+    
+    public void AddDraws(int amount)
+    {
+        Draws += amount;
+        OnCardSystemChanged?.Invoke(this, this);
+    }
 
     public void BuildHand()
     {

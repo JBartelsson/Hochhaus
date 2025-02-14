@@ -1,0 +1,16 @@
+﻿using UnityEngine;
+using System.Collections.Generic;
+
+
+namespace Items.ItemFunctions
+{
+    public class #ARTIST_NAME# : ItemFunctionBase, IGameEventReceivable
+    {
+        public new Context GameUpdate(Environment.GameStateType gameStateType, Context context)
+        {
+            if (gameStateType != Environment.GameStateType.BUILD_ROOM) return context;
+
+            return context;
+        }
+    }
+}

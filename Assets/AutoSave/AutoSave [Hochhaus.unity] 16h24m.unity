@@ -1129,6 +1129,7 @@ MonoBehaviour:
   cardUIPrefab: {fileID: 5201421010021114106, guid: ad293e9eb84051f44821c8438807a5e0, type: 3}
   cardsSpawnTarget: {fileID: 562769501}
   scoreUI: {fileID: 1599432614}
+  towerVisual: {fileID: 1849877384}
   baseUIs:
   - {fileID: 239597702}
   - {fileID: 1599432614}
@@ -2056,6 +2057,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: HochhausEnvironment
       objectReference: {fileID: 0}
+    - target: {fileID: 1730986241064776238, guid: a63dfd6eadea60140ae864430bb9b464, type: 3}
+      propertyPath: itemData.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1730986241064776238, guid: a63dfd6eadea60140ae864430bb9b464, type: 3}
+      propertyPath: 'itemData.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: c2159a9a95e3abe4785aa3c45df8319c, type: 2}
     - target: {fileID: 6049468067878345201, guid: a63dfd6eadea60140ae864430bb9b464, type: 3}
       propertyPath: envSettings.startEnvStats.HandSize
       value: 3

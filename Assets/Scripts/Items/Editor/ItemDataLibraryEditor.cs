@@ -1,13 +1,13 @@
-﻿namespace Art.Editor
+﻿namespace Items.Editor
 {
     using System.Collections.Generic;
     using UnityEditor;
     using UnityEngine;
 
     [CustomEditor(typeof(ItemLibrary))]
-    public class ArtPersonManagerEditor : Editor
+    public class ItemLibraryEditor : Editor
     {
-        public static string folderPath = "Assets/ScriptableObjects/ArtPersonData"; // Default folder path
+        public static string folderPath = "Assets/ScriptableObjects/ItemData"; // Default folder path
 
         public override void OnInspectorGUI()
         {
@@ -23,7 +23,7 @@
 
             // Add a button to load ScriptableObjects
             GUI.backgroundColor = Color.green;
-            if (GUILayout.Button("Load ArtPersonData from Folder"))
+            if (GUILayout.Button("Load ItemData from Folder"))
             {
                LoadArtPersonDataIntoManager(manager);
 
@@ -32,10 +32,10 @@
 
         public static void LoadArtPersonDataIntoManager(ItemLibrary manager)
         {
-            List<ArtPersonData> loadedData = LoadArtPersonDataFromFolder();
+            List<ItemData> loadedData = LoadArtPersonDataFromFolder();
 
-            Undo.RecordObject(manager, "Load ArtPersonData"); // Allow Undo
-            manager.GetType().GetField("artPersonData",
+            Undo.RecordObject(manager, "Load ItemData"); // Allow Undo
+            manager.GetType().GetField("itemData",
                     System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
                 ?.SetValue(manager, loadedData);
 
@@ -44,18 +44,18 @@
         }
 
 
-        public static List<ArtPersonData> LoadArtPersonDataFromFolder()
+        public static List<ItemData> LoadArtPersonDataFromFolder()
         {
             // Get the target object (ArtPersonManager)
             string path = folderPath;
             // Find all ScriptableObjects of type ArtPersonData in the specified folder
-            string[] guids = AssetDatabase.FindAssets("t:ArtPersonData", new[] { path });
-            List<ArtPersonData> loadedData = new List<ArtPersonData>();
+            string[] guids = AssetDatabase.FindAssets("t:ItemData", new[] { path });
+            List<ItemData> loadedData = new List<ItemData>();
 
             foreach (string guid in guids)
             {
                 string assetPath = AssetDatabase.GUIDToAssetPath(guid);
-                ArtPersonData data = AssetDatabase.LoadAssetAtPath<ArtPersonData>(assetPath);
+                ItemData data = AssetDatabase.LoadAssetAtPath<ItemData>(assetPath);
 
                 if (data != null)
                 {

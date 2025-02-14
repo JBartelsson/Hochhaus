@@ -163,4 +163,9 @@
         {
             POINTS, MULT, xMULT
         }
+
+        public override string ToString()
+        {
+            return $"Points: {points}, Multiplier: {mult}, xMultiplier: {xmult}, Room Score: {StoryScore}, Total Score: {totalScore}";
+        }
     }

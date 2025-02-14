@@ -9,10 +9,10 @@ public class ArtistCardUI : UIBase
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI descriptionText;
 
-    public void SetCardUI(Art.ArtPerson artPerson)
+    public void SetCardUI(Items.Item item)
     {
-        nameText.text = artPerson.ArtPersonData.DisplayName;
-        descriptionText.text = artPerson.ArtPersonData.Description;
+        nameText.text = item.ItemData.DisplayName;
+        descriptionText.text = item.ItemData.Description;
     }
 
     public override void ResetSubscriptions()

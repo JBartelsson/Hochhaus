@@ -31,8 +31,55 @@ Transform:
   m_Children:
   - {fileID: 8862315328921740505}
   - {fileID: 6572654279416872068}
+  - {fileID: 7881190047878675757}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2773669887313392850
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7881190047878675757}
+  - component: {fileID: 1730986241064776238}
+  m_Layer: 0
+  m_Name: ItemLibrary
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7881190047878675757
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2773669887313392850}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 64938960358956035}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1730986241064776238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2773669887313392850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21f1ca28740943944bfdb52b7b226eea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemData:
+  - {fileID: 11400000, guid: 04934fc61fc8ac94ba37a50d127742a9, type: 2}
 --- !u!1 &4325655533602039970
 GameObject:
   m_ObjectHideFlags: 0
@@ -82,8 +129,10 @@ MonoBehaviour:
     startEnvStats:
       dollarPerStory: 100
       HandSize: 3
+      startDraws: 20
+      startDollars: 0
   towerManager: {fileID: 3706129975220936898}
-  itemLibrary: {fileID: 0}
+  itemLibrary: {fileID: 1730986241064776238}
   _weekManager: {fileID: 0}
 --- !u!1 &7004101940794755620
 GameObject:

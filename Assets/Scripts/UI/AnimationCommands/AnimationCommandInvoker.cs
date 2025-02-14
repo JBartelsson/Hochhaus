@@ -43,7 +43,7 @@ namespace UI.AnimationCommands
             Debug.Log("Checking animation queue");
             if (_animationQueue.Count > 0)
             {
-                Debug.Log("Starting animation");
+                Debug.Log("Q not empty");
                 StartAnimationBlock();
                 Animation currentAnimation = _animationQueue.Peek();
                 AnimationCommand command = currentAnimation.Command;
@@ -80,7 +80,11 @@ namespace UI.AnimationCommands
 
         public void StartPlaying()
         {
-            if (!isPlaying) CheckQueue();
+            if (!isPlaying)
+            {
+                Debug.Log($"Starting Animation Playing");
+                CheckQueue();
+            }
         }
 
         public void NextCommand()
@@ -117,23 +121,28 @@ namespace UI.AnimationCommands
         {
             for (int i = lastGameCommandIndex; i < arg1.CommandInvoker.ReplayCommands.Count; i++)
             {
+                Debug.Log($"Adding {arg1.CommandInvoker.ReplayCommands[i].GetType()} to animation queue");
+
                 if (arg1.CommandInvoker.ReplayCommands[i].GetType() == typeof(CreateTowerCommand))
                 {
                     CreateTowerCommand createTowerCommand = (CreateTowerCommand)arg1.CommandInvoker.ReplayCommands[i];
                     AnimationCreateTowerCommand animationCreateTowerCommand =
                         new AnimationCreateTowerCommand(ui, createTowerCommand);
                     QueueAnimation(animationCreateTowerCommand);
+                    Debug.Log($"Info: {createTowerCommand.PlacedRoom}");
                 }
                 else if (arg1.CommandInvoker.ReplayCommands[i].GetType() == typeof(UpdateScoreCommand))
                 {
                     UpdateScoreCommand updateScoreCommand = (UpdateScoreCommand)arg1.CommandInvoker.ReplayCommands[i];
                     AnimationUpdatePoints animationUpdateScore = new AnimationUpdatePoints(ui, updateScoreCommand);
                     QueueAnimation(animationUpdateScore, true);
+                    Debug.Log($"Info: {updateScoreCommand.ScoreType} {updateScoreCommand.Value}");
+
+
                 }
 
                 // AnimationUpdatePoints animationUpdatePoints = new AnimationUpdatePoints(UIController, i, arg3, towerManager);
                 // UIController.AnimationCommandInvoker.ExecuteAnimationCommand(animationUpdatePoints, true);
-            Debug.Log($"Adding {arg1.CommandInvoker.ReplayCommands[i].GetType()} to animation queue");
             }
 
             StartPlaying();

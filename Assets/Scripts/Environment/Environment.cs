@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Art;
+using Items;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
@@ -70,7 +70,8 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
         _playerStats.Init();
         _cardSystem.DrawNewHand();
         towerManager.SetEnvironment(this);
-        // artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.BasicPoints));
+        _inventory.AddArtPerson(itemLibrary.CreateItem(ItemType.BasicPoints));
+        _inventory.AddArtPerson(itemLibrary.CreateItem(ItemType.DrawChance1));
         // _inventory.AddArtPerson(itemLibrary.CreateArtPerson(ArtPersonType.PinkSkies));
         // artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.DrawingAssistant));
         // artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.Repainter));

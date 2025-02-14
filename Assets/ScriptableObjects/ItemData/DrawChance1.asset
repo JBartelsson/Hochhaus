@@ -10,15 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f9c4792f35bd4fbfbd43ad21c1092c88, type: 3}
-  m_Name: TheBlue
+  m_Name: DrawChance1
   m_EditorClassIdentifier: 
-  displayName: Bluey
-  description: Blue gains +20
-  artPersonType: 1
-  pointEffect: 20
+  displayName: DrawChance1
+  description: 
+  itemType: 6
+  pointEffect: 0
   multEffect: 0
   pointGain: 0
   multGain: 0
-  effectColor1: {fileID: 11400000, guid: 5b70c3251d5873c4b8a35c4348944495, type: 2}
+  effectColor1: {fileID: 0}
   effectColor2: {fileID: 0}
   effectColor3: {fileID: 0}
+  floatValue: 0.1
+  intValue: 1
