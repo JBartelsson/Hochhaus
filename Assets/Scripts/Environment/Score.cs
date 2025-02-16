@@ -34,7 +34,7 @@
         }
 
         // Public getter for total score
-        public float StoryScore => points * mult * xmult;
+        public float RoomScore => points * mult * xmult;
 
         private float totalScore;
         public float TotalScore => totalScore;
@@ -125,8 +125,8 @@
 
         public void CalculateScore()
         {
-            totalScore += StoryScore;
-            Debug.Log($"Painting is worth {points} x {mult} = {StoryScore} and total Score is {totalScore}");
+            totalScore += RoomScore;
+            Debug.Log($"Painting is worth {points} x {mult} = {RoomScore} and total Score is {totalScore}");
         }
 
         // Reset the score and multiplier
@@ -134,6 +134,7 @@
         {
             points = 0;
             mult = 1f;
+            xmult = 1f;
             Debug.Log("Resetting Score");
             // Notify all listeners about the reset
             OnPointsChanged?.Invoke(this, this);
@@ -166,6 +167,6 @@
 
         public override string ToString()
         {
-            return $"Points: {points}, Multiplier: {mult}, xMultiplier: {xmult}, Room Score: {StoryScore}, Total Score: {totalScore}";
+            return $"Points: {points}, Multiplier: {mult}, xMultiplier: {xmult}, Room Score: {RoomScore}, Total Score: {totalScore}";
         }
     }

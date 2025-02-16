@@ -10,19 +10,19 @@ using UnityEngine.Serialization;
 
 public class TowerVisual : UIBase, ISubscriber
 {
-    [SerializeField] AppartmentVisual appartmentVisualPrefab;
+    [FormerlySerializedAs("appartmentVisualPrefab")] [SerializeField] RoomVisual roomVisualPrefab;
 
 
     [SerializeField] private Transform towerVisualParent;
     [SerializeField] private Transform currentSpawnPosition;
     [SerializeField] private float scale = 4f;
 
-    public AppartmentVisual AppartmentVisualPrefab => appartmentVisualPrefab;
+    public RoomVisual RoomVisualPrefab => roomVisualPrefab;
     public Transform CurrentSpawnPosition => currentSpawnPosition;
     public Transform TowerVisualParent => towerVisualParent;
 
-    List<AppartmentVisual> appartmentVisuals = new List<AppartmentVisual>();
-    public List<AppartmentVisual> AppartmentVisuals => appartmentVisuals;
+    List<RoomVisual> appartmentVisuals = new List<RoomVisual>();
+    public List<RoomVisual> AppartmentVisuals => appartmentVisuals;
 
     private void TowerManagerOnInit(TowerManager towerManager)
     {
@@ -45,6 +45,7 @@ public class TowerVisual : UIBase, ISubscriber
 
     public void MoveCurrentSpawn()
     {
+        Debug.Log("Moving current spawn");
         currentSpawnPosition.transform.position += new Vector3(0f, appartmentVisuals.Last().Height, 0f);
     }
 

@@ -35,8 +35,8 @@ namespace UI.Canvas
             
             Debug.Log(score.Points);
             Debug.Log(score.Mult);
-            Debug.Log(score.StoryScore);
-            paintingScoreText.text = score.StoryScore.ToString();
+            Debug.Log(score.RoomScore);
+            paintingScoreText.text = score.RoomScore.ToString();
             totalText.text = score.TotalScore.ToString();
         }
 

@@ -30,5 +30,10 @@ namespace Items
             }
             return _updateFunction.GameUpdate(gameStateType, context);
         }
+
+        public override string ToString()
+        {
+            return _itemData.DisplayName;
+        }
     }
 }

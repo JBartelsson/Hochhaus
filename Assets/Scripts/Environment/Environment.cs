@@ -72,6 +72,7 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
         towerManager.SetEnvironment(this);
         _inventory.AddArtPerson(itemLibrary.CreateItem(ItemType.BasicPoints));
         _inventory.AddArtPerson(itemLibrary.CreateItem(ItemType.DrawChance1));
+        _inventory.AddArtPerson(itemLibrary.CreateItem(ItemType.x2Maybe));
         // _inventory.AddArtPerson(itemLibrary.CreateArtPerson(ArtPersonType.PinkSkies));
         // artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.DrawingAssistant));
         // artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.Repainter));

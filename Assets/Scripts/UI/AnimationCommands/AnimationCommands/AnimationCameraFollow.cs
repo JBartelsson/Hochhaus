@@ -14,7 +14,7 @@ namespace CommandSystem.AnimationCommands
             _room = room;
         }
         
-        public override void Execute()
+        protected override void ExecuteCmd()
         {
             if (_towerVisual.CurrentSpawnPosition.position.y <= 540)
             {

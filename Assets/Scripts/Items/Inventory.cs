@@ -74,6 +74,7 @@ namespace Items
         {
             foreach (var item in items)
             {
+                context.CurrentItem = item;
                 context = item.GameUpdate(gameStateType, context);
                 Debug.Log($"Scoring context on {item}");
             }

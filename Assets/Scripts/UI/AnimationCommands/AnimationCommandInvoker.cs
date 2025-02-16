@@ -48,7 +48,8 @@ namespace UI.AnimationCommands
                 Animation currentAnimation = _animationQueue.Peek();
                 AnimationCommand command = currentAnimation.Command;
                 _animationQueue.Dequeue();
-                Debug.Log($"Command Invisble: {currentAnimation.Invisible} Type: {command.GetType()}");;
+                Debug.Log($"Command Invisble: {currentAnimation.Invisible} Type: {command.GetType()}");
+                ;
 
                 command.SetCallback(NextCommand);
                 command.Execute();
@@ -64,7 +65,8 @@ namespace UI.AnimationCommands
 
                 while (animations[i].Invisible)
                 {
-                    Debug.Log($"{i}: Invisble: {animations[i].Invisible} Type: {animations[i].Command.GetType()}");;
+                    Debug.Log($"{i}: Invisble: {animations[i].Invisible} Type: {animations[i].Command.GetType()}");
+                    ;
                     animations[i].Command.Execute();
                     _animationQueue.Dequeue();
                     i++;
@@ -89,6 +91,7 @@ namespace UI.AnimationCommands
 
         public void NextCommand()
         {
+            Debug.Log("Callback worked!");
             if (_animationQueue.Count == 0)
             {
                 Debug.Log("Animation Q over");
@@ -122,7 +125,8 @@ namespace UI.AnimationCommands
             for (int i = lastGameCommandIndex; i < arg1.CommandInvoker.ReplayCommands.Count; i++)
             {
                 Debug.Log($"Adding {arg1.CommandInvoker.ReplayCommands[i].GetType()} to animation queue");
-
+                AnimationDelay animationDelay = new AnimationDelay(ui, 0.2f);
+                QueueAnimation(animationDelay);
                 if (arg1.CommandInvoker.ReplayCommands[i].GetType() == typeof(CreateTowerCommand))
                 {
                     CreateTowerCommand createTowerCommand = (CreateTowerCommand)arg1.CommandInvoker.ReplayCommands[i];
@@ -137,14 +141,15 @@ namespace UI.AnimationCommands
                     AnimationUpdatePoints animationUpdateScore = new AnimationUpdatePoints(ui, updateScoreCommand);
                     QueueAnimation(animationUpdateScore, true);
                     Debug.Log($"Info: {updateScoreCommand.ScoreType} {updateScoreCommand.Value}");
-
-
                 }
+                AnimationDelay animationDelay2 = new AnimationDelay(ui, 0.2f);
 
-                // AnimationUpdatePoints animationUpdatePoints = new AnimationUpdatePoints(UIController, i, arg3, towerManager);
-                // UIController.AnimationCommandInvoker.ExecuteAnimationCommand(animationUpdatePoints, true);
+                QueueAnimation(animationDelay2);
             }
 
+            AnimationMoveTowerVisualSpawn animationMoveTowerVisualSpawn =
+                new AnimationMoveTowerVisualSpawn(ui, arg2);
+            QueueAnimation(animationMoveTowerVisualSpawn);
             StartPlaying();
             lastGameCommandIndex = arg1.CommandInvoker.ReplayCommands.Count;
         }

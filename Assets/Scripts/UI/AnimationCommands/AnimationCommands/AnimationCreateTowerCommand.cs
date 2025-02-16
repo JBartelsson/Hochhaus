@@ -10,24 +10,21 @@ namespace CommandSystem.AnimationCommands
         TowerRoom _room;
         UIController _uiController;
         
-        public AnimationCreateTowerCommand(UIController ui, CreateTowerCommand createTowerCommand)
+        public AnimationCreateTowerCommand(UIController ui, CreateTowerCommand createTowerCommand) : base()
         {
             _towerVisual = ui.TowerVisual;
             _room = createTowerCommand.PlacedRoom;
         }
 
-        public override void Execute()
+        protected override void ExecuteCmd()
         {
-            AppartmentVisual appartmentVisual = GameObject.Instantiate(_towerVisual.AppartmentVisualPrefab, _towerVisual.TowerVisualParent);
-            appartmentVisual.Init(_room);
-            _towerVisual.AppartmentVisuals.Add(appartmentVisual);
-            appartmentVisual.transform.position = _towerVisual.CurrentSpawnPosition.position;
-            _towerVisual.MoveCurrentSpawn();
-            Sequence s = DOTween.Sequence();
-            
-            s.Append(appartmentVisual.transform.DOShakePosition(0.3f, new Vector3(0,0, 1f)))
-                .AppendInterval(.2f).AppendCallback(() => _callback.Invoke());
-            s.Play();
+            RoomVisual roomVisual = GameObject.Instantiate(_towerVisual.RoomVisualPrefab, _towerVisual.TowerVisualParent);
+            roomVisual.Init(_room);
+            _towerVisual.AppartmentVisuals.Add(roomVisual);
+            roomVisual.transform.position = _towerVisual.CurrentSpawnPosition.position;
+
+            s.Append(roomVisual.transform.DOShakePosition(0.3f, new Vector3(0, 0, 1f)))
+                .AppendInterval(.2f);
             
         }
         

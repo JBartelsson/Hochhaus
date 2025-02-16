@@ -11,6 +11,9 @@ namespace Items
 
         [SerializeField] private string displayName;
 
+        [SerializeField] private Sprite image;
+
+
 
         [SerializeField] private string description;
         [FormerlySerializedAs("artPersonType")] [SerializeField] ItemType itemType;
@@ -18,6 +21,7 @@ namespace Items
         {
             set => displayName = value;
         }
+        public Sprite Image => image;
 
         public ItemType ItemTypeEditor
         {
@@ -29,6 +33,9 @@ namespace Items
         [SerializeField] private float multEffect;
         [SerializeField] private float pointGain;
         [SerializeField] private float multGain;
+        [SerializeField] private float multMult;
+
+
         [SerializeField] private AppartmentSO effectColor1;
         [SerializeField] private AppartmentSO effectColor2;
         [SerializeField] private AppartmentSO effectColor3;
@@ -36,6 +43,7 @@ namespace Items
         [SerializeField] private int intValue;
 
         public int INTValue => intValue;
+        public float MultMult => multMult;
 
 
         public string DisplayName => displayName;
