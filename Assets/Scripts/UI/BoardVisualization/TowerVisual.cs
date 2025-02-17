@@ -15,11 +15,13 @@ public class TowerVisual : UIBase, ISubscriber
 
     [SerializeField] private Transform towerVisualParent;
     [SerializeField] private Transform currentSpawnPosition;
-    [SerializeField] private float scale = 4f;
+    [SerializeField] private Transform displayTextPosition;
 
     public RoomVisual RoomVisualPrefab => roomVisualPrefab;
     public Transform CurrentSpawnPosition => currentSpawnPosition;
     public Transform TowerVisualParent => towerVisualParent;
+    
+    public Transform DisplayTextPosition => displayTextPosition;
 
     List<RoomVisual> appartmentVisuals = new List<RoomVisual>();
     public List<RoomVisual> AppartmentVisuals => appartmentVisuals;

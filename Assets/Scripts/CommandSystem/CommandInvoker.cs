@@ -39,6 +39,9 @@ public class CommandInvoker
         _replayCommands.Add(command);
         command.Execute();
 
+        // debug log command
+        
+        
     }
 
     public void Replay()

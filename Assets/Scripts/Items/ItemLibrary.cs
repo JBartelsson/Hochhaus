@@ -25,11 +25,9 @@ public class ItemLibrary : MonoBehaviour
         Items.Item item = null;
         Items.ItemFunctionBase itemPersonFunction = null;
         ItemData itemData = itemDataDictionary[itemType];
-        Debug.Log($"ART PERSON TYPE TO STRING: " + itemType.ToString());
 
         string className = "Items.ItemFunctions." + itemType.ToString();
         Type artPersonDataType = Type.GetType(className, true);
-        Debug.Log($"ART PERSON TYPE: " + className);
         try
         {
             itemPersonFunction = (Items.ItemFunctionBase)(Activator.CreateInstance(artPersonDataType));

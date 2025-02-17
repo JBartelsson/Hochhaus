@@ -19,7 +19,7 @@ public class CardSystem : IResetHandler, IInitHandler
     public List<Card> DiscardPile => discardPile;
 
     public List<Card> FullDeck => fullDeck;
-    
+
     public int Draws { get; set; }
 
     public List<Card> Hand => hand;
@@ -38,7 +38,7 @@ public class CardSystem : IResetHandler, IInitHandler
         _env = env;
         Init();
     }
-    
+
     public bool DrawsEmpty()
     {
         return Draws <= 0;
@@ -75,7 +75,7 @@ public class CardSystem : IResetHandler, IInitHandler
         hand.AddRange(drawnCards);
         OnCardSystemChanged?.Invoke(this, this);
     }
-    
+
     public void DrawRandom(int numberToDraw = 1)
     {
         if (numberToDraw > drawPile.Count)
@@ -87,6 +87,7 @@ public class CardSystem : IResetHandler, IInitHandler
             drawnCards.Add(drawPile[randomIndex]);
             drawPile.RemoveAt(randomIndex);
         }
+
         drawPile.AddRange(drawnCards);
         hand.AddRange(drawnCards);
         OnCardSystemChanged?.Invoke(this, this);
@@ -170,7 +171,7 @@ public class CardSystem : IResetHandler, IInitHandler
         fullDeck.Add(card);
         OnCardSystemChanged?.Invoke(this, this);
     }
-    
+
     public void AddDraws(int amount)
     {
         Draws += amount;
@@ -181,9 +182,16 @@ public class CardSystem : IResetHandler, IInitHandler
     {
         foreach (var card in hand)
         {
-            CreateTowerCommand createTowerCommand = new CreateTowerCommand(_env, card);
-            _env.CommandInvoker.ExecuteAndRecord(createTowerCommand);
+            CreateRoomCommand createRoomCommand = new CreateRoomCommand(_env, card);
+            Context newCtx = new Context(_env)
+            {
+                NextCommand = createRoomCommand
+            };
+            Debug.Log($"NEXT CMMMAND IS: {newCtx.NextCommand}");
+            _env.GameUpdate(Environment.GameStateType.BUILD_ROOM_START, newCtx);
+            _env.CommandInvoker.ExecuteAndRecord(createRoomCommand);
         }
+
         // DrawNewHand();
     }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 
 namespace UI
 {
@@ -19,6 +20,8 @@ namespace UI
         public Color tertiary_text;
         [Header("Other")] 
         public Color disable;
+        
+       
         
         public Color GetBackgroundColor(UIStyle style)
         {

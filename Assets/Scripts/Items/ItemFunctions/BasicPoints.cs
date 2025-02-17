@@ -8,8 +8,10 @@ namespace Items.ItemFunctions
     {
         public new Context GameUpdate(Environment.GameStateType gameStateType, Context context)
         {
+            if (gameStateType != Environment.GameStateType.BUILD_ROOM) return context;
+
             TowerRoom placedRoom = context.Env.TowerManager.TowerRooms.Last();
-            UpdateScoreCommand updateScore = new UpdateScoreCommand(context.Env, Score.ScoreType.POINTS, placedRoom._PlacedCard.CardCopy.RuntimePoints);
+            UpdateGameStatCommand updateScore = new UpdateGameStatCommand(context.Env, context.CurrentItem, Score.ScoreType.POINTS, placedRoom._PlacedCard.CardCopy.RuntimePoints);
             Debug.Log($"placed Room {placedRoom}");
             context.Env.CommandInvoker.ExecuteAndRecord(updateScore);
             return context;

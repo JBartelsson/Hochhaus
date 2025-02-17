@@ -8,17 +8,15 @@ public abstract class AnimationCommand : ICommand
     protected Sequence s;
 
     protected abstract void ExecuteCmd();
-    public void SetCallback(Action callback)
+    public virtual void SetCallback(Action callback)
     {
         _callback = callback;
-        Debug.Log($"Callback set of {GetType().Name}");
     }
     
     public virtual void Execute()
     {
         s = DOTween.Sequence();
         s.OnComplete(() => _callback?.Invoke());
-        Debug.Log($"Executung {GetType().Name}");
         ExecuteCmd();
         s.Play();
     }

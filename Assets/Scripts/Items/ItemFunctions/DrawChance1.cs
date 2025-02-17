@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using CommandSystem.Commands;
 
 
 namespace Items.ItemFunctions
@@ -14,8 +15,9 @@ namespace Items.ItemFunctions
             int cardDrawAmount = effectData.INTValue;
             if (Random.Range(0, 1f) <= rng)
             {
-                context.Env.CardSystem.AddDraws(cardDrawAmount);
-                Debug.Log("Got Back draw!");
+                UpdateGameStatCommand updateGameStatCommand =
+                    new UpdateGameStatCommand(context.Env, context.CurrentItem, PlayerStats.PlayerStat.DRAWS, cardDrawAmount );
+                context.Env.CommandInvoker.ExecuteAndRecord(updateGameStatCommand);
             }
             return context;
         }

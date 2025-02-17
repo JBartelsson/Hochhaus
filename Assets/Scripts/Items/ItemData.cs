@@ -36,7 +36,7 @@ namespace Items
         [SerializeField] private float multMult;
 
 
-        [SerializeField] private AppartmentSO effectColor1;
+        [FormerlySerializedAs("effectColor1")] [SerializeField] private AppartmentSO effectRoom1;
         [SerializeField] private AppartmentSO effectColor2;
         [SerializeField] private AppartmentSO effectColor3;
         [SerializeField] private float floatValue;
@@ -60,7 +60,7 @@ namespace Items
 
         public float MultGain => multGain;
 
-        public AppartmentSO EffectColor1 => effectColor1;
+        public AppartmentSO EffectRoom1 => effectRoom1;
 
         public AppartmentSO EffectColor2 => effectColor2;
 

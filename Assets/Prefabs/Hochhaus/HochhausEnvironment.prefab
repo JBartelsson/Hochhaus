@@ -131,9 +131,17 @@ MonoBehaviour:
       HandSize: 3
       startDraws: 20
       startDollars: 0
+  debugEnvSettings:
+    StartDeck: {fileID: 11400000, guid: 7ffe19b9568d10d4289c6c53e433e876, type: 2}
+    startEnvStats:
+      dollarPerStory: 100
+      HandSize: 3
+      startDraws: 20
+      startDollars: 0
   towerManager: {fileID: 3706129975220936898}
   itemLibrary: {fileID: 1730986241064776238}
   _weekManager: {fileID: 0}
+  debug: 1
 --- !u!1 &7004101940794755620
 GameObject:
   m_ObjectHideFlags: 0

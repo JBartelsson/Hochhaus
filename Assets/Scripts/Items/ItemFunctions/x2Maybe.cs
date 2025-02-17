@@ -13,11 +13,9 @@ namespace Items.ItemFunctions
             if (gameStateType != Environment.GameStateType.BUILD_ROOM) return context;
             if (ItemUtility.CheckRandom(effectData.FloatValue))
             {
-                Debug.Log($"{context.CurrentItem} did something!");
-                UpdateScoreCommand updateScoreCommand =
-                    new UpdateScoreCommand(context.Env, Score.ScoreType.xMULT, effectData.MultMult);
-                context.Env.CommandInvoker.ExecuteAndRecord(updateScoreCommand);
-                Debug.Log("Triggered");
+                UpdateGameStatCommand updateGameStatCommand =
+                    new UpdateGameStatCommand(context.Env, context.CurrentItem, Score.ScoreType.xMULT, effectData.MultMult);
+                context.Env.CommandInvoker.ExecuteAndRecord(updateGameStatCommand);
             }
 
             return context;

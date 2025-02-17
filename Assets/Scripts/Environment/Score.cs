@@ -1,10 +1,12 @@
 ﻿
     using System;
+    using System.Collections.Generic;
     using UnityEngine;
     using Utility;
 [Serializable]
     public class Score: ICloneable
     {
+        private readonly float _baseMultiplier = 1f;
         // The current points and multiplier
         private float points;
 
@@ -21,7 +23,15 @@
         // Events to notify UI or other systems
         public event EventHandler<Score> OnPointsChanged;    // Triggered when points change
         public event EventHandler<Score> OnMultiplierChanged; // Triggered when multiplier changes
-        public event EventHandler<Score> OnScoreChanged; 
+        public event EventHandler<Score> OnScoreChanged;
+
+        public class ScoreModifier
+        {
+            public float Value;
+            public ScoreType ScoreType;
+        }
+        
+        List<ScoreModifier> scoreModifiers = new List<ScoreModifier>();
         
         // Triggered when total score changes
 
@@ -34,28 +44,36 @@
         }
 
         // Public getter for total score
-        public float RoomScore => points * mult * xmult;
+        public float RoomScore
+        {
+            get
+            {
+                float score = points;
+                foreach (var modifier in scoreModifiers)
+                {
+                    switch (modifier.ScoreType)
+                    {
+                        case ScoreType.POINTS:
+                            score += modifier.Value;
+                            break;
+                        case ScoreType.xMULT:
+                            score *= modifier.Value;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                return score;
+            }
+        }
 
         private float totalScore;
         public float TotalScore => totalScore;
 
 
-        public void UpdateScore(ScoreType scoreType, float value)
+        public void InsertScoreModifier(ScoreType scoreType, float value)
         {
-            switch (scoreType)
-            {
-                case ScoreType.POINTS:
-                    AddPoints(value);
-                    break;
-                case ScoreType.MULT:
-                    AddMultiplier(value);
-                    break;
-                case ScoreType.xMULT:
-                    MultiplyXMult(value);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(scoreType), scoreType, null);
-            }
+            scoreModifiers.Add(new ScoreModifier(){ScoreType = scoreType, Value = value});
         }
         // Add points to the current score
         public void AddPoints(float amount)
@@ -126,15 +144,22 @@
         public void CalculateScore()
         {
             totalScore += RoomScore;
-            Debug.Log($"Painting is worth {points} x {mult} = {RoomScore} and total Score is {totalScore}");
+            //log all the score modifiers
+            Debug.Log("Room SCORE:");
+            foreach (var modifier in scoreModifiers)
+            {
+                Debug.Log($"Modifier: {modifier.ScoreType} Value: {modifier.Value}");
+            }
+            Debug.Log($"Room is worth {RoomScore} and total Score is {totalScore}");
         }
 
         // Reset the score and multiplier
-        public void ResetScore()
+        public void ResetRoomScore()
         {
             points = 0;
             mult = 1f;
             xmult = 1f;
+            scoreModifiers.Clear();
             Debug.Log("Resetting Score");
             // Notify all listeners about the reset
             OnPointsChanged?.Invoke(this, this);
@@ -145,24 +170,19 @@
         public void ResetTotalScore()
         {
             totalScore = 0;
-            ResetScore();
-        }
-
-        public void EndRoomBuilding()
-        {
-            CalculateScore();
-            ResetScore();
-
+            ResetRoomScore();
         }
 
         public object Clone()
         {
-            return this.MemberwiseClone();
+            Score newScore = (Score)this.MemberwiseClone();
+            newScore.scoreModifiers = new List<ScoreModifier>(scoreModifiers);
+            return newScore;
         }
 
         public enum ScoreType
         {
-            POINTS, MULT, xMULT
+            POINTS, xMULT, DRAWS
         }
 
         public override string ToString()

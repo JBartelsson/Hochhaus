@@ -11,6 +11,7 @@ using Random = Unity.Mathematics.Random;
 public class RoomVisual : UIBase
 {
     [SerializeField] private SpriteRenderer sprite;
+    
 
     private TowerRoom _towerRoom;
 
@@ -20,7 +21,7 @@ public class RoomVisual : UIBase
     {
         get
         {
-            return transform.localScale.y * sprite.transform.localScale.y;
+            return transform.localScale.y * UIController.VisualSettings.roomPxPerUnit;
         }
     }
 
@@ -35,14 +36,14 @@ public class RoomVisual : UIBase
         this._towerRoom = towerRoom;
         sprite.color = towerRoom._PlacedCard.CardCopy.AppartmentReference.AppartmentColor;
         ogScale = transform.localScale;
-        this.transform.localScale = new Vector2(transform.localScale.x, towerRoom._PlacedCard.CardCopy.AppartmentReference.Height * transform.localScale.y);
+        this.transform.localScale = new Vector2(transform.localScale.x, towerRoom._PlacedCard.CardCopy.AppartmentReference.BasePoints);
         _towerRoom.OnUpdate += TowerRoomOnOnUpdate;
     }
 
     public bool IsBaseHeight()
     {
-        Debug.Log($"Room visual height is {Height} and card height is {_towerRoom._PlacedCard.CardCopy.AppartmentReference.Height * ogScale.y}");
-        return Mathf.Approximately(Height, _towerRoom._PlacedCard.CardCopy.AppartmentReference.Height * ogScale.y * sprite.transform.localScale.y);
+        Debug.Log($"Room visual height is {Height} and card height is {_towerRoom._PlacedCard.CardCopy.AppartmentReference.BasePoints * ogScale.y}");
+        return Mathf.Approximately(Height, _towerRoom._PlacedCard.CardCopy.AppartmentReference.BasePoints * ogScale.y * UIController.VisualSettings.roomPxPerUnit);
     }
 
     private void TowerRoomOnOnUpdate(object sender, EventArgs e)

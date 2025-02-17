@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UI;
 using UI.AnimationCommands;
-using UI.Canvas;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -16,6 +15,12 @@ public class UIController : UIBase, ISubscriber
     [SerializeField] private Transform cardsSpawnTarget;
     [SerializeField] ScoreUI scoreUI;
     [SerializeField] TowerVisual towerVisual;
+    [SerializeField] EffectDisplay effectDisplay;
+    [SerializeField] private VisualSettings _visualSettings;
+    
+    public VisualSettings VisualSettings => _visualSettings;
+
+    public EffectDisplay EffectDisplay => effectDisplay;
 
     public TowerVisual TowerVisual => towerVisual;
 

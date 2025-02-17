@@ -12,14 +12,21 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
 {
     private CommandInvoker _commandInvoker;
     [SerializeField] private EnvSettings envSettings;
+    [SerializeField] private EnvSettings debugEnvSettings;
 
 
-    [FormerlySerializedAs("boardManager")] [SerializeField] private TowerManager towerManager;
-    [FormerlySerializedAs("artPersonLibrary")] [SerializeField] private ItemLibrary itemLibrary;
+    [FormerlySerializedAs("boardManager")] [SerializeField]
+    private TowerManager towerManager;
+
+    [FormerlySerializedAs("artPersonLibrary")] [SerializeField]
+    private ItemLibrary itemLibrary;
+
     [SerializeField] private WeekManager _weekManager;
 
+    [Header("Debug Settings")] [SerializeField]
+    private bool debug;
     public WeekManager WeekManager => _weekManager;
-    
+
     public CommandInvoker CommandInvoker => _commandInvoker;
 
 
@@ -34,14 +41,16 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
 
     public Inventory Inventory => _inventory;
     public EnvSettings EnvSettings => envSettings;
-    
+
     public bool BlockActions { get; set; }
 
     //Events
 
     public enum GameStateType
     {
-        BUILD_ROOM
+        BUILD_ROOM,
+        BUILD_ROOM_END,
+        BUILD_ROOM_START
     }
 
 
@@ -54,13 +63,20 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
 
     public Context Ctx => ctx;
 
-    public event Action<Environment, GameStateType> GameStateUpdate; 
+    public event Action<Environment, GameStateType> GameStateUpdate;
 
     public void Init()
     {
+        #if UNITY_EDITOR
+        if (debug)
+        {
+            envSettings = debugEnvSettings;
+        }
+        #endif
         ctx = new Context(this);
         _commandInvoker = new CommandInvoker(this);
         _playerStats = new PlayerStats(envSettings);
+       
         _cardSystem = new CardSystem(this);
         _inventory = new Inventory(itemLibrary);
     }
@@ -72,7 +88,11 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
         towerManager.SetEnvironment(this);
         _inventory.AddArtPerson(itemLibrary.CreateItem(ItemType.BasicPoints));
         _inventory.AddArtPerson(itemLibrary.CreateItem(ItemType.DrawChance1));
+        _inventory.AddArtPerson(itemLibrary.CreateItem(ItemType.ShinyNail));
+        _inventory.AddArtPerson(itemLibrary.CreateItem(ItemType.TheRichest));
         _inventory.AddArtPerson(itemLibrary.CreateItem(ItemType.x2Maybe));
+        _inventory.AddArtPerson(itemLibrary.CreateItem(ItemType.x2Maybe));
+
         // _inventory.AddArtPerson(itemLibrary.CreateArtPerson(ArtPersonType.PinkSkies));
         // artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.DrawingAssistant));
         // artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.Repainter));
@@ -88,6 +108,7 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
             Debug.Log("Gameover!");
             BlockActions = true;
         }
+
         if (BlockActions) return;
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -107,6 +128,18 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
         _cardSystem.BuildHand();
     }
 
+    public void EndRoomBuilding()
+    {
+        PlayerStats.Score.CalculateScore();
+        Score lastScore = (Score)PlayerStats.Score.Clone();
+        PlayerStats.Score.ResetRoomScore();
+        GameUpdate(GameStateType.BUILD_ROOM_END, new Context(this)
+        {
+            LastScore = lastScore
+        });
+        
+    }
+
 
     private void GameOver()
     {
@@ -117,9 +150,12 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
 
     public Context GameUpdate(GameStateType gameStateType, Context context = null)
     {
-        context = new Context(this){};
+        if (context == null)
+        {
+            context = new Context(this) { };
+        }
+
         context = _inventory.GameUpdate(gameStateType, context);
-        PlayerStats.Score.EndRoomBuilding();
         GameStateUpdate?.Invoke(this, gameStateType);
         return context;
     }

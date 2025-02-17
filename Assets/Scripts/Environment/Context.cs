@@ -1,4 +1,5 @@
-﻿using Items;
+﻿using CommandSystem.Commands;
+using Items;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,6 +10,10 @@ public class Context
     public Environment Env;
 
     public Item CurrentItem;
+
+    public CommandBase NextCommand;
+
+    public Score LastScore;
 
     public Context(Environment env)
     {

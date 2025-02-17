@@ -6,5 +6,8 @@
         BasicPoints = 5,
         DrawChance1 = 6,
         x2Maybe = 7,
+        ShortyBoosty = 8,
+        ShinyNail = 9,
+        TheRichest = 10
     }
 }
