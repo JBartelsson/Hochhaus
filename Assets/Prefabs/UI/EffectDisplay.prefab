@@ -304,8 +304,24 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5992144472514094375, guid: 733819e39726d2c4591875d17cd0a70d, type: 3}
+      propertyPath: m_Padding.m_Top
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5992144472514094375, guid: 733819e39726d2c4591875d17cd0a70d, type: 3}
       propertyPath: m_ChildAlignment
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5992144472514094375, guid: 733819e39726d2c4591875d17cd0a70d, type: 3}
+      propertyPath: m_Padding.m_Left
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5992144472514094375, guid: 733819e39726d2c4591875d17cd0a70d, type: 3}
+      propertyPath: m_Padding.m_Right
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5992144472514094375, guid: 733819e39726d2c4591875d17cd0a70d, type: 3}
+      propertyPath: m_Padding.m_Bottom
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5992144472514094375, guid: 733819e39726d2c4591875d17cd0a70d, type: 3}
       propertyPath: m_ChildControlWidth
@@ -474,8 +490,20 @@ PrefabInstance:
       value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 3814467933091407172, guid: 7f4d349eeff93804193e17a3f18ce685, type: 3}
+      propertyPath: m_fontSizeMax
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 3814467933091407172, guid: 7f4d349eeff93804193e17a3f18ce685, type: 3}
+      propertyPath: m_fontSizeMin
+      value: 8.93
+      objectReference: {fileID: 0}
+    - target: {fileID: 3814467933091407172, guid: 7f4d349eeff93804193e17a3f18ce685, type: 3}
       propertyPath: m_fontSizeBase
       value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 3814467933091407172, guid: 7f4d349eeff93804193e17a3f18ce685, type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3814467933091407172, guid: 7f4d349eeff93804193e17a3f18ce685, type: 3}
       propertyPath: m_HorizontalAlignment

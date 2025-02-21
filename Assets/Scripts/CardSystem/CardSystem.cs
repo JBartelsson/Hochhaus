@@ -87,14 +87,19 @@ public class CardSystem : IResetHandler, IInitHandler
         List<Card> drawnCards = new List<Card>();
         for (int i = 0; i < numberToDraw; ++i)
         {
-            int randomIndex = Random.Range(0, drawPile.Count);
-            drawnCards.Add(drawPile[randomIndex]);
-            drawPile.RemoveAt(randomIndex);
+            DrawRandomCardCommand drawRandomCardCommand = new DrawRandomCardCommand(_env, null);
+            _env.CommandInvoker.ExecuteAndRecord(drawRandomCardCommand);
         }
-
-        drawPile.AddRange(drawnCards);
-        hand.AddRange(drawnCards);
+        //
+        // drawPile.AddRange(drawnCards);
+        // hand.AddRange(drawnCards);
         OnCardSystemChanged?.Invoke(this, this);
+    }
+
+    public void PutHandBackToDeck()
+    {
+        PutHandBackToDeckCommand putHandBackToDeckCommand = new PutHandBackToDeckCommand(_env, null);
+        _env.CommandInvoker.ExecuteAndRecord(putHandBackToDeckCommand);
     }
 
     public void DrawFullHand(bool putBack = true)
@@ -197,7 +202,7 @@ public class CardSystem : IResetHandler, IInitHandler
             _env.GameUpdate(Environment.GameStateType.BUILD_ROOM_START, newCtx);
             _env.CommandInvoker.ExecuteAndRecord(createRoomCommand);
         }
-
+        PutHandBackToDeck();
         // DrawNewHand();
     }
 

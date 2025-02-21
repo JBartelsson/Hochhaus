@@ -10,7 +10,7 @@ namespace CommandSystem.Commands
         public Environment Env => _env;
 
 
-        private Item sender;
+        protected Item sender;
 
         public Item Sender => sender;
         public abstract void Execute();
