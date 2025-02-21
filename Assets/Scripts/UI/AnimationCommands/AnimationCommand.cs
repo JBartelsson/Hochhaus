@@ -6,6 +6,12 @@ public abstract class AnimationCommand : ICommand
 {
     protected Action _callback;
     protected Sequence s;
+    protected UIController ui;
+
+    protected AnimationCommand(UIController ui)
+    {
+        this.ui = ui;
+    }
 
     protected abstract void ExecuteCmd();
     public virtual void SetCallback(Action callback)

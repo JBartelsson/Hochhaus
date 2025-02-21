@@ -60,7 +60,6 @@ namespace UI.AnimationCommands
 
                 while (animations[i].Invisible)
                 {
-                  
                     animations[i].Command.Execute();
                     _animationQueue.Dequeue();
                     i++;
@@ -69,7 +68,6 @@ namespace UI.AnimationCommands
                         break;
                     }
                 }
-
             }
         }
 
@@ -117,52 +115,91 @@ namespace UI.AnimationCommands
             {
                 Debug.Log(commandInvokerReplayCommand);
             }
+
             Debug.Log("END OF Game State Update replay log");
 
             for (int i = lastGameCommandIndex; i < arg1.CommandInvoker.ReplayCommands.Count; i++)
             {
                 Debug.Log($"Adding {arg1.CommandInvoker.ReplayCommands[i].GetType()} to animation queue");
-                if (arg1.CommandInvoker.ReplayCommands[i].GetType() == typeof(CreateRoomCommand))
-                {
-                    CreateRoomCommand createRoomCommand = (CreateRoomCommand)arg1.CommandInvoker.ReplayCommands[i];
-                    AnimationCreateTowerCommand animationCreateTowerCommand =
-                        new AnimationCreateTowerCommand(ui, createRoomCommand);
-                    AnimationEffectDisplay effectDisplayCommand = new AnimationEffectDisplay(ui, createRoomCommand);
-                    AnimationMoveTowerVisualSpawn animationMoveTowerVisualSpawn =
-                        new AnimationMoveTowerVisualSpawn(ui, createRoomCommand);
-                    AnimationMultiple animationMultiple = new AnimationMultiple(ui);
-                    // QueueAnimation(animationMoveTowerVisualSpawn);
-                    animationMultiple
-                        .AddCommand(animationCreateTowerCommand)
-                        .AddCommand(animationMoveTowerVisualSpawn)
-                        .AddCommand(effectDisplayCommand);
-                    QueueAnimation(animationMultiple);
-                    Debug.Log($"Info: {createRoomCommand.PlacedRoom}");
-                }
-                else if (arg1.CommandInvoker.ReplayCommands[i].GetType() == typeof(UpdateGameStatCommand))
-                {
-                    UpdateGameStatCommand updateGameStatCommand = (UpdateGameStatCommand)arg1.CommandInvoker.ReplayCommands[i];
-                    AnimationUpdateScore animationUpdateScore = new AnimationUpdateScore(ui, updateGameStatCommand);
-                    AnimationEffectDisplay effectDisplay = new AnimationEffectDisplay(ui, updateGameStatCommand);
-                    AnimationMoveTowerVisualSpawn animationMoveTowerVisualSpawn =
-                        new AnimationMoveTowerVisualSpawn(ui, updateGameStatCommand);
-                    
-                    AnimationMultiple animationMultiple = new AnimationMultiple(ui);
-                    animationMultiple
-                        .AddCommand(animationUpdateScore)
-                        .AddCommand(effectDisplay);
-                    QueueAnimation(animationMoveTowerVisualSpawn);
-                    QueueAnimation(animationMultiple);
-                    Debug.Log($"Info: {updateGameStatCommand.ScoreType} {updateGameStatCommand.Value}");
-                }
+                ICommand command = arg1.CommandInvoker.ReplayCommands[i];
+                CheckCreateRoomCommand(command);
+                CheckUpdateGameStatCommand(command);
+                CheckItemAddedCommand(command);
+                CheckReorderItemsCommand(command);
+
                 AnimationDelay animationDelay2 = new AnimationDelay(ui, 0.2f);
 
                 // QueueAnimation(animationDelay2);
             }
 
-            
+
             StartPlaying();
             lastGameCommandIndex = arg1.CommandInvoker.ReplayCommands.Count;
+        }
+
+        private void CheckCreateRoomCommand(ICommand command)
+        {
+            if (command.GetType() == typeof(CreateRoomCommand))
+            {
+                CreateRoomCommand createRoomCommand = (CreateRoomCommand)command;
+                AnimationCreateTowerCommand animationCreateTowerCommand =
+                    new AnimationCreateTowerCommand(ui, createRoomCommand);
+                AnimationEffectDisplay effectDisplayCommand = new AnimationEffectDisplay(ui, createRoomCommand);
+                AnimationMoveTowerVisualSpawn animationMoveTowerVisualSpawn =
+                    new AnimationMoveTowerVisualSpawn(ui, createRoomCommand);
+                AnimationMultiple animationMultiple = new AnimationMultiple(ui);
+                // QueueAnimation(animationMoveTowerVisualSpawn);
+                animationMultiple
+                    .AddCommand(animationCreateTowerCommand)
+                    .AddCommand(animationMoveTowerVisualSpawn)
+                    .AddCommand(effectDisplayCommand);
+                QueueAnimation(animationMultiple);
+                Debug.Log($"Info: {createRoomCommand.PlacedRoom}");
+            }
+        }
+
+        private void CheckUpdateGameStatCommand(ICommand command)
+        {
+            if (command.GetType() == typeof(UpdateGameStatCommand))
+            {
+                UpdateGameStatCommand updateGameStatCommand = (UpdateGameStatCommand)command;
+                AnimationUpdateScore animationUpdateScore = new AnimationUpdateScore(ui, updateGameStatCommand);
+                AnimationEffectDisplay effectDisplay = new AnimationEffectDisplay(ui, updateGameStatCommand);
+                AnimationMoveTowerVisualSpawn animationMoveTowerVisualSpawn =
+                    new AnimationMoveTowerVisualSpawn(ui, updateGameStatCommand);
+
+                AnimationMultiple animationMultiple = new AnimationMultiple(ui);
+                animationMultiple
+                    .AddCommand(animationUpdateScore)
+                    .AddCommand(effectDisplay);
+                QueueAnimation(animationMoveTowerVisualSpawn);
+                QueueAnimation(animationMultiple);
+                Debug.Log($"Info: {updateGameStatCommand.ScoreType} {updateGameStatCommand.Value}");
+            }
+        }
+
+        private void CheckItemAddedCommand(ICommand command)
+        {
+            if (command.GetType() == typeof(AddItemCommand))
+            {
+                AddItemCommand addedItemCommand = (AddItemCommand)command;
+
+                AnimationAddedItemCommand animationAddedItemCommand =
+                    new AnimationAddedItemCommand(ui, addedItemCommand);
+                QueueAnimation(animationAddedItemCommand);
+            }
+        }
+
+        private void CheckReorderItemsCommand(ICommand command)
+        {
+            if (command.GetType() == typeof(ReorderItemsCommand))
+            {
+                ReorderItemsCommand reorderItemsCommand = (ReorderItemsCommand)command;
+
+                UIReorderItemsCommand uiReorderItemsCommand =
+                    new UIReorderItemsCommand(ui);
+                QueueAnimation(uiReorderItemsCommand);
+            }
         }
 
 

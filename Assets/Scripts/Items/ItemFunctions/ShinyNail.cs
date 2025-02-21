@@ -10,12 +10,17 @@ namespace Items.ItemFunctions
         {
             if (gameStateType != Environment.GameStateType.BUILD_ROOM) return context;
             int index = context.Env.Inventory.Items.IndexOf(context.CurrentItem);
-            int nextIndex = index + 1;
-            if (context.Env.Inventory.Items.Count > nextIndex)
+            do
             {
-                context.CurrentItem = context.Env.Inventory.Items[nextIndex];
-                context.Env.Inventory.Items[nextIndex].GameUpdate(gameStateType, context);
-            }
+                index++;
+                if (index >= context.Env.Inventory.Items.Count)
+                {
+                    return context;
+                }
+            } while (context.Env.Inventory.Items[index].ItemData.ItemType == ItemType.ShinyNail);
+
+            // context.CurrentItem = context.Env.Inventory.Items[nextIndex];
+            context.Env.Inventory.Items[index].GameUpdate(gameStateType, context);
             return context;
         }
     }

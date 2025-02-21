@@ -16,12 +16,13 @@ MonoBehaviour:
   image: {fileID: 21300000, guid: 39d898b2781343a4892a59ab1c20343a, type: 3}
   description: 
   itemType: 7
+  rarity: 1
   pointEffect: 0
   multEffect: 0
   pointGain: 0
   multGain: 0
   multMult: 2
-  effectColor1: {fileID: 0}
+  effectRoom1: {fileID: 0}
   effectColor2: {fileID: 0}
   effectColor3: {fileID: 0}
   floatValue: 0.5

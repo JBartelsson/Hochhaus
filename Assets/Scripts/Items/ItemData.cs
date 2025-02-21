@@ -7,6 +7,8 @@ namespace Items
 
     public class ItemData : ScriptableObject
     {
+        
+        
         [Header("General Settings")]
 
         [SerializeField] private string displayName;
@@ -27,8 +29,11 @@ namespace Items
         {
             set => itemType = value;
         }
+    [SerializeField] private Rarity rarity;
 
-        [Header("Effect Settings")] 
+    public Rarity Rarity => rarity;
+
+    [Header("Effect Settings")] 
         [SerializeField] private float pointEffect;
         [SerializeField] private float multEffect;
         [SerializeField] private float pointGain;

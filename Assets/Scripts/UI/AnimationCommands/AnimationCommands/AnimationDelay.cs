@@ -9,12 +9,10 @@ namespace CommandSystem.AnimationCommands
     public class AnimationDelay : AnimationCommand
     {
         private float delay;
-        private UIController _uiController;
 
-        public AnimationDelay(UIController ui, float delay) : base()
+        public AnimationDelay(UIController ui, float delay) : base(ui)
         {
             this.delay = delay;
-            _uiController = ui;
         }
 
 

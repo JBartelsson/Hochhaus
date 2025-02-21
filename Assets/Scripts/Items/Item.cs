@@ -3,13 +3,26 @@ using UnityEngine;
 
 namespace Items
 {
-    public class Item: IGameEventReceivable
+    [Serializable]
+    public class Item : IGameEventReceivable
     {
-        private IGameEventReceivable _updateFunction;
         
+
+        private IGameEventReceivable _updateFunction;
+
         private ItemData _itemData;
 
         public ItemData ItemData => _itemData;
+
+        private bool isInShop;
+        
+
+        public bool IsInShop
+        {
+            get => isInShop;
+            set => isInShop = value;
+        }
+
 
         public Item(IGameEventReceivable updateFunction)
         {
@@ -20,7 +33,7 @@ namespace Items
         {
             _itemData = itemData;
         }
-        
+
         public Context GameUpdate(Environment.GameStateType gameStateType, Context context)
         {
             if (_updateFunction == null)
@@ -28,6 +41,7 @@ namespace Items
                 Debug.Log("Art Person has no ability! just like you!");
                 return null;
             }
+
             return _updateFunction.GameUpdate(gameStateType, context);
         }
 

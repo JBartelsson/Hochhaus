@@ -11,13 +11,11 @@ namespace CommandSystem.AnimationCommands
     public class AnimationMultiple : AnimationCommand
     {
         private List<AnimationCommand> _animationCommands = new ();
-        private UIController _uiController;
         int _callbackCount = 0;
 
-        public AnimationMultiple(UIController ui) : base()
+
+        public AnimationMultiple(UIController ui) : base(ui)
         {
-            _uiController = ui;
-           
         }
 
         public override void SetCallback(Action callback)

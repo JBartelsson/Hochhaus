@@ -4,58 +4,52 @@ using UnityEngine;
 
 namespace Items
 {
+    [Serializable]
     public class Inventory : IGameEventReceivable
     {
-        List<Item> items = new ();
+        List<Item> items = new();
+        public bool IsInShop { get; set; }
 
-        public List<Item> Items => items;
+
+        public List<Item> Items
+        {
+            get => items;
+            set => items = value;
+        }
 
         private ItemLibrary _itemLibrary;
-        
-        // Events to notify changes to the list
-        public event EventHandler<Inventory> OnArtPersonAdded;    // Triggered when an ArtPerson is added
-        public event EventHandler<Inventory> OnArtPersonRemoved;  // Triggered when an ArtPerson is removed
-        public event EventHandler OnArtPersonsCleared;            // Triggered when all ArtPersons are cleared
 
-        public Inventory(ItemLibrary itemLibrary)
+
+        public Inventory(ItemLibrary itemLibrary, bool isShop = false)
         {
             this._itemLibrary = itemLibrary;
+            IsInShop = isShop;
         }
 
         // Add an ArtPerson to the list
-        public void AddArtPerson(Item artFunction)
+        public void AddItem(Item item)
         {
-            if (artFunction == null)
-            {
-                throw new ArgumentNullException(nameof(artFunction), "ArtPerson cannot be null.");
-            }
-
-            if (!items.Contains(artFunction))
-            {
-                items.Add(artFunction);
-                OnArtPersonAdded?.Invoke(this, this); // Raise event
-            }
+            item.IsInShop = IsInShop;
+            items.Add(item);
         }
 
         // Remove an ArtPerson from the list
-        public void RemoveArtPerson(Item artFunction)
+        public void RemoveItem(Item item)
         {
-            if (artFunction == null)
+            if (item == null)
             {
-                throw new ArgumentNullException(nameof(artFunction), "ArtPerson cannot be null.");
+                throw new ArgumentNullException(nameof(item), "ArtPerson cannot be null.");
             }
 
-            if (items.Remove(artFunction))
+            if (items.Remove(item))
             {
-                OnArtPersonRemoved?.Invoke(this, this); // Raise event
             }
         }
 
         // Clear all ArtPersons from the list
-        public void ClearArtPersons()
+        public void ClearItems()
         {
             items.Clear();
-            OnArtPersonsCleared?.Invoke(this, EventArgs.Empty); // Raise event
         }
 
         // Get the count of ArtPersons

@@ -7,6 +7,7 @@ public class CustomVerticalContainer : CustomUIComponent
 {
     private VerticalLayoutGroup layoutGroup;
     
+    
     public override void SetUp()
     {
         layoutGroup = GetComponent<VerticalLayoutGroup>();

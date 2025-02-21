@@ -21,7 +21,7 @@ public class RoomVisual : UIBase
     {
         get
         {
-            return transform.localScale.y * UIController.VisualSettings.roomPxPerUnit;
+            return transform.localScale.y * UI.VisualSettings.roomPxPerUnit;
         }
     }
 
@@ -43,7 +43,7 @@ public class RoomVisual : UIBase
     public bool IsBaseHeight()
     {
         Debug.Log($"Room visual height is {Height} and card height is {_towerRoom._PlacedCard.CardCopy.AppartmentReference.BasePoints * ogScale.y}");
-        return Mathf.Approximately(Height, _towerRoom._PlacedCard.CardCopy.AppartmentReference.BasePoints * ogScale.y * UIController.VisualSettings.roomPxPerUnit);
+        return Mathf.Approximately(Height, _towerRoom._PlacedCard.CardCopy.AppartmentReference.BasePoints * ogScale.y * UI.VisualSettings.roomPxPerUnit);
     }
 
     private void TowerRoomOnOnUpdate(object sender, EventArgs e)

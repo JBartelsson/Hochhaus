@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using CommandSystem.Commands;
 using Items;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -42,6 +43,10 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
     public Inventory Inventory => _inventory;
     public EnvSettings EnvSettings => envSettings;
 
+    private Shop shop;
+
+    public Shop Shop => shop;
+
     public bool BlockActions { get; set; }
 
     //Events
@@ -50,7 +55,9 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
     {
         BUILD_ROOM,
         BUILD_ROOM_END,
-        BUILD_ROOM_START
+        BUILD_ROOM_START,
+        ITEM_ADDED,
+        ITEM_REMOVED
     }
 
 
@@ -79,6 +86,7 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
        
         _cardSystem = new CardSystem(this);
         _inventory = new Inventory(itemLibrary);
+        shop = new Shop(this);
     }
 
     public void StartEnvironment()
@@ -86,12 +94,8 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
         _playerStats.Init();
         _cardSystem.DrawNewHand();
         towerManager.SetEnvironment(this);
-        _inventory.AddArtPerson(itemLibrary.CreateItem(ItemType.BasicPoints));
-        _inventory.AddArtPerson(itemLibrary.CreateItem(ItemType.DrawChance1));
-        _inventory.AddArtPerson(itemLibrary.CreateItem(ItemType.ShinyNail));
-        _inventory.AddArtPerson(itemLibrary.CreateItem(ItemType.TheRichest));
-        _inventory.AddArtPerson(itemLibrary.CreateItem(ItemType.x2Maybe));
-        _inventory.AddArtPerson(itemLibrary.CreateItem(ItemType.x2Maybe));
+        
+        
 
         // _inventory.AddArtPerson(itemLibrary.CreateArtPerson(ArtPersonType.PinkSkies));
         // artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.DrawingAssistant));
@@ -99,6 +103,21 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
         // artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.TheBlue));
         // artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.LoudNeighbors));
         // towerManager.InitTower();
+    }
+
+    private void TestItems()
+    {
+        AddItemCommand addItemCommand = new AddItemCommand(this, null, itemLibrary.CreateItem(ItemType.BasicPoints),
+            ItemLocations.INVENTORY);
+        _commandInvoker.ExecuteAndRecord(addItemCommand);
+        // AddItemCommand addItemCommand23 = new AddItemCommand(this, null, itemLibrary.CreateItem(ItemType.DrawChance1));
+        // _commandInvoker.ExecuteAndRecord(addItemCommand23);
+        AddItemCommand addItemCommand22 = new AddItemCommand(this, null, itemLibrary.CreateItem(ItemType.ShinyNail), ItemLocations.INVENTORY);
+        _commandInvoker.ExecuteAndRecord(addItemCommand22);
+        AddItemCommand addItemCommand3 = new AddItemCommand(this, null, itemLibrary.CreateItem(ItemType.x2Maybe), ItemLocations.INVENTORY);
+        _commandInvoker.ExecuteAndRecord(addItemCommand3);
+        // AddItemCommand addItemCommand4 = new AddItemCommand(this, null, itemLibrary.CreateItem(ItemType.TheRichest));
+        // _commandInvoker.ExecuteAndRecord(addItemCommand4);
     }
 
     private void Update()
@@ -115,6 +134,17 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
             Debug.Log("Space Pressed");
             PlayHand();
             _cardSystem.DrawNewHand();
+        }
+
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            TestItems();
+        }
+
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            AddRandomShopItemCommand randomShopItemCommand = new AddRandomShopItemCommand(this, null);
+            _commandInvoker.ExecuteAndRecord(randomShopItemCommand);
         }
     }
 

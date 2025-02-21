@@ -80,6 +80,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemData:
   - {fileID: 11400000, guid: 04934fc61fc8ac94ba37a50d127742a9, type: 2}
+  rarityWeights:
+  - rarity: 0
+    weight: 41
+  - rarity: 1
+    weight: 8
+  - rarity: 2
+    weight: 1
 --- !u!1 &4325655533602039970
 GameObject:
   m_ObjectHideFlags: 0

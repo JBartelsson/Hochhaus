@@ -9,11 +9,9 @@ namespace CommandSystem.AnimationCommands
     public class AnimationUpdateScore : AnimationCommand
     {
         private UpdateGameStatCommand _updateGameStatCommand;
-        private UIController _uiController;
 
-        public AnimationUpdateScore(UIController ui, UpdateGameStatCommand updateGameStatCommand) : base()
+        public AnimationUpdateScore(UIController ui, UpdateGameStatCommand updateGameStatCommand) : base(ui)
         {
-            _uiController = ui;
             _updateGameStatCommand = updateGameStatCommand;
         }
 
@@ -23,8 +21,8 @@ namespace CommandSystem.AnimationCommands
             if (_updateGameStatCommand.PlayerStat != PlayerStats.PlayerStat.SCORE) return;
             
             Score newScore = _updateGameStatCommand.NewScore;
-            _uiController.ScoreUI.ScoreText.text = _updateGameStatCommand.NewScore.TotalScore.ToString();
-            RoomVisual roomVisual = _uiController.TowerVisual.AppartmentVisuals.Last();
+            ui.ScoreUI.ScoreText.text = _updateGameStatCommand.NewScore.TotalScore.ToString();
+            RoomVisual roomVisual = ui.TowerVisual.AppartmentVisuals.Last();
             Debug.Log($"Sequence Active: {s.IsActive()}");
            
             // if (newScore.RoomScore == roomVisual.TowerRoom._PlacedCard.CardCopy.AppartmentReference.Height) return;

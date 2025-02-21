@@ -16,6 +16,14 @@ public class UIController : UIBase, ISubscriber
     [SerializeField] ScoreUI scoreUI;
     [SerializeField] TowerVisual towerVisual;
     [SerializeField] EffectDisplay effectDisplay;
+    [SerializeField] UIInventoryManager uiInventoryManager;
+
+    public UIInventoryManager UIInventoryManager
+    {
+        get => uiInventoryManager;
+        set => uiInventoryManager = value;
+    }
+
     [SerializeField] private VisualSettings _visualSettings;
     
     public VisualSettings VisualSettings => _visualSettings;
@@ -42,6 +50,7 @@ public class UIController : UIBase, ISubscriber
         base.InitSubscriptions(uiController);
         animationCommandInvoker.InitSubscriptions(this);
         towerVisual.InitSubscriptions(this);
+        uiInventoryManager.InitSubscriptions(this);
 
         Environment env = EnvironmentManager.Instance.GetActiveEnvironment();
         env.CardSystem.OnCardSystemChanged += EnvOnOnCardSystemChanged;
@@ -64,16 +73,10 @@ public class UIController : UIBase, ISubscriber
 
     private void EnvOnOnCardSystemChanged(object sender, CardSystem cardSystem)
     {
-        foreach (var singleCardUI in singleCardUIs)
-        {
-            Destroy(singleCardUI.gameObject);
-        }
-        singleCardUIs.Clear();
+        uiInventoryManager.HandCardManager.Clear();
         for (int i = 0; i < cardSystem.Hand.Count; i++)
         {
-            SingleCardUI singleCardUI = Instantiate(cardUIPrefab, cardsSpawnTarget);
-            singleCardUI.SetCardUI(cardSystem.Hand[i], cardsSpawnTarget.parent, this);
-            singleCardUIs.Add(singleCardUI);
+            uiInventoryManager.HandCardManager.AddHandItem(cardSystem.Hand[i]);
         }
    
     }

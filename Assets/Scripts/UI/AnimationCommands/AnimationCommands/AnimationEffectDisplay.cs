@@ -2,6 +2,7 @@
 using CommandSystem.Commands;
 using DG.Tweening;
 using Items;
+using UI;
 using UnityEngine;
 
 namespace CommandSystem.AnimationCommands
@@ -9,10 +10,9 @@ namespace CommandSystem.AnimationCommands
     public class AnimationEffectDisplay : AnimationCommand
     {
         private CommandBase _command;
-        private UIController ui;
         private EffectDisplay _effectDisplay;
 
-        public AnimationEffectDisplay(UIController ui, CommandBase command)
+        public AnimationEffectDisplay(UIController ui, CommandBase command) : base(ui)
         {
             _command = command;
             this.ui = ui;
@@ -30,6 +30,7 @@ namespace CommandSystem.AnimationCommands
                 prefix = GetInformation(updateGameStatCommand);
                 _effectDisplay.Text.text = prefix + updateGameStatCommand.Value;
             }
+            _effectDisplay.ImageContainer.SetActive(false);
 
             if (_command.Sender != null)
             {
@@ -37,19 +38,30 @@ namespace CommandSystem.AnimationCommands
                 {
                     _effectDisplay.ImageContainer.SetActive(true);
                 }
-                else
-                {
-                    _effectDisplay.ImageContainer.SetActive(false);
-                }
 
                 _effectDisplay.Image.sprite = _command.Sender.ItemData.Image;
             }
 
 
             _effectDisplay.CanvasGroup.alpha = 0f;
-            s.Append(_effectDisplay.CanvasGroup.DOFade(1f, 0.4f))
-                .AppendInterval(0.2f)
+            s.Append(_effectDisplay.CanvasGroup.DOFade(1f, 0.4f));
+                
+            int itemIndex = EnvironmentManager.Instance.GetActiveEnvironment().Inventory.Items.IndexOf(_command.Sender);
+            if (itemIndex != -1)
+            {
+                Transform item = ui.UIInventoryManager.ItemDraggableManager.GetItem(itemIndex).transform;
+                s.JoinCallback(()=> DoItemScale(item));
+            }
+            s.AppendInterval(0.2f)
                 .Append(_effectDisplay.CanvasGroup.DOFade(0f, 0.4f));
+        }
+
+        private void DoItemScale(Transform item)
+        {
+            Sequence s2 = DOTween.Sequence();
+            s2.Join(item.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.4f))
+                .AppendInterval(0.2f)
+                .Join(item.DOScale(new Vector3(1f, 1f, 1f), 0.4f));
         }
 
         private string GetInformation(UpdateGameStatCommand updateGameStatCommand)

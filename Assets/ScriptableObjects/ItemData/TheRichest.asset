@@ -16,6 +16,7 @@ MonoBehaviour:
   image: {fileID: 21300000, guid: 661402626b9b7e948b6c366be74e6b50, type: 3}
   description: 
   itemType: 10
+  rarity: 1
   pointEffect: 0
   multEffect: 0
   pointGain: 0

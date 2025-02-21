@@ -8,7 +8,7 @@ namespace CommandSystem.AnimationCommands
         TowerVisual _towerVisual;
         TowerRoom _room;
         
-        public AnimationCameraFollow(TowerVisual towerVisual, TowerRoom room)
+        public AnimationCameraFollow(UIController ui, TowerVisual towerVisual, TowerRoom room) : base(ui)
         {
             _towerVisual = towerVisual;
             _room = room;

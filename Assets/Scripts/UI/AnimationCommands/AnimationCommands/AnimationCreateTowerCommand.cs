@@ -8,9 +8,8 @@ namespace CommandSystem.AnimationCommands
     {
         TowerVisual _towerVisual;
         TowerRoom _room;
-        UIController ui;
         
-        public AnimationCreateTowerCommand(UIController ui, CreateRoomCommand createRoomCommand) : base()
+        public AnimationCreateTowerCommand(UIController ui, CreateRoomCommand createRoomCommand) : base(ui)
         {
             _towerVisual = ui.TowerVisual;
             _room = createRoomCommand.PlacedRoom;

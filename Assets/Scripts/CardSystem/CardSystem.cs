@@ -22,7 +22,11 @@ public class CardSystem : IResetHandler, IInitHandler
 
     public int Draws { get; set; }
 
-    public List<Card> Hand => hand;
+    public List<Card> Hand
+    {
+        get => hand;
+        set => hand = value;
+    }
 
     private Environment _env;
 
@@ -180,6 +184,8 @@ public class CardSystem : IResetHandler, IInitHandler
 
     public void BuildHand()
     {
+        ReorderItemsCommand reorderItemsCommand = new ReorderItemsCommand(_env, null);
+        _env.CommandInvoker.ExecuteAndRecord(reorderItemsCommand);
         foreach (var card in hand)
         {
             CreateRoomCommand createRoomCommand = new CreateRoomCommand(_env, card);
