@@ -17,6 +17,9 @@ public class UIController : UIBase, ISubscriber
     [SerializeField] TowerVisual towerVisual;
     [SerializeField] EffectDisplay effectDisplay;
     [SerializeField] UIInventoryManager uiInventoryManager;
+    [SerializeField] FabricUI drawUI;
+
+    public FabricUI DrawUI => drawUI;
 
     public UIInventoryManager UIInventoryManager
     {
@@ -73,11 +76,6 @@ public class UIController : UIBase, ISubscriber
 
     private void EnvOnOnCardSystemChanged(object sender, CardSystem cardSystem)
     {
-        uiInventoryManager.HandCardManager.Clear();
-        for (int i = 0; i < cardSystem.Hand.Count; i++)
-        {
-            uiInventoryManager.HandCardManager.AddHandItem(cardSystem.Hand[i]);
-        }
    
     }
     

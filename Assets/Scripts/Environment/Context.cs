@@ -15,6 +15,9 @@ public class Context
 
     public Score LastScore;
 
+    public Card LastDrawnCard;
+
+    public UpdateGameStatCommand UpdateGameStatCommand;
     public Context(Environment env)
     {
         Env = env;

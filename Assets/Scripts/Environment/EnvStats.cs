@@ -1,13 +1,23 @@
 ﻿using System;
+using UnityEngine.Serialization;
+
 [Serializable]
 public class EnvStats: ICloneable
 {
     public float dollarPerStory = 100;
-    public int HandSize = 2; 
-    public int startDraws = 20; 
-    public int startDollars = 0;  
+    public int HandSize = 2;
+    public int Fabric;
+    public int DrawCost = 1;
     
     public EventHandler<EnvStats> UpdateStats;
+
+    public EnvStats()
+    {
+        dollarPerStory = 0;
+        HandSize = 0;
+        Fabric = 0;
+        DrawCost = 0;
+    }
 
     public void AddToDollarPerStory(float amount)
     {
@@ -43,5 +53,10 @@ public class EnvStats: ICloneable
     public object Clone()
     {
         return this.MemberwiseClone();
+    }
+
+    public bool CanDraw()
+    {
+        return Fabric - DrawCost >= 0;
     }
 }

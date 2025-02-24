@@ -1,4 +1,5 @@
 ﻿using System;
+using DG.Tweening;
 using UnityEngine;
 
 namespace UI.Camera
@@ -14,10 +15,10 @@ namespace UI.Camera
 
         private void Update()
         {
-            if (target.transform.position.y >= 540f)
+            if (UnityEngine.Camera.main.WorldToScreenPoint(target.position).y > Screen.height / 2f)
             {
-                float y = Mathf.Lerp(transform.position.y, target.transform.position.y, Time.deltaTime * speed);
-                transform.position = new Vector3(transform.position.x, y, transform.position.z);
+                transform.DOMove(new Vector3(transform.position.x, target.transform.position.y, transform.position.z),
+                    .2f).SetEase(Ease.InOutSine);
             }
         }
     }

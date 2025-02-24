@@ -1637,7 +1637,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemDraggableManager: {fileID: 237657426}
-  shopManager: {fileID: 0}
+  shopManager: {fileID: 1694974662}
   handCardManager: {fileID: 1449109647}
 --- !u!1 &1137037541
 GameObject:
@@ -2142,7 +2142,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3375408399805345220, guid: 184504053cb1e5c4a9126874fbfbca7e, type: 3}
       propertyPath: m_Pivot.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3375408399805345220, guid: 184504053cb1e5c4a9126874fbfbca7e, type: 3}
       propertyPath: m_Pivot.y
@@ -2307,6 +2307,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreText: {fileID: 1502113813}
+--- !u!114 &1694974662 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8117552492316043112, guid: 184504053cb1e5c4a9126874fbfbca7e, type: 3}
+  m_PrefabInstance: {fileID: 1509552077}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aaca7bf2717047b3a74e41fef8cf7054, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1730314731
 GameObject:
   m_ObjectHideFlags: 0
@@ -2983,7 +2994,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2126201499
 Transform:
   m_ObjectHideFlags: 0
@@ -3155,6 +3166,14 @@ PrefabInstance:
     - target: {fileID: 6049468067878345201, guid: a63dfd6eadea60140ae864430bb9b464, type: 3}
       propertyPath: envSettings.startEnvStats.startDraws
       value: 21
+      objectReference: {fileID: 0}
+    - target: {fileID: 6049468067878345201, guid: a63dfd6eadea60140ae864430bb9b464, type: 3}
+      propertyPath: envSettings.startEnvStats.startFabric
+      value: 21
+      objectReference: {fileID: 0}
+    - target: {fileID: 6049468067878345201, guid: a63dfd6eadea60140ae864430bb9b464, type: 3}
+      propertyPath: debugEnvSettings.startEnvStats.HandSize
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

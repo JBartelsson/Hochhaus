@@ -20,6 +20,13 @@ namespace CommandSystem.Commands
         public Score NewScore => newScore;
 
         private float value;
+        private float oldValue;
+        private float newValue;
+
+        public float OldValue => oldValue;
+
+        public float NewValue => newValue;
+
         private Score.ScoreType _scoreType;
         private PlayerStats.PlayerStat _playerStat;
         public PlayerStats.PlayerStat PlayerStat => _playerStat;
@@ -46,25 +53,47 @@ namespace CommandSystem.Commands
         {
             switch (_playerStat)
             {
-                case PlayerStats.PlayerStat.MONEY:
+                case PlayerStats.PlayerStat.FABRIC:
+                    UpdateFabric();
                     break;
                 case PlayerStats.PlayerStat.SCORE:
                     UpdateScore();
                     break;
-                case PlayerStats.PlayerStat.DRAWS:
+                case PlayerStats.PlayerStat.DRAW_COST:
                     UpdateDraws();
                     break;
                 case PlayerStats.PlayerStat.HAND_SIZE:
+                    UpdateHandSize();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
+
+            _env.GameUpdate(Environment.GameStateType.GAME_STAT_UPDATE, new Context(_env)
+            {
+                UpdateGameStatCommand = this
+            });
         }
 
         private void UpdateDraws()
         {
-            _env.CardSystem.AddDraws(Mathf.FloorToInt(value));
+            oldValue = _env.PlayerStats.Stats.DrawCost;
+            newValue = (float)_env.PlayerStats.Stats.DrawCost + value;
+            _env.PlayerStats.Stats.DrawCost = Mathf.FloorToInt(newValue);
+        }
+
+        private void UpdateHandSize()
+        {
+            oldValue = _env.PlayerStats.Stats.HandSize;
+            newValue = (float)_env.PlayerStats.Stats.HandSize + value;
+            _env.PlayerStats.Stats.HandSize = Mathf.FloorToInt(newValue);
+        }
+
+        private void UpdateFabric()
+        {
+            oldValue = _env.PlayerStats.Stats.Fabric;
+            newValue = (float)_env.PlayerStats.Stats.Fabric + value;
+            _env.PlayerStats.Stats.Fabric = Mathf.FloorToInt(newValue);
         }
 
         private void UpdateScore()

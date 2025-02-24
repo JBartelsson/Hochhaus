@@ -11,7 +11,12 @@ using Random = Unity.Mathematics.Random;
 public class RoomVisual : UIBase
 {
     [SerializeField] private SpriteRenderer sprite;
-    
+    [SerializeField] private Transform pivot;
+
+    public Transform Pivot => pivot;
+
+    public SpriteRenderer Sprite => sprite;
+
 
     private TowerRoom _towerRoom;
 
@@ -36,7 +41,7 @@ public class RoomVisual : UIBase
         this._towerRoom = towerRoom;
         sprite.color = towerRoom._PlacedCard.CardCopy.AppartmentReference.AppartmentColor;
         ogScale = transform.localScale;
-        this.transform.localScale = new Vector2(transform.localScale.x, towerRoom._PlacedCard.CardCopy.AppartmentReference.BasePoints);
+        pivot.transform.localScale = new Vector2(transform.localScale.x, towerRoom._PlacedCard.CardCopy.AppartmentReference.BasePoints);
         _towerRoom.OnUpdate += TowerRoomOnOnUpdate;
     }
 

@@ -25,9 +25,17 @@ public abstract class DraggableManager : UIBase
     public List<DraggableItem> Items => items;
 
     //Get Iitem by Index
-    public DraggableItem GetItem(int index)
+    public DraggableItem GetItemByIndex(int index)
     {
-        return items[index];
+        foreach (var draggableItem in items)
+        {
+            if (draggableItem.Index == index)
+            {
+                return draggableItem;
+            }
+        }
+
+        return null;
     }
 
     private void Start()
@@ -74,13 +82,13 @@ public abstract class DraggableManager : UIBase
         float prefix = inverted ? -1 : 1;
         if (!vertical)
         {
-            
-         totalSpace = GetComponent<RectTransform>().rect.width;
+            totalSpace = GetComponent<RectTransform>().rect.width;
         }
         else
         {
             totalSpace = GetComponent<RectTransform>().rect.height;
         }
+
         Debug.Log(totalSpace);
         float itemWidth = items[0].RectTransform.rect.width;
         Debug.Log(itemWidth);
@@ -105,6 +113,7 @@ public abstract class DraggableManager : UIBase
             {
                 newPosition = new Vector3(0, prefix * spacingOffset, 0);
             }
+
             items[i].SetTargetPos(newPosition);
             items[i].MoveToTargetPos();
         }
@@ -172,6 +181,7 @@ public abstract class DraggableManager : UIBase
         {
             Destroy(draggableItem.gameObject);
         }
+
         items.Clear();
     }
 
@@ -183,6 +193,30 @@ public abstract class DraggableManager : UIBase
     public Vector3 GetTargetPosition(int itemIndex)
     {
         return items[itemIndex].TargetPosition;
+    }
+
+    public void RemoveItem(int index)
+    {
+        for (var i = 0; i < items.Count; i++)
+        {
+            DraggableItem draggableItem = items[i];
+            if (draggableItem.Index == index)
+            {
+                items.Remove(draggableItem);
+                Destroy(draggableItem.gameObject);
+                // UpdateItemPositions();
+                foreach (var item in items)
+                {
+                    if (item.Index > index)
+                    {
+                        item.Index--;
+                    }
+                }
+                return;
+            }
+        }
+
+        
     }
 
 

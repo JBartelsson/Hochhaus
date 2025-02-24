@@ -20,7 +20,6 @@ public class CardSystem : IResetHandler, IInitHandler
 
     public List<Card> FullDeck => fullDeck;
 
-    public int Draws { get; set; }
 
     public List<Card> Hand
     {
@@ -41,11 +40,6 @@ public class CardSystem : IResetHandler, IInitHandler
         fullDeck = new List<Card>();
         _env = env;
         Init();
-    }
-
-    public bool DrawsEmpty()
-    {
-        return Draws <= 0;
     }
 
     // Shuffle the Current Deck of cards
@@ -90,20 +84,15 @@ public class CardSystem : IResetHandler, IInitHandler
             DrawRandomCardCommand drawRandomCardCommand = new DrawRandomCardCommand(_env, null);
             _env.CommandInvoker.ExecuteAndRecord(drawRandomCardCommand);
         }
-        //
-        // drawPile.AddRange(drawnCards);
-        // hand.AddRange(drawnCards);
-        OnCardSystemChanged?.Invoke(this, this);
     }
 
-    public void PutHandBackToDeck()
+    private void PutHandBackToDeck()
     {
-        PutHandBackToDeckCommand putHandBackToDeckCommand = new PutHandBackToDeckCommand(_env, null);
-        _env.CommandInvoker.ExecuteAndRecord(putHandBackToDeckCommand);
     }
 
     public void DrawFullHand(bool putBack = true)
     {
+        Debug.Log(_env.PlayerStats.Stats.HandSize);
         for (int i = hand.Count; i < _env.PlayerStats.Stats.HandSize; i++)
         {
             DrawRandom(1);
@@ -113,7 +102,6 @@ public class CardSystem : IResetHandler, IInitHandler
     public void DrawNewHand()
     {
         hand.Clear();
-        Draws--;
         DrawFullHand();
     }
 
@@ -149,7 +137,7 @@ public class CardSystem : IResetHandler, IInitHandler
         OnCardSystemChanged?.Invoke(this, this);
     }
 
-    public void ShuffleDiscard()
+    public void ReturnDiscardPile(bool shuffle = false)
     {
         foreach (Card OneCard in discardPile)
         {
@@ -157,13 +145,13 @@ public class CardSystem : IResetHandler, IInitHandler
         }
 
         discardPile.Clear();
-        Shuffle();
+        if (shuffle)
+            Shuffle();
     }
 
     public void Init()
     {
         StartDeck startDeck = _env.EnvSettings.StartDeck;
-        Draws = _env.EnvSettings.startEnvStats.startDraws;
         foreach (var colorEntry in startDeck.Deck)
         {
             for (int i = 0; i < colorEntry.Amount; i++)
@@ -181,17 +169,21 @@ public class CardSystem : IResetHandler, IInitHandler
         OnCardSystemChanged?.Invoke(this, this);
     }
 
-    public void AddDraws(int amount)
-    {
-        Draws += amount;
-        OnCardSystemChanged?.Invoke(this, this);
-    }
 
     public void BuildHand()
     {
+        if (!_env.PlayerStats.Stats.CanDraw())
+        {
+            return;
+        }
+        
+        UpdateGameStatCommand updateGameStatCommand = new UpdateGameStatCommand(_env, null, PlayerStats.PlayerStat.FABRIC, -_env.PlayerStats.Stats.DrawCost);
+        _env.CommandInvoker.ExecuteAndRecord(updateGameStatCommand);
+        
         ReorderItemsCommand reorderItemsCommand = new ReorderItemsCommand(_env, null);
         _env.CommandInvoker.ExecuteAndRecord(reorderItemsCommand);
-        foreach (var card in hand)
+        List<Card> handCopy = new List<Card>(_env.CardSystem.Hand);
+        foreach (var card in handCopy)
         {
             CreateRoomCommand createRoomCommand = new CreateRoomCommand(_env, card);
             Context newCtx = new Context(_env)
@@ -201,9 +193,15 @@ public class CardSystem : IResetHandler, IInitHandler
             Debug.Log($"NEXT CMMMAND IS: {newCtx.NextCommand}");
             _env.GameUpdate(Environment.GameStateType.BUILD_ROOM_START, newCtx);
             _env.CommandInvoker.ExecuteAndRecord(createRoomCommand);
+            RemoveCardFromHandCommand removeCardFromHandCommand = new RemoveCardFromHandCommand(_env, null, card);
+            _env.CommandInvoker.ExecuteAndRecord(removeCardFromHandCommand);
         }
-        PutHandBackToDeck();
-        // DrawNewHand();
+
+        PutHandBackToDeckCommand putHandBackToDeckCommand = new PutHandBackToDeckCommand(_env, null);
+        _env.CommandInvoker.ExecuteAndRecord(putHandBackToDeckCommand);
+        
+
+        DrawNewHand();
     }
 
 

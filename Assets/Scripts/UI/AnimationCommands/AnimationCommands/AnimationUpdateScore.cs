@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using CommandSystem.Commands;
 using DG.Tweening;
 using TMPro;
@@ -18,10 +19,41 @@ namespace CommandSystem.AnimationCommands
 
         protected override void ExecuteCmd()
         {
-            if (_updateGameStatCommand.PlayerStat != PlayerStats.PlayerStat.SCORE) return;
+            switch (_updateGameStatCommand.PlayerStat)
+            {
+                case PlayerStats.PlayerStat.FABRIC:
+                    UpdateFabric();
+                    break;
+                case PlayerStats.PlayerStat.SCORE:
+                    UpdateScore();
+                    break;
+                case PlayerStats.PlayerStat.DRAW_COST:
+                    UpdateDrawCost();
+                    break;
+                case PlayerStats.PlayerStat.HAND_SIZE:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
             
+        }
+
+        private void UpdateFabric()
+        {
+            ui.DrawUI.FabricText.text = _updateGameStatCommand.NewValue.ToString();
+        }
+        
+        private void UpdateDrawCost()
+        {
+            ui.DrawUI.DrawCostText.text = _updateGameStatCommand.NewValue.ToString();
+        }
+        
+        private void UpdateScore()
+        {
             Score newScore = _updateGameStatCommand.NewScore;
-            ui.ScoreUI.ScoreText.text = _updateGameStatCommand.NewScore.TotalScore.ToString();
+            float oldScore = _updateGameStatCommand.LastScore.TotalScore;
+            Tween scoreTween = DOTween.To(() => oldScore, x => oldScore = x, _updateGameStatCommand.NewScore.TotalScore, 0.1f).OnUpdate(() => ui.ScoreUI.ScoreText.text = Mathf.FloorToInt(oldScore).ToString(""));
+            s.Append(scoreTween);
             RoomVisual roomVisual = ui.TowerVisual.AppartmentVisuals.Last();
             Debug.Log($"Sequence Active: {s.IsActive()}");
            
@@ -29,7 +61,7 @@ namespace CommandSystem.AnimationCommands
             if (roomVisual != null)
             {
                 
-                s.Append(roomVisual.transform.DOScaleY(newScore.RoomScore, 0.5f));
+                s.Join(roomVisual.Pivot.transform.DOScaleY(newScore.RoomScore, 0.5f));
             }
 
             Debug.Log($"Update Score: {newScore}");

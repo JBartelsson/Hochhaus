@@ -57,6 +57,10 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
         BUILD_ROOM_END,
         BUILD_ROOM_START,
         ITEM_ADDED,
+        CARD_DRAWN,
+        CARD_REMOVED_FROM_HAND,
+        GAME_STAT_UPDATE,
+        CARD_DESTROYED_FROM_HAND,
         ITEM_REMOVED
     }
 
@@ -82,7 +86,7 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
         #endif
         ctx = new Context(this);
         _commandInvoker = new CommandInvoker(this);
-        _playerStats = new PlayerStats(envSettings);
+        _playerStats = new PlayerStats(this);
        
         _cardSystem = new CardSystem(this);
         _inventory = new Inventory(itemLibrary);
@@ -94,6 +98,7 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
         _playerStats.Init();
         _cardSystem.DrawNewHand();
         towerManager.SetEnvironment(this);
+        Invoke(nameof(TestItems), .1f);
         
         
 
@@ -110,19 +115,19 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
         AddItemCommand addItemCommand = new AddItemCommand(this, null, itemLibrary.CreateItem(ItemType.BasicPoints),
             ItemLocations.INVENTORY);
         _commandInvoker.ExecuteAndRecord(addItemCommand);
-        // AddItemCommand addItemCommand23 = new AddItemCommand(this, null, itemLibrary.CreateItem(ItemType.DrawChance1));
-        // _commandInvoker.ExecuteAndRecord(addItemCommand23);
+        AddItemCommand addItemCommand23 = new AddItemCommand(this, null, itemLibrary.CreateItem(ItemType.DrawChance1), ItemLocations.INVENTORY);
+        _commandInvoker.ExecuteAndRecord(addItemCommand23);
         AddItemCommand addItemCommand22 = new AddItemCommand(this, null, itemLibrary.CreateItem(ItemType.ShinyNail), ItemLocations.INVENTORY);
         _commandInvoker.ExecuteAndRecord(addItemCommand22);
         AddItemCommand addItemCommand3 = new AddItemCommand(this, null, itemLibrary.CreateItem(ItemType.x2Maybe), ItemLocations.INVENTORY);
         _commandInvoker.ExecuteAndRecord(addItemCommand3);
-        // AddItemCommand addItemCommand4 = new AddItemCommand(this, null, itemLibrary.CreateItem(ItemType.TheRichest));
-        // _commandInvoker.ExecuteAndRecord(addItemCommand4);
+        AddItemCommand addItemCommand4 = new AddItemCommand(this, null, itemLibrary.CreateItem(ItemType.TheRichest), ItemLocations.INVENTORY);
+        _commandInvoker.ExecuteAndRecord(addItemCommand4);
     }
 
     private void Update()
     {
-        if (_cardSystem.DrawsEmpty())
+        if (!_playerStats.Stats.CanDraw())
         {
             Debug.Log("Gameover!");
             BlockActions = true;
@@ -132,8 +137,11 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Debug.Log("Space Pressed");
+            float time = Time.time;
+            Debug.Log($"oldTime {time}");
             PlayHand();
-            _cardSystem.DrawNewHand();
+            Debug.Log($"Duration {(Time.time - time).ToString("G")}");
+
         }
 
         if (Input.GetKeyDown(KeyCode.A))

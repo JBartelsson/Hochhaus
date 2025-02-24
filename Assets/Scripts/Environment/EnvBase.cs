@@ -1,6 +1,7 @@
 ﻿public class EnvBase
     {
-        private Environment env;
+        protected Environment env;
+
 
         public EnvBase(Environment env)
         {

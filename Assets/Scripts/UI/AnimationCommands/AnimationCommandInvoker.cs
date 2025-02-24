@@ -126,6 +126,8 @@ namespace UI.AnimationCommands
                 CheckUpdateGameStatCommand(command);
                 CheckItemAddedCommand(command);
                 CheckReorderItemsCommand(command);
+                CheckAddCardToHandCommand(command);
+                CheckRemoveCardFromHandCommand(command);
 
                 AnimationDelay animationDelay2 = new AnimationDelay(ui, 0.2f);
 
@@ -142,15 +144,15 @@ namespace UI.AnimationCommands
             if (command.GetType() == typeof(CreateRoomCommand))
             {
                 CreateRoomCommand createRoomCommand = (CreateRoomCommand)command;
-                AnimationCreateTowerCommand animationCreateTowerCommand =
-                    new AnimationCreateTowerCommand(ui, createRoomCommand);
+                AnimationCreateRoomCommand animationCreateRoomCommand =
+                    new AnimationCreateRoomCommand(ui, createRoomCommand);
                 AnimationEffectDisplay effectDisplayCommand = new AnimationEffectDisplay(ui, createRoomCommand);
                 AnimationMoveTowerVisualSpawn animationMoveTowerVisualSpawn =
                     new AnimationMoveTowerVisualSpawn(ui, createRoomCommand);
                 AnimationMultiple animationMultiple = new AnimationMultiple(ui);
                 // QueueAnimation(animationMoveTowerVisualSpawn);
                 animationMultiple
-                    .AddCommand(animationCreateTowerCommand)
+                    .AddCommand(animationCreateRoomCommand)
                     .AddCommand(animationMoveTowerVisualSpawn)
                     .AddCommand(effectDisplayCommand);
                 QueueAnimation(animationMultiple);
@@ -187,6 +189,27 @@ namespace UI.AnimationCommands
                 AnimationAddedItemCommand animationAddedItemCommand =
                     new AnimationAddedItemCommand(ui, addedItemCommand);
                 QueueAnimation(animationAddedItemCommand);
+            }
+        }
+
+        private void CheckAddCardToHandCommand(ICommand command)
+        {
+            if(command.GetType() == typeof(AddCardToHandCommand))
+            {
+                AddCardToHandCommand addCardToHandCommand = (AddCardToHandCommand)command;
+                AnimationAddCardToHand animationAddCardToHandCommand = new AnimationAddCardToHand(ui, addCardToHandCommand);
+                QueueAnimation(animationAddCardToHandCommand);
+            }
+            
+        }
+        
+        private void CheckRemoveCardFromHandCommand(ICommand command)
+        {
+            if (command.GetType() == typeof(RemoveCardFromHandCommand))
+            {
+                RemoveCardFromHandCommand removeCardFromHandCommand = (RemoveCardFromHandCommand)command;
+                AnimationRemoveCardFromHand animationRemoveCardFromHand = new AnimationRemoveCardFromHand(ui, removeCardFromHandCommand);
+                QueueAnimation(animationRemoveCardFromHand);
             }
         }
 

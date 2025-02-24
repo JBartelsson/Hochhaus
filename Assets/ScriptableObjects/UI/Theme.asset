@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Theme
   m_EditorClassIdentifier: 
   primary_bg: {r: 0, g: 0, b: 0, a: 1}
-  primary_text: {r: 0.8627451, g: 0, b: 0, a: 1}
+  primary_text: {r: 0, g: 0, b: 0, a: 1}
   secondary_bg: {r: 0, g: 0, b: 0, a: 1}
-  secondary_text: {r: 0.5999999, g: 0.34326738, b: 0.0033961767, a: 1}
+  secondary_text: {r: 0, g: 0, b: 0, a: 1}
   tertiary_bg: {r: 0, g: 0, b: 0, a: 1}
-  tertiary_text: {r: 0.27289885, g: 0.5773585, b: 0, a: 1}
+  tertiary_text: {r: 0, g: 0, b: 0, a: 1}
   disable: {r: 0, g: 0, b: 0, a: 1}

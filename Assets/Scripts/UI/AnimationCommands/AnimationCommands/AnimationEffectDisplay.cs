@@ -49,7 +49,7 @@ namespace CommandSystem.AnimationCommands
             int itemIndex = EnvironmentManager.Instance.GetActiveEnvironment().Inventory.Items.IndexOf(_command.Sender);
             if (itemIndex != -1)
             {
-                Transform item = ui.UIInventoryManager.ItemDraggableManager.GetItem(itemIndex).transform;
+                Transform item = ui.UIInventoryManager.ItemDraggableManager.GetItemByIndex(itemIndex).transform;
                 s.JoinCallback(()=> DoItemScale(item));
             }
             s.AppendInterval(0.2f)
@@ -84,16 +84,16 @@ namespace CommandSystem.AnimationCommands
                     }
 
                     break;
-                case PlayerStats.PlayerStat.MONEY:
+                case PlayerStats.PlayerStat.FABRIC:
                     Debug.Log("MONEYY!!!");
-                    return "+$";
+                    return "";
 
                     break;
-                case PlayerStats.PlayerStat.DRAWS:
+                case PlayerStats.PlayerStat.DRAW_COST:
                     return "Draws +";
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    break;
             }
 
             return "+";

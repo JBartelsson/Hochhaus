@@ -12,7 +12,13 @@ namespace CommandSystem.Commands
 
         public override void Execute()
         {
-            _env.CardSystem.DrawPile.AddRange(_env.CardSystem.Hand);
+            Debug.Log($"Put {_env.CardSystem.Hand.ToFormattedString()} back to Deck");
+            for (var i = _env.CardSystem.Hand.Count - 1; i >= 0; i--)
+            {
+                RemoveCardFromHandCommand removeCardFromHandCommand = new RemoveCardFromHandCommand(_env, sender, _env.CardSystem.Hand[i]);
+                _env.CommandInvoker.ExecuteAndRecord(removeCardFromHandCommand);
+            }
+            _env.CardSystem.ReturnDiscardPile();
             Debug.Log($"Put {_env.CardSystem.Hand.ToFormattedString()} back to Deck");
         }
 

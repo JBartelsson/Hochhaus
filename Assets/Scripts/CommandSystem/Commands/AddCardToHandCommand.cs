@@ -6,6 +6,8 @@ namespace CommandSystem.Commands
     {
         private Card _card;
 
+        public Card Card => _card;
+
         public AddCardToHandCommand(Environment env, Item sender, Card card) : base(env, sender)
         {
             _card = card;
@@ -14,6 +16,10 @@ namespace CommandSystem.Commands
         public override void Execute()
         {
             _env.CardSystem.Hand.Add(_card);
+            _env.GameUpdate(Environment.GameStateType.CARD_DRAWN, new Context(_env)
+            {
+                LastDrawnCard = _card
+            });
         }
 
         public override void Undo()
