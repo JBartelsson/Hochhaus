@@ -15,9 +15,15 @@ namespace Items.ItemFunctions
             int fabricAmount = effectData.INTValue;
             if (Random.Range(0, 1f) <= rng)
             {
+                Debug.Log("DrawChance1 succeeded");
+
                 UpdateGameStatCommand updateGameStatCommand =
                     new UpdateGameStatCommand(context.Env, context.CurrentItem, PlayerStats.PlayerStat.FABRIC, fabricAmount );
-                context.Env.CommandInvoker.ExecuteAndRecord(updateGameStatCommand);
+                context.Env.CommandInvoker.Execute(updateGameStatCommand);
+            }
+            else
+            {
+                Debug.Log("DrawChance1 failed");
             }
             return context;
         }

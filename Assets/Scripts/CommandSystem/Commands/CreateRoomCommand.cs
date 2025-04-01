@@ -13,17 +13,17 @@ namespace CommandSystem.Commands
 
         public Card CardToPlace => _cardToPlace;
 
-        public CreateRoomCommand(Environment env, Card cardToPlace, Item sender = null) : base(env, sender)
+        public CreateRoomCommand(Environment env, Card cardToPlace, Item sender = null, CommandBase parent = null) : base(env, sender, parent)
         {
             SetEnv(env);
             _cardToPlace = cardToPlace;
-            _placedRoom = new TowerRoom(_cardToPlace, (Score)_env.PlayerStats.Score.Clone());
+            _placedRoom = new TowerRoom(_cardToPlace, (PlayerStats)_env.PlayerStats.Clone());
             _placedRoom._PlacedCard.CardCopy.Sender = sender;
-            Debug.Log($"PLACED ROOM LAST SCORE: {PlacedRoom.LastScore}");
+            // Debug.Log($"PLACED ROOM LAST SCORE: {PlacedRoom.LastStats}");
         }
 
 
-        public override void Execute()
+        protected override void ExecuteSingle()
         {
             _env.TowerManager.TowerRooms.Add(_placedRoom);
          

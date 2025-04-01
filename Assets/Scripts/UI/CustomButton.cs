@@ -5,7 +5,6 @@ using UnityEngine.Events;
 
 public class CustomButton : CustomUIComponent
 {
-    public ThemeSO theme;
     public UI.UIStyle style;
     public UnityEvent onClick;
     private Button button;

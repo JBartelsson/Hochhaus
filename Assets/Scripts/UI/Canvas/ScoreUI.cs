@@ -23,7 +23,7 @@ public class ScoreUI : UIBase
 
     }
 
-    private void ScoreOnOnScoreChanged(object sender, Score e)
+    private void ScoreOnOnScoreChanged(object sender, PlayerStats e)
     {
     }
 

@@ -4,11 +4,11 @@ namespace CommandSystem.Commands
 {
     public class ReorderItemsCommand : CommandBase
     {
-        public ReorderItemsCommand(Environment env, Item sender) : base(env, sender)
+        public ReorderItemsCommand(Environment env, Item sender, CommandBase parent = null) : base(env, sender, parent)
         {
         }
 
-        public override void Execute()
+        protected override void ExecuteSingle()
         {
         }
 

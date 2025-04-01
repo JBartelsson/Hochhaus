@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CommandSystem.AnimationCommands;
 using CommandSystem.Commands;
@@ -6,6 +7,7 @@ using UnityEngine;
 
 namespace UI.AnimationCommands
 {
+    [Serializable]
     public class AnimationCommandInvoker : CommandInvoker, ISubscriber
     {
         private Queue<Animation> _animationQueue = new Queue<Animation>();
@@ -15,6 +17,7 @@ namespace UI.AnimationCommands
 
         private bool isPlaying;
 
+        [Serializable]
         public class Animation
         {
             public AnimationCommand Command { get; set; }
@@ -34,19 +37,28 @@ namespace UI.AnimationCommands
 
         public void QueueAnimation(AnimationCommand command, bool invisible = false)
         {
+            if (command == null)
+            {
+                return;
+            }
+
+            // Debug.Log($"Adding {command} to animation queue");
+
             _animationQueue.Enqueue(new Animation(command, invisible));
         }
         //Write debug.log in checkqueue so it can be seen in the console
 
         public void CheckQueue()
         {
+            // Debug.Log($"Checking Animation Queue with {_animationQueue.Count} elements");
             if (_animationQueue.Count > 0)
             {
                 StartAnimationBlock();
                 Animation currentAnimation = _animationQueue.Peek();
                 AnimationCommand command = currentAnimation.Command;
+                // Debug.Log("Next command is " + command);
                 _animationQueue.Dequeue();
-                ;
+
 
                 command.SetCallback(NextCommand);
                 command.Execute();
@@ -81,6 +93,7 @@ namespace UI.AnimationCommands
 
         public void NextCommand()
         {
+            // Debug.Log("Next Command Callback Invoked");
             if (_animationQueue.Count == 0)
             {
                 EndAnimationBlock();
@@ -98,6 +111,7 @@ namespace UI.AnimationCommands
 
         public void EndAnimationBlock()
         {
+            // Debug.Log("Ending animation blok");
             isPlaying = false;
             EnvironmentManager.Instance.GetActiveEnvironment().SetBlockActions(false);
         }
@@ -105,30 +119,24 @@ namespace UI.AnimationCommands
         public void InitSubscriptions(UIController uiController)
         {
             ui = uiController;
-            EnvironmentManager.Instance.GetActiveEnvironment().GameStateUpdate += OnGameStateUpdate;
+            EnvironmentManager.Instance.GetActiveEnvironment().CommandInvoker.CommandUpdate += OnGameStateUpdate;
         }
 
-        private void OnGameStateUpdate(Environment arg1, Environment.GameStateType arg2)
+        private void OnGameStateUpdate(Environment arg1)
         {
-            Debug.Log("START OF Game State Update replay log");
-            foreach (var commandInvokerReplayCommand in arg1.CommandInvoker.ReplayCommands)
+            // Debug.Log($"START OF Game State Update replay log Current Index: {lastGameCommandIndex}");
+            for (int i = 0; i < arg1.CommandInvoker.ReplayCommands.Count; i++)
             {
-                Debug.Log(commandInvokerReplayCommand);
+                // Debug.Log(i + " " + arg1.CommandInvoker.ReplayCommands[i]);
             }
 
-            Debug.Log("END OF Game State Update replay log");
+            // Debug.Log("END OF Game State Update replay log");
 
             for (int i = lastGameCommandIndex; i < arg1.CommandInvoker.ReplayCommands.Count; i++)
             {
-                Debug.Log($"Adding {arg1.CommandInvoker.ReplayCommands[i].GetType()} to animation queue");
-                ICommand command = arg1.CommandInvoker.ReplayCommands[i];
-                CheckCreateRoomCommand(command);
-                CheckUpdateGameStatCommand(command);
-                CheckItemAddedCommand(command);
-                CheckReorderItemsCommand(command);
-                CheckAddCardToHandCommand(command);
-                CheckRemoveCardFromHandCommand(command);
-
+                CommandBase command = arg1.CommandInvoker.ReplayCommands[i];
+                AnimationCommand animation = CheckCommand(command);
+                QueueAnimation(animation);
                 AnimationDelay animationDelay2 = new AnimationDelay(ui, 0.2f);
 
                 // QueueAnimation(animationDelay2);
@@ -139,8 +147,72 @@ namespace UI.AnimationCommands
             lastGameCommandIndex = arg1.CommandInvoker.ReplayCommands.Count;
         }
 
-        private void CheckCreateRoomCommand(ICommand command)
+        private AnimationCommand CheckCommand(CommandBase command)
         {
+            AnimationCommand animationCommand = null;
+            if (CheckCompositeCommand(command, out animationCommand))
+            {
+                return animationCommand;
+            }
+
+            if (CheckCreateRoomCommand(command, out animationCommand))
+            {
+                return animationCommand;
+            }
+
+            if (CheckUpdateGameStatCommand(command, out animationCommand))
+            {
+                return animationCommand;
+            }
+
+            if (CheckItemAddedCommand(command, out animationCommand))
+            {
+                return animationCommand;
+            }
+
+            if (CheckAddCardToHandCommand(command, out animationCommand))
+            {
+                return animationCommand;
+            }
+
+            if (CheckRemoveCardFromHandCommand(command, out animationCommand))
+            {
+                return animationCommand;
+            }
+
+            if (CheckReorderItemsCommand(command, out animationCommand))
+            {
+                return animationCommand;
+            }
+
+            return null;
+        }
+
+        private bool CheckCompositeCommand(CommandBase command, out AnimationCommand animationCommand)
+        {
+            animationCommand = null;
+            if (command.Children.Count == 0)
+            {
+                return false;
+            }
+
+            AnimationMultiple animationMultiple = new AnimationMultiple(ui);
+            foreach (var child in command.Children)
+            {
+                AnimationCommand newCommand = CheckCommand(child);
+                if (newCommand == null) continue;
+
+                animationMultiple.AddCommand(
+                    newCommand);
+            }
+
+            animationCommand = animationMultiple;
+            return true;
+        }
+
+        private bool CheckCreateRoomCommand(ICommand command, out AnimationCommand animationCommand)
+        {
+            animationCommand = null;
             if (command.GetType() == typeof(CreateRoomCommand))
             {
                 CreateRoomCommand createRoomCommand = (CreateRoomCommand)command;
@@ -155,80 +227,116 @@ namespace UI.AnimationCommands
                     .AddCommand(animationCreateRoomCommand)
                     .AddCommand(animationMoveTowerVisualSpawn)
                     .AddCommand(effectDisplayCommand);
-                QueueAnimation(animationMultiple);
-                Debug.Log($"Info: {createRoomCommand.PlacedRoom}");
+
+                animationCommand = animationMultiple;
+                return true;
             }
+
+            return false;
         }
 
-        private void CheckUpdateGameStatCommand(ICommand command)
+        private bool CheckUpdateGameStatCommand(ICommand command, out AnimationCommand animationCommand)
         {
+            animationCommand = null;
             if (command.GetType() == typeof(UpdateGameStatCommand))
             {
                 UpdateGameStatCommand updateGameStatCommand = (UpdateGameStatCommand)command;
                 AnimationUpdateScore animationUpdateScore = new AnimationUpdateScore(ui, updateGameStatCommand);
-                AnimationEffectDisplay effectDisplay = new AnimationEffectDisplay(ui, updateGameStatCommand);
-                AnimationMoveTowerVisualSpawn animationMoveTowerVisualSpawn =
-                    new AnimationMoveTowerVisualSpawn(ui, updateGameStatCommand);
+                AnimationOrdered animationOrdered = new AnimationOrdered(ui);
+                if (!updateGameStatCommand.Init)
+                {
+                    AnimationEffectDisplay effectDisplay = new AnimationEffectDisplay(ui, updateGameStatCommand);
+                    AnimationMoveTowerVisualSpawn animationMoveTowerVisualSpawn =
+                        new AnimationMoveTowerVisualSpawn(ui, updateGameStatCommand);
 
-                AnimationMultiple animationMultiple = new AnimationMultiple(ui);
-                animationMultiple
-                    .AddCommand(animationUpdateScore)
-                    .AddCommand(effectDisplay);
-                QueueAnimation(animationMoveTowerVisualSpawn);
-                QueueAnimation(animationMultiple);
-                Debug.Log($"Info: {updateGameStatCommand.ScoreType} {updateGameStatCommand.Value}");
+                    AnimationMultiple animationMultiple = new AnimationMultiple(ui);
+                    animationMultiple
+                        .AddCommand(animationUpdateScore)
+                        .AddCommand(effectDisplay);
+                    animationOrdered.AddCommand(animationMoveTowerVisualSpawn)
+                        .AddCommand(animationMultiple);
+                }
+                else
+                {
+                    animationOrdered.AddCommand(animationUpdateScore);
+                }
+
+                animationCommand = animationOrdered;
+                return true;
             }
+
+            return false;
         }
 
-        private void CheckItemAddedCommand(ICommand command)
+
+        private bool CheckItemAddedCommand(CommandBase command, out AnimationCommand animationCommand)
         {
-            if (command.GetType() == typeof(AddItemCommand))
+            animationCommand = null;
+            if (command.GetType() == typeof(ItemCommand))
             {
-                AddItemCommand addedItemCommand = (AddItemCommand)command;
+                ItemCommand addedItemCommand = (ItemCommand)command;
 
-                AnimationAddedItemCommand animationAddedItemCommand =
-                    new AnimationAddedItemCommand(ui, addedItemCommand);
-                QueueAnimation(animationAddedItemCommand);
+                AnimationItemCommand animationItemCommand =
+                    new AnimationItemCommand(ui, addedItemCommand);
+                animationCommand = animationItemCommand;
+                return true;
             }
+
+            return false;
         }
 
-        private void CheckAddCardToHandCommand(ICommand command)
+        private bool CheckAddCardToHandCommand(ICommand command, out AnimationCommand animationCommand)
         {
-            if(command.GetType() == typeof(AddCardToHandCommand))
+            animationCommand = null;
+            if (command.GetType() == typeof(AddCardToHandCommand))
             {
                 AddCardToHandCommand addCardToHandCommand = (AddCardToHandCommand)command;
-                AnimationAddCardToHand animationAddCardToHandCommand = new AnimationAddCardToHand(ui, addCardToHandCommand);
-                QueueAnimation(animationAddCardToHandCommand);
+                AnimationAddCardToHand animationAddCardToHandCommand =
+                    new AnimationAddCardToHand(ui, addCardToHandCommand);
+                animationCommand = animationAddCardToHandCommand;
+                return true;
             }
-            
+
+            return false;
         }
-        
-        private void CheckRemoveCardFromHandCommand(ICommand command)
+
+        private bool CheckRemoveCardFromHandCommand(ICommand command, out AnimationCommand animationCommand)
         {
+            animationCommand = null;
+
             if (command.GetType() == typeof(RemoveCardFromHandCommand))
             {
                 RemoveCardFromHandCommand removeCardFromHandCommand = (RemoveCardFromHandCommand)command;
-                AnimationRemoveCardFromHand animationRemoveCardFromHand = new AnimationRemoveCardFromHand(ui, removeCardFromHandCommand);
-                QueueAnimation(animationRemoveCardFromHand);
+                AnimationRemoveCardFromHand animationRemoveCardFromHand =
+                    new AnimationRemoveCardFromHand(ui, removeCardFromHandCommand);
+                animationCommand = animationRemoveCardFromHand;
+                return true;
             }
+
+            return false;
         }
 
-        private void CheckReorderItemsCommand(ICommand command)
+        private bool CheckReorderItemsCommand(ICommand command, out AnimationCommand animationCommand)
         {
+            animationCommand = null;
+
             if (command.GetType() == typeof(ReorderItemsCommand))
             {
                 ReorderItemsCommand reorderItemsCommand = (ReorderItemsCommand)command;
 
                 UIReorderItemsCommand uiReorderItemsCommand =
                     new UIReorderItemsCommand(ui);
-                QueueAnimation(uiReorderItemsCommand);
+                animationCommand = uiReorderItemsCommand;
+                return true;
             }
+
+            return false;
         }
 
 
         public void ResetSubscriptions()
         {
-            EnvironmentManager.Instance.GetActiveEnvironment().GameStateUpdate -= OnGameStateUpdate;
+            EnvironmentManager.Instance.GetActiveEnvironment().CommandInvoker.CommandUpdate -= OnGameStateUpdate;
         }
     }
 }

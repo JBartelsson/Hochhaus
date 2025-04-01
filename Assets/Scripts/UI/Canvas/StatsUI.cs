@@ -13,8 +13,6 @@ public class StatsUI : UIBase, ISubscriber
     {
         base.InitSubscriptions(uiController);
 
-        EnvironmentManager.Instance.GetActiveEnvironment().PlayerStats.Stats.UpdateStats += UpdateStats;
-        EnvironmentManager.Instance.GetActiveEnvironment().WeekManager.OnWeekChanged += OnWeekChanged;
     }
 
     private void OnWeekChanged(object sender, WeekManager e)
@@ -28,8 +26,6 @@ public class StatsUI : UIBase, ISubscriber
 
     public override void ResetSubscriptions()
     {
-        EnvironmentManager.Instance.GetActiveEnvironment().PlayerStats.Stats.UpdateStats -= UpdateStats;
-        EnvironmentManager.Instance.GetActiveEnvironment().WeekManager.OnWeekChanged -= OnWeekChanged;
 
 
     }

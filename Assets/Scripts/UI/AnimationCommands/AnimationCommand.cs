@@ -1,7 +1,7 @@
 ﻿using System;
 using DG.Tweening;
 using UnityEngine;
-
+[Serializable]
 public abstract class AnimationCommand : ICommand
 {
     protected Action _callback;
@@ -26,6 +26,7 @@ public abstract class AnimationCommand : ICommand
         ExecuteCmd();
         s.Play();
     }
+
 
     public virtual void Undo()
     {

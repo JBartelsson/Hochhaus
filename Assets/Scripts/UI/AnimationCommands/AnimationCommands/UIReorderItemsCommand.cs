@@ -27,18 +27,17 @@ namespace CommandSystem.AnimationCommands
         private List<T> ReorderList<T>(List<T> list, DraggableManager draggableManager) where T : class
         {
             List<T> newList = new List<T>();
-            for (var i = 0; i < list.Count; i++)
-            {
-                newList.Add(null);
-            }
+            newList.AddRange(list);
+            
+            
             List<int> indices = draggableManager.Items.Select((x) => x.OriginalIndex).ToList();
             foreach (var draggableManagerItem in draggableManager.Items)
             {
                 newList[draggableManagerItem.Index] = list[draggableManagerItem.OriginalIndex];    
                 draggableManagerItem.OriginalIndex = draggableManagerItem.Index;
             }
-            Debug.Log(indices.ToFormattedString());
-            Debug.Log("Reordered List: " + newList.ToFormattedString());
+            // Debug.Log(indices.ToFormattedString());
+            // Debug.Log("Reordered List: " + newList.ToFormattedString());
             return newList;
         }
     }

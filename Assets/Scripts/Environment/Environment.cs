@@ -26,6 +26,7 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
 
     [Header("Debug Settings")] [SerializeField]
     private bool debug;
+
     public WeekManager WeekManager => _weekManager;
 
     public CommandInvoker CommandInvoker => _commandInvoker;
@@ -61,7 +62,9 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
         CARD_REMOVED_FROM_HAND,
         GAME_STAT_UPDATE,
         CARD_DESTROYED_FROM_HAND,
-        ITEM_REMOVED
+        ITEM_REMOVED,
+        EMPTY,
+        MODIFICATION_TRIGGER
     }
 
 
@@ -73,21 +76,19 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
     private Context ctx;
 
     public Context Ctx => ctx;
-
-    public event Action<Environment, GameStateType> GameStateUpdate;
-
     public void Init()
     {
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         if (debug)
         {
             envSettings = debugEnvSettings;
         }
-        #endif
+#endif
+        envSettings.Init();
         ctx = new Context(this);
         _commandInvoker = new CommandInvoker(this);
         _playerStats = new PlayerStats(this);
-       
+
         _cardSystem = new CardSystem(this);
         _inventory = new Inventory(itemLibrary);
         shop = new Shop(this);
@@ -98,31 +99,28 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
         _playerStats.Init();
         _cardSystem.DrawNewHand();
         towerManager.SetEnvironment(this);
-        Invoke(nameof(TestItems), .1f);
-        
-        
+        shop.RerollFree();
+        Invoke(nameof(TestItems),.01f);
 
-        // _inventory.AddArtPerson(itemLibrary.CreateArtPerson(ArtPersonType.PinkSkies));
-        // artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.DrawingAssistant));
-        // artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.Repainter));
-        // artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.TheBlue));
-        // artPersonGroup.AddArtPerson(artPersonLibrary.CreateArtPerson(ArtPersonType.LoudNeighbors));
+
         // towerManager.InitTower();
     }
 
     private void TestItems()
     {
-        AddItemCommand addItemCommand = new AddItemCommand(this, null, itemLibrary.CreateItem(ItemType.BasicPoints),
-            ItemLocations.INVENTORY);
-        _commandInvoker.ExecuteAndRecord(addItemCommand);
-        AddItemCommand addItemCommand23 = new AddItemCommand(this, null, itemLibrary.CreateItem(ItemType.DrawChance1), ItemLocations.INVENTORY);
-        _commandInvoker.ExecuteAndRecord(addItemCommand23);
-        AddItemCommand addItemCommand22 = new AddItemCommand(this, null, itemLibrary.CreateItem(ItemType.ShinyNail), ItemLocations.INVENTORY);
-        _commandInvoker.ExecuteAndRecord(addItemCommand22);
-        AddItemCommand addItemCommand3 = new AddItemCommand(this, null, itemLibrary.CreateItem(ItemType.x2Maybe), ItemLocations.INVENTORY);
-        _commandInvoker.ExecuteAndRecord(addItemCommand3);
-        AddItemCommand addItemCommand4 = new AddItemCommand(this, null, itemLibrary.CreateItem(ItemType.TheRichest), ItemLocations.INVENTORY);
-        _commandInvoker.ExecuteAndRecord(addItemCommand4);
+        ItemCommand itemCommand = new ItemCommand(this, null, itemLibrary.CreateItem(ItemType.BasicPoints),
+            ItemLocations.INVENTORY, ItemCommand.Mode.ADD);
+        _commandInvoker.Execute(itemCommand);
+        // ItemCommand addItemCommand23 = new ItemCommand(this, null, itemLibrary.CreateItem(ItemType.Ladder),
+        //     ItemLocations.INVENTORY, ItemCommand.Mode.ADD);
+        // _commandInvoker.Execute(addItemCommand23);
+        // ItemCommand addItemCommand22 = new ItemCommand(this, null, itemLibrary.CreateItem(ItemType.x2Maybe),
+        //     ItemLocations.INVENTORY, ItemCommand.Mode.ADD);
+        // _commandInvoker.Execute(addItemCommand22);
+        // AddItemCommand addItemCommand3 = new AddItemCommand(this, null, itemLibrary.CreateItem(ItemType.x2Maybe), ItemLocations.INVENTORY);
+        // _commandInvoker.ExecuteAndRecord(addItemCommand3);
+        // AddItemCommand addItemCommand4 = new AddItemCommand(this, null, itemLibrary.CreateItem(ItemType.TheRichest), ItemLocations.INVENTORY);
+        // _commandInvoker.ExecuteAndRecord(addItemCommand4);
     }
 
     private void Update()
@@ -141,7 +139,6 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
             Debug.Log($"oldTime {time}");
             PlayHand();
             Debug.Log($"Duration {(Time.time - time).ToString("G")}");
-
         }
 
         if (Input.GetKeyDown(KeyCode.A))
@@ -151,8 +148,8 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
 
         if (Input.GetKeyDown(KeyCode.S))
         {
-            AddRandomShopItemCommand randomShopItemCommand = new AddRandomShopItemCommand(this, null);
-            _commandInvoker.ExecuteAndRecord(randomShopItemCommand);
+            AddRandomShopItemCommand randomShopItemCommand = new AddRandomShopItemCommand(this, null, ItemClass.Item);
+            _commandInvoker.Execute(randomShopItemCommand);
         }
     }
 
@@ -168,14 +165,13 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
 
     public void EndRoomBuilding()
     {
-        PlayerStats.Score.CalculateScore();
-        Score lastScore = (Score)PlayerStats.Score.Clone();
-        PlayerStats.Score.ResetRoomScore();
+        PlayerStats.CalculateScore();
+        PlayerStats lastScore = (PlayerStats)PlayerStats.Clone();
         GameUpdate(GameStateType.BUILD_ROOM_END, new Context(this)
         {
             LastScore = lastScore
         });
-        
+        PlayerStats.ResetRoomScore();
     }
 
 
@@ -193,8 +189,11 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
             context = new Context(this) { };
         }
 
-        context = _inventory.GameUpdate(gameStateType, context);
-        GameStateUpdate?.Invoke(this, gameStateType);
+        if (gameStateType != GameStateType.EMPTY)
+        {
+            context = _inventory.GameUpdate(gameStateType, context);
+        }
+
         return context;
     }
 }

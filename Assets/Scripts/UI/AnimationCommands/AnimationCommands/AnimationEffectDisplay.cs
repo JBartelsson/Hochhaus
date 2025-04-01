@@ -21,14 +21,13 @@ namespace CommandSystem.AnimationCommands
 
         protected override void ExecuteCmd()
         {
-            string prefix = "";
-            Debug.Log("AnimationEffectDisplay Executing");
-            _effectDisplay.Text.text = prefix;
+            string valueString = "";
+            _effectDisplay.Text.text = valueString;
             if (_command.GetType() == typeof(UpdateGameStatCommand))
             {
                 UpdateGameStatCommand updateGameStatCommand = (UpdateGameStatCommand)_command;
-                prefix = GetInformation(updateGameStatCommand);
-                _effectDisplay.Text.text = prefix + updateGameStatCommand.Value;
+                valueString = GetInformation(updateGameStatCommand);
+                _effectDisplay.Text.text = valueString;
             }
             _effectDisplay.ImageContainer.SetActive(false);
 
@@ -41,13 +40,17 @@ namespace CommandSystem.AnimationCommands
 
                 _effectDisplay.Image.sprite = _command.Sender.ItemData.Image;
             }
+            else
+            {
+                return;
+            }
 
 
             _effectDisplay.CanvasGroup.alpha = 0f;
             s.Append(_effectDisplay.CanvasGroup.DOFade(1f, 0.4f));
                 
             int itemIndex = EnvironmentManager.Instance.GetActiveEnvironment().Inventory.Items.IndexOf(_command.Sender);
-            if (itemIndex != -1)
+            if (itemIndex != -1 && !_command.Sender.ItemData.IsBasic)
             {
                 Transform item = ui.UIInventoryManager.ItemDraggableManager.GetItemByIndex(itemIndex).transform;
                 s.JoinCallback(()=> DoItemScale(item));
@@ -68,30 +71,28 @@ namespace CommandSystem.AnimationCommands
         {
             switch (updateGameStatCommand.PlayerStat)
             {
-                case PlayerStats.PlayerStat.SCORE:
-                    switch (updateGameStatCommand.ScoreType)
-                    {
-                        case Score.ScoreType.xMULT:
-                            return "x";
-                            break;
-                        case Score.ScoreType.POINTS:
-                            return "+";
-                            break;
-                        case Score.ScoreType.DRAWS:
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                case PlayerStats.PlayerStat.SCORE_POINTS:
+                    return "+" + + updateGameStatCommand.Value;
 
                     break;
                 case PlayerStats.PlayerStat.FABRIC:
-                    Debug.Log("MONEYY!!!");
                     return "";
 
                     break;
                 case PlayerStats.PlayerStat.DRAW_COST:
-                    return "Draws +";
+                    return "Draws +" + + updateGameStatCommand.Value;
                     break;
+                case PlayerStats.PlayerStat.SCORE_MULT:
+                    return "x" +  + updateGameStatCommand.Value + "\nx" + updateGameStatCommand.LastStats.xMult;
+
+                case PlayerStats.PlayerStat.SCORE_xMULT:
+                    return "+x" + updateGameStatCommand.Value;
+
+                case PlayerStats.PlayerStat.HAND_SIZE:
+                case PlayerStats.PlayerStat.SHOP_SIZE_ITEMS:
+                case PlayerStats.PlayerStat.SHOP_SIZE_CONSUMABLES:
+                case PlayerStats.PlayerStat.REROLL_COST:
+                case PlayerStats.PlayerStat.REROLL_COST_INCREASE:
                 default:
                     break;
             }

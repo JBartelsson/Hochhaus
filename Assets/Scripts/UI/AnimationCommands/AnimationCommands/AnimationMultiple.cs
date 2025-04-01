@@ -29,6 +29,11 @@ namespace CommandSystem.AnimationCommands
         
         public AnimationMultiple AddCommand(AnimationCommand command)
         {
+            if (command == null)
+            {
+                Debug.LogWarning("Command is null");
+                return this;
+            }
             _animationCommands.Add(command);
             command.SetCallback(CountCallbacks);
             return this;
@@ -43,10 +48,29 @@ namespace CommandSystem.AnimationCommands
 
         protected override void ExecuteCmd()
         {
+            
             foreach (var animationCommand in _animationCommands)
             {
                 animationCommand.Execute();
             }
+        }
+
+        public override string ToString()
+        {
+            string s = $"{this.GetType()}";
+            if (_animationCommands.Count == 0)
+            {
+                return s;
+            }
+
+            s += ": ";
+            foreach (var commandBase in _animationCommands)
+            {
+                s += commandBase.ToString() + ",";
+            }
+
+            s.Remove(s.Length - 1);
+            return s;
         }
     }
 }

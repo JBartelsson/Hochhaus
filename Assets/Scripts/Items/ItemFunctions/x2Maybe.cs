@@ -14,8 +14,8 @@ namespace Items.ItemFunctions
             if (ItemUtility.CheckRandom(effectData.FloatValue))
             {
                 UpdateGameStatCommand updateGameStatCommand =
-                    new UpdateGameStatCommand(context.Env, context.CurrentItem, Score.ScoreType.xMULT, effectData.MultMult);
-                context.Env.CommandInvoker.ExecuteAndRecord(updateGameStatCommand);
+                    new UpdateGameStatCommand(context.Env, context.CurrentItem, PlayerStats.PlayerStat.SCORE_MULT, effectData.MultMult);
+                context.Env.CommandInvoker.Execute(updateGameStatCommand);
             }
 
             return context;

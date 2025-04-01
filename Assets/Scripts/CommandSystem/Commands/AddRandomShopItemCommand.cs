@@ -1,19 +1,25 @@
 ﻿using Items;
+using UnityEngine;
 
 namespace CommandSystem.Commands
 {
     public class AddRandomShopItemCommand : CommandBase
     {
-        public AddRandomShopItemCommand(Environment env, Item sender) : base(env, sender)
+        private ItemClass _itemClass;
+
+        public AddRandomShopItemCommand(Environment env, Item sender, ItemClass itemClass, CommandBase parent = null) : base(env, sender, parent)
         {
+            _itemClass = itemClass;
         }
 
-        public override void Execute()
+        protected override void ExecuteSingle()
         {
-            Item _itemToAdd = _env.ItemLibrary.CreateRandomItem();
-            AddItemCommand addItemCommand = new AddItemCommand(_env, Sender, _itemToAdd, ItemLocations.SHOP);
-            _env.CommandInvoker.ExecuteAndRecord(addItemCommand);
-            
+            Item _itemToAdd = _env.ItemLibrary.CreateRandomItem(_itemClass);
+
+            if (_itemToAdd == null) return;
+
+            ItemCommand itemCommand = new ItemCommand(_env, Sender, _itemToAdd, ItemLocations.SHOP, ItemCommand.Mode.ADD);
+            AddChild(itemCommand);
         }
 
         public override void Undo()

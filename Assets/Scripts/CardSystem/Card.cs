@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using Items;
 using UnityEngine;
 [Serializable]
-public class Card: ICloneable
+public class Card: EnvBase, ICloneable
 {
     private AppartmentSO appartmentReference;
     private Item sender;
+    private List<Item> mods = new List<Item>();
 
     public Item Sender
     {
@@ -16,19 +17,17 @@ public class Card: ICloneable
 
     public AppartmentSO AppartmentReference => appartmentReference;
 
-    public Card(AppartmentSO appartmentReference, Item sender = null)
+    public Card(AppartmentSO appartmentReference, Environment env, Item sender = null) : base(env)
     {
         this.appartmentReference = appartmentReference;
         RuntimePoints = this.appartmentReference.BasePoints;
+        appartmentReference.Modifications.ForEach(mod =>
+        {
+            mods.Add(env.ItemLibrary.CreateItem(mod.ItemType));
+            Debug.Log("Adding mod: " + mod + " to card: " + this);
+        });
         this.sender = sender;
     }
-
-    public Card(AppartmentSO appartmentReference, float runtimePoints)
-    {
-        this.appartmentReference = appartmentReference;
-        this.RuntimePoints = runtimePoints;
-    }
-
 
     public override string ToString()
     {
@@ -38,7 +37,7 @@ public class Card: ICloneable
 
     public object Clone()
     {
-        return new Card(appartmentReference, this.RuntimePoints);
+        return new Card(appartmentReference, env, null);
     }
 
     public float RuntimePoints { get; set; }

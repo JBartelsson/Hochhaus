@@ -8,6 +8,10 @@
         x2Maybe = 7,
         ShortyBoosty = 8,
         ShinyNail = 9,
-        TheRichest = 10
+        TheRichest = 10,
+        Ladder = 11,
+        MOD_MachineRoom = 256,
+        MOD_SwimmingPool = 257,
+        MOD_Maisonette = 258,
     }
 }

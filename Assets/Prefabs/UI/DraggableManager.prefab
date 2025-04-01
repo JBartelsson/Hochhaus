@@ -114,6 +114,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemPrefab: {fileID: 776632762841451504, guid: e2b663a260461e34e97d3c0568769b34, type: 3}
   vertical: 0
+  inverted: 0
+  invertedRows: 0
+  rows: 1
+  reorderable: 1
 --- !u!1001 &2718896180828171486
 PrefabInstance:
   m_ObjectHideFlags: 0

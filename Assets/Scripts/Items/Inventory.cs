@@ -70,7 +70,6 @@ namespace Items
             {
                 context.CurrentItem = item;
                 context = item.GameUpdate(gameStateType, context);
-                Debug.Log($"Scoring context on {item}");
             }
 
             return context;

@@ -7,6 +7,7 @@ using CommandSystem.AnimationCommands;
 using Items;
 using UI;
 using Unity.VisualScripting;
+using UnityEngine.Serialization;
 using Object = System.Object;
 
 public abstract class DraggableManager : UIBase
@@ -14,6 +15,12 @@ public abstract class DraggableManager : UIBase
     [SerializeField] protected DraggableItem itemPrefab; // Das Prefab für die Items
     [SerializeField] protected bool vertical;
     [SerializeField] protected bool inverted;
+    [SerializeField] protected bool invertedRows;
+    [SerializeField] protected int rows = 1;
+    [SerializeField] protected bool reorderable;
+
+    public bool Reorderable => reorderable;
+
     private HorizontalLayoutGroup layoutGroup; // Das Layout Group
     protected List<DraggableItem> items = new List<DraggableItem>();
 
@@ -61,12 +68,12 @@ public abstract class DraggableManager : UIBase
         UpdateItemPositions();
     }
 
-    protected DraggableItem AddItem()
+    protected DraggableItem AddDraggableItem(int index, bool isPinned = false)
     {
         DraggableItem itemObject = Instantiate(itemPrefab, transform);
         items.Add(itemObject);
         itemObject.name = "Item " + items.Count;
-        itemObject.Init(this, items.Count - 1);
+        itemObject.Init(this, index, isPinned);
         UpdateItemPositions();
         return itemObject;
     }
@@ -79,43 +86,60 @@ public abstract class DraggableManager : UIBase
         }
 
         float totalSpace;
-        float prefix = inverted ? -1 : 1;
+        float spacingX;
+        float spacingY;
+        float prefixX = inverted ? -1 : 1;
+        float prefixY = invertedRows ? -1 : 1;
+        float width = GetComponent<RectTransform>().rect.width;
+        float height = GetComponent<RectTransform>().rect.height;
         if (!vertical)
         {
-            totalSpace = GetComponent<RectTransform>().rect.width;
+            spacingX = Mathf.Max(minSpacing, width * rows / (items.Count + 1)) ;
+            spacingY = Mathf.Max(minSpacing, height / (rows));
         }
         else
         {
-            totalSpace = GetComponent<RectTransform>().rect.height;
+            spacingX = Mathf.Max(minSpacing, width / (rows));
+            spacingY = Mathf.Max(minSpacing, height / (items.Count + 1));
         }
-
-        Debug.Log(totalSpace);
-        float itemWidth = items[0].RectTransform.rect.width;
-        Debug.Log(itemWidth);
 
 
         // Falls die Items zu viele für den Platz sind, Spacing reduzieren (Überlappung)
-        float spacing = Mathf.Max(minSpacing, totalSpace / (items.Count + 1));
         if (items.Count == 1)
         {
-            spacing = totalSpace / 2f;
+            spacingX = vertical ? height / 2f : width / 2f;
         }
 
+        int rowItemAmount = Mathf.CeilToInt((float)items.Count / rows);
+        int row = 0;
+        int column = 1;
         for (int i = 0; i < items.Count; i++)
         {
-            float spacingOffset = (i + 1) * spacing;
+            float spacingOffsetX = (column) * spacingX;
+            float spacingOffsetY = (row) * spacingY;
             Vector3 newPosition;
             if (!vertical)
             {
-                newPosition = new Vector3(prefix * spacingOffset, 0, 0);
+                newPosition = new Vector3(prefixX * spacingOffsetX, prefixY * spacingOffsetY, 0);
             }
             else
             {
-                newPosition = new Vector3(0, prefix * spacingOffset, 0);
+                newPosition = new Vector3(prefixX * spacingOffsetY, prefixY * spacingOffsetX, 0);
+
             }
 
             items[i].SetTargetPos(newPosition);
             items[i].MoveToTargetPos();
+            if (column == rowItemAmount)
+            {
+
+                row++;
+                column = 1;
+            }
+            else
+            {
+                column++;
+            }
         }
     }
 
@@ -129,8 +153,7 @@ public abstract class DraggableManager : UIBase
             UI.AnimationCommandInvoker.QueueAnimation(reorderItemsCommand);
             UI.AnimationCommandInvoker.StartPlaying();
 
-            draggableItem.transform.SetSiblingIndex(draggableItem.Index);
-            draggableItem.MoveToTargetPos();
+           
             return;
         }
 
@@ -140,6 +163,7 @@ public abstract class DraggableManager : UIBase
         for (int i = 0; i < items.Count; i++)
         {
             if (items[i].Index == draggableItem.Index) continue;
+            if (items[i].IsPinned) continue;
 
             float distance = Vector3.Distance(draggableItem.RectTransform.localPosition,
                 items[i].TargetPosition);
@@ -199,6 +223,7 @@ public abstract class DraggableManager : UIBase
     {
         for (var i = 0; i < items.Count; i++)
         {
+
             DraggableItem draggableItem = items[i];
             if (draggableItem.Index == index)
             {
@@ -212,11 +237,10 @@ public abstract class DraggableManager : UIBase
                         item.Index--;
                     }
                 }
+
                 return;
             }
         }
-
-        
     }
 
 

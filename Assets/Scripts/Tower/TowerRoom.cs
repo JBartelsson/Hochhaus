@@ -8,8 +8,8 @@ using UnityEngine.Serialization;
 public class TowerRoom : IResetHandler
 {
     public PlacedCard _PlacedCard;
-    private Score lastScore;
-    public Score LastScore => lastScore;
+    private PlayerStats lastStats;
+    public PlayerStats LastStats => lastStats;
     
     
     [Serializable]
@@ -32,10 +32,10 @@ public class TowerRoom : IResetHandler
         OnUpdate?.Invoke(this, EventArgs.Empty);
     }
 
-    public TowerRoom(Card card, Score lastScore)
+    public TowerRoom(Card card, PlayerStats lastStats)
     {
         _PlacedCard = new PlacedCard(card);
-        this.lastScore = lastScore;
+        this.lastStats = lastStats;
     }
    
     public void Reset()

@@ -87,6 +87,13 @@ MonoBehaviour:
     weight: 8
   - rarity: 2
     weight: 1
+  rarityPrices:
+  - rarity: 0
+    weight: 2
+  - rarity: 1
+    weight: 5
+  - rarity: 2
+    weight: 10
 --- !u!1 &4325655533602039970
 GameObject:
   m_ObjectHideFlags: 0
@@ -138,7 +145,10 @@ MonoBehaviour:
       HandSize: 3
       Fabric: 20
       DrawCost: 1
-      startFabric: 20
+      RerollCost: 1
+      RerollCostIncrease: 1
+      ShopSizeItems: 2
+      ShopSizeConsumables: 1
   debugEnvSettings:
     StartDeck: {fileID: 11400000, guid: 7ffe19b9568d10d4289c6c53e433e876, type: 2}
     startEnvStats:
@@ -146,7 +156,10 @@ MonoBehaviour:
       HandSize: 3
       Fabric: 20
       DrawCost: 1
-      startFabric: 20
+      RerollCost: 0
+      RerollCostIncrease: 0
+      ShopSizeItems: 0
+      ShopSizeConsumables: 0
   towerManager: {fileID: 3706129975220936898}
   itemLibrary: {fileID: 1730986241064776238}
   _weekManager: {fileID: 0}

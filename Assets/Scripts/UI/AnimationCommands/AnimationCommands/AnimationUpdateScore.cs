@@ -24,7 +24,13 @@ namespace CommandSystem.AnimationCommands
                 case PlayerStats.PlayerStat.FABRIC:
                     UpdateFabric();
                     break;
-                case PlayerStats.PlayerStat.SCORE:
+                case PlayerStats.PlayerStat.SCORE_POINTS:
+                    UpdateScore();
+                    break;
+                case PlayerStats.PlayerStat.SCORE_MULT:
+                    UpdateScore();
+                    break;
+                case PlayerStats.PlayerStat.SCORE_xMULT:
                     UpdateScore();
                     break;
                 case PlayerStats.PlayerStat.DRAW_COST:
@@ -32,12 +38,34 @@ namespace CommandSystem.AnimationCommands
                     break;
                 case PlayerStats.PlayerStat.HAND_SIZE:
                     break;
+                
+                case PlayerStats.PlayerStat.SHOP_SIZE_ITEMS:
+                case PlayerStats.PlayerStat.SHOP_SIZE_CONSUMABLES:
+                case PlayerStats.PlayerStat.REROLL_COST:
+                    UpdateRerollCost();
+                    break;
+                case PlayerStats.PlayerStat.REROLL_COST_INCREASE:
+                case PlayerStats.PlayerStat.HANDS_UNTIL_INCREASE:
+
+                case PlayerStats.PlayerStat.HANDS_LEFT:
+                    UpdateHands();
+                    break;
+                case PlayerStats.PlayerStat.HANDS_TOTAL:
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    break;
             }
             
         }
 
+        private void UpdateRerollCost()
+        {
+            ui.UIInventoryManager.RerollText.text = "Reroll (" + _updateGameStatCommand.NewValue.ToString() +")";
+        }
+
+        private void UpdateHands()
+        {
+            ui.DrawUI.DrawIncreaseText.text = _updateGameStatCommand.NewValue.ToString();
+        }
         private void UpdateFabric()
         {
             ui.DrawUI.FabricText.text = _updateGameStatCommand.NewValue.ToString();
@@ -50,21 +78,22 @@ namespace CommandSystem.AnimationCommands
         
         private void UpdateScore()
         {
-            Score newScore = _updateGameStatCommand.NewScore;
-            float oldScore = _updateGameStatCommand.LastScore.TotalScore;
-            Tween scoreTween = DOTween.To(() => oldScore, x => oldScore = x, _updateGameStatCommand.NewScore.TotalScore, 0.1f).OnUpdate(() => ui.ScoreUI.ScoreText.text = Mathf.FloorToInt(oldScore).ToString(""));
+            PlayerStats newStats = _updateGameStatCommand.NewStats;
+            float oldScore = _updateGameStatCommand.LastStats.Stats.TotalScore;
+            Tween scoreTween = DOTween.To(() => oldScore, x => oldScore = x, _updateGameStatCommand.NewStats.Stats.TotalScore, 0.1f).OnUpdate(() => ui.ScoreUI.ScoreText.text = Mathf.FloorToInt(oldScore).ToString(""));
+            if (_updateGameStatCommand.Init) return;
+            
             s.Append(scoreTween);
             RoomVisual roomVisual = ui.TowerVisual.AppartmentVisuals.Last();
-            Debug.Log($"Sequence Active: {s.IsActive()}");
            
             // if (newScore.RoomScore == roomVisual.TowerRoom._PlacedCard.CardCopy.AppartmentReference.Height) return;
             if (roomVisual != null)
             {
                 
-                s.Join(roomVisual.Pivot.transform.DOScaleY(newScore.RoomScore, 0.5f));
+                s.Join(roomVisual.Pivot.transform.DOScaleY(newStats.RoomScore, 0.5f));
             }
+            Debug.Log("Animation Update new Stats: " + newStats);
 
-            Debug.Log($"Update Score: {newScore}");
         }
     }
 }

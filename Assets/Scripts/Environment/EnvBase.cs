@@ -1,4 +1,7 @@
-﻿public class EnvBase
+﻿using System;
+
+[Serializable]
+public class EnvBase
     {
         protected Environment env;
 

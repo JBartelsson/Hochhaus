@@ -15,8 +15,8 @@ namespace Items.ItemFunctions
             if (context.Env.TowerManager.TowerRooms.Last()._PlacedCard.CardCopy.AppartmentReference.AppartmentName == "Shorty")
             {
                 UpdateGameStatCommand updateGameStatCommand =
-                    new UpdateGameStatCommand(context.Env, context.CurrentItem, Score.ScoreType.POINTS, effectData.PointEffect);
-                context.Env.CommandInvoker.ExecuteAndRecord(updateGameStatCommand);
+                    new UpdateGameStatCommand(context.Env, context.CurrentItem, PlayerStats.PlayerStat.SCORE_POINTS, effectData.PointEffect);
+                context.Env.CommandInvoker.Execute(updateGameStatCommand);
             }
             return context;
         }

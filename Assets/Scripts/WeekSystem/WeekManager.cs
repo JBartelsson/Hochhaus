@@ -19,9 +19,9 @@ namespace WeekSystem
             Reset();
         }
 
-        public bool IsLevelSuccessful(Score roundScore)
+        public bool IsLevelSuccessful(PlayerStats roundScore)
         {
-            return weekData.GetScoreAt(currentWeek) <= roundScore.TotalScore;
+            return weekData.GetScoreAt(currentWeek) <= roundScore.Stats.TotalScore;
         }
 
         public void NextWeek()

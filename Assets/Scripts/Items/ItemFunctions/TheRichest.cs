@@ -15,10 +15,10 @@ namespace Items.ItemFunctions
             Debug.Log($"LAST BUILDING SCORE IS {context.LastScore.RoomScore}");;
             if (context.LastScore.RoomScore >= effectData.FloatValue)
             {
-                Card newCard = new Card(effectData.EffectRoom1);
+                Card newCard = new Card(effectData.EffectRoom1, context.Env, context.CurrentItem);
                 CreateRoomCommand createRoomCommand =
                     new CreateRoomCommand(context.Env, newCard, context.CurrentItem);
-                context.Env.CommandInvoker.ExecuteAndRecord(createRoomCommand);
+                context.Env.CommandInvoker.Execute(createRoomCommand);
             }
             return context;
         }

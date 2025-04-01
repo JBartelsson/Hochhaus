@@ -6,7 +6,6 @@ namespace Items
     [Serializable]
     public class Item : IGameEventReceivable
     {
-        
 
         private IGameEventReceivable _updateFunction;
 
@@ -16,6 +15,13 @@ namespace Items
 
         private bool isInShop;
         
+        private int _price;
+
+        public int Price
+        {
+            get => _price;
+            set => _price = value;
+        }
 
         public bool IsInShop
         {

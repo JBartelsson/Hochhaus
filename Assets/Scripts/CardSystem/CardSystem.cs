@@ -82,7 +82,7 @@ public class CardSystem : IResetHandler, IInitHandler
         for (int i = 0; i < numberToDraw; ++i)
         {
             DrawRandomCardCommand drawRandomCardCommand = new DrawRandomCardCommand(_env, null);
-            _env.CommandInvoker.ExecuteAndRecord(drawRandomCardCommand);
+            _env.CommandInvoker.Execute(drawRandomCardCommand);
         }
     }
 
@@ -92,7 +92,7 @@ public class CardSystem : IResetHandler, IInitHandler
 
     public void DrawFullHand(bool putBack = true)
     {
-        Debug.Log(_env.PlayerStats.Stats.HandSize);
+        // Debug.Log(_env.PlayerStats.Stats.HandSize);
         for (int i = hand.Count; i < _env.PlayerStats.Stats.HandSize; i++)
         {
             DrawRandom(1);
@@ -156,7 +156,7 @@ public class CardSystem : IResetHandler, IInitHandler
         {
             for (int i = 0; i < colorEntry.Amount; i++)
             {
-                AddCard(new Card(colorEntry.Color));
+                AddCard(new Card(colorEntry.Color, _env));
             }
         }
 
@@ -178,10 +178,13 @@ public class CardSystem : IResetHandler, IInitHandler
         }
         
         UpdateGameStatCommand updateGameStatCommand = new UpdateGameStatCommand(_env, null, PlayerStats.PlayerStat.FABRIC, -_env.PlayerStats.Stats.DrawCost);
-        _env.CommandInvoker.ExecuteAndRecord(updateGameStatCommand);
+        _env.CommandInvoker.Execute(updateGameStatCommand);
+        Debug.Log("HANDS UPDATE YEAH!");
+        UpdateGameStatCommand updateHands = new UpdateGameStatCommand(_env, null, PlayerStats.PlayerStat.HANDS_TOTAL, 1);
+        _env.CommandInvoker.Execute(updateHands);
         
         ReorderItemsCommand reorderItemsCommand = new ReorderItemsCommand(_env, null);
-        _env.CommandInvoker.ExecuteAndRecord(reorderItemsCommand);
+        _env.CommandInvoker.Execute(reorderItemsCommand);
         List<Card> handCopy = new List<Card>(_env.CardSystem.Hand);
         foreach (var card in handCopy)
         {
@@ -192,17 +195,18 @@ public class CardSystem : IResetHandler, IInitHandler
             };
             Debug.Log($"NEXT CMMMAND IS: {newCtx.NextCommand}");
             _env.GameUpdate(Environment.GameStateType.BUILD_ROOM_START, newCtx);
-            _env.CommandInvoker.ExecuteAndRecord(createRoomCommand);
+            _env.CommandInvoker.Execute(createRoomCommand);
             RemoveCardFromHandCommand removeCardFromHandCommand = new RemoveCardFromHandCommand(_env, null, card);
-            _env.CommandInvoker.ExecuteAndRecord(removeCardFromHandCommand);
+            _env.CommandInvoker.Execute(removeCardFromHandCommand);
         }
 
         PutHandBackToDeckCommand putHandBackToDeckCommand = new PutHandBackToDeckCommand(_env, null);
-        _env.CommandInvoker.ExecuteAndRecord(putHandBackToDeckCommand);
+        _env.CommandInvoker.Execute(putHandBackToDeckCommand);
         
 
         DrawNewHand();
     }
+
 
 
     public override string ToString()

@@ -12,13 +12,13 @@ namespace CommandSystem.Commands
         public Card Card => _card;
         public bool Destroy { get;  }
 
-        public RemoveCardFromHandCommand(Environment env, Item sender, Card card, bool destroy = false) : base(env, sender)
+        public RemoveCardFromHandCommand(Environment env, Item sender, Card card, bool destroy = false , CommandBase parent = null) : base(env, sender, parent)
         {
             _card = card;
             Destroy = destroy;
         }
 
-        public override void Execute()
+        protected override void ExecuteSingle()
         {
             oldIndex = _env.CardSystem.Hand.IndexOf(_card);
             _env.CardSystem.Hand.Remove(_card);

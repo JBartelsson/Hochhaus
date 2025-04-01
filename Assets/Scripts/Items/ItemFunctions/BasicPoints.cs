@@ -11,9 +11,9 @@ namespace Items.ItemFunctions
             if (gameStateType != Environment.GameStateType.BUILD_ROOM) return context;
 
             TowerRoom placedRoom = context.Env.TowerManager.TowerRooms.Last();
-            UpdateGameStatCommand updateScore = new UpdateGameStatCommand(context.Env, context.CurrentItem, Score.ScoreType.POINTS, placedRoom._PlacedCard.CardCopy.RuntimePoints);
+            UpdateGameStatCommand updateScore = new UpdateGameStatCommand(context.Env, context.CurrentItem, PlayerStats.PlayerStat.SCORE_POINTS, placedRoom._PlacedCard.CardCopy.RuntimePoints);
             Debug.Log($"placed Room {placedRoom}");
-            context.Env.CommandInvoker.ExecuteAndRecord(updateScore);
+            context.Env.CommandInvoker.Execute(updateScore);
             return context;
         }
     }

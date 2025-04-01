@@ -13,7 +13,7 @@ namespace CommandSystem.AnimationCommands
 
         protected override void ExecuteCmd()
         {
-            ui.UIInventoryManager.HandCardManager.AddHandItem(_addCardToHandCommand.Card);
+            ui.UIInventoryManager.HandCardManager.AddHandItem(_addCardToHandCommand);
 
         }
     }

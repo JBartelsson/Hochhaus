@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Items;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -15,5 +16,9 @@ public class AppartmentSO : ScriptableObject
     [SerializeField] private Color appartmentColor;
     
     public Color AppartmentColor => appartmentColor;
+
+    [SerializeField] private List<ItemData> modifications;
+    
+    public List<ItemData> Modifications => modifications;
 
 }

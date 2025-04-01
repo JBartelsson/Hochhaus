@@ -20,6 +20,8 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     public RectTransform RectTransform => rectTransform;
 
     private Vector2 targetPosition;
+    
+    public bool IsPinned { get; set; }
 
     public Vector2 TargetPosition
     {
@@ -48,11 +50,12 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         rectTransform = GetComponent<RectTransform>();
     }
 
-    public void Init(DraggableManager draggableManager, int index)
+    public void Init(DraggableManager draggableManager, int index, bool isPinned = false)
     {
         this._draggableManager = draggableManager;
         this.index = index;
         originalIndex = index;
+        IsPinned = isPinned;
     }
 
     public void Start()
@@ -85,13 +88,18 @@ public class DraggableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         // Statt direkt zu setzen, sanft animieren
         transform.DOKill();
         transform.DORotate(new Vector3(0, 0, rotationZ), smoothTime, RotateMode.Fast);
-        _draggableManager.CalculateItemDrag(this, true);
+        if (_draggableManager.Reorderable)
+            _draggableManager.CalculateItemDrag(this, true);
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (_draggableManager.Reorderable)
+
+            _draggableManager.CalculateItemDrag(this);
         Debug.Log("END DRAg");
-        _draggableManager.CalculateItemDrag(this);
+        transform.SetSiblingIndex(Index);
+        MoveToTargetPos();
     }
 
     public void SetTargetPos(Vector2 _targetPosition)

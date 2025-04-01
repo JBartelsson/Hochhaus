@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9c4792f35bd4fbfbd43ad21c1092c88, type: 3}
   m_Name: DrawChance1
   m_EditorClassIdentifier: 
+  itemClass: 0
+  isBasic: 0
   displayName: DrawChance1
   image: {fileID: 21300000, guid: ff51cde1bf05cc045be321764bb3ac54, type: 3}
   description: 
@@ -22,8 +24,17 @@ MonoBehaviour:
   pointGain: 0
   multGain: 0
   multMult: 0
+  fabric: 0
+  fabricMult: 0
   effectRoom1: {fileID: 0}
   effectColor2: {fileID: 0}
   effectColor3: {fileID: 0}
   floatValue: 0.1
   intValue: 1
+  intValue2: 0
+  stats:
+    StatsList:
+    - stat: 0
+      value: 1
+    - stat: 14
+      value: 0.1

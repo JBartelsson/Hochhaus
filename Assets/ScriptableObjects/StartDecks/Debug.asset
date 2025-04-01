@@ -21,3 +21,5 @@ MonoBehaviour:
     Amount: 10
   - Color: {fileID: 11400000, guid: 0c05ec859b7f10147b2d2a0f8ca1c734, type: 2}
     Amount: 0
+  - Color: {fileID: 11400000, guid: b418c4198c6dfbb43adf686d311d1077, type: 2}
+    Amount: 10

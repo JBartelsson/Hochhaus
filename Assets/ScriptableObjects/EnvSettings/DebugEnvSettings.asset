@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6b0bca41b554764b5992119a0c0c456, type: 3}
+  m_Name: DebugEnvSettings
+  m_EditorClassIdentifier: 
+  StartDeck: {fileID: 11400000, guid: 7ffe19b9568d10d4289c6c53e433e876, type: 2}
+  startEnvStats:
+    StatsList:
+    - stat: 0
+      value: 20
+    - stat: 4
+      value: 0
+    - stat: 5
+      value: 3
+    - stat: 6
+      value: 3
+    - stat: 7
+      value: 0
+    - stat: 8
+      value: 3
+    - stat: 9
+      value: 1
+    - stat: 10
+      value: 2

@@ -33,7 +33,8 @@ namespace CommandSystem.AnimationCommands
                 DraggableItem item = ui.UIInventoryManager.HandCardManager.GetItemByIndex(0);
                 Vector3 oldItemScale = item.transform.localScale;
                 s.Append(item.transform.DOScale(oldItemScale * scaleAmount, duration))
-                    .Append(item.transform.DOScale(oldItemScale, duration))
+                    // .Append(item.transform.DOScale(oldItemScale, duration))
+                    .AppendCallback(() => item.gameObject.SetActive(false))
                     ;
             }
 

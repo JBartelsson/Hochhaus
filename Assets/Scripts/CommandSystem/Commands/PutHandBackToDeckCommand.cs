@@ -5,18 +5,18 @@ namespace CommandSystem.Commands
 {
     public class PutHandBackToDeckCommand : CommandBase
     {
-        public PutHandBackToDeckCommand(Environment env, Item sender) : base(env, sender)
+        public PutHandBackToDeckCommand(Environment env, Item sender, CommandBase parent = null) : base(env, sender, parent)
         {
             
         }
 
-        public override void Execute()
+        protected override void ExecuteSingle()
         {
             Debug.Log($"Put {_env.CardSystem.Hand.ToFormattedString()} back to Deck");
             for (var i = _env.CardSystem.Hand.Count - 1; i >= 0; i--)
             {
                 RemoveCardFromHandCommand removeCardFromHandCommand = new RemoveCardFromHandCommand(_env, sender, _env.CardSystem.Hand[i]);
-                _env.CommandInvoker.ExecuteAndRecord(removeCardFromHandCommand);
+                _env.CommandInvoker.Execute(removeCardFromHandCommand);
             }
             _env.CardSystem.ReturnDiscardPile();
             Debug.Log($"Put {_env.CardSystem.Hand.ToFormattedString()} back to Deck");

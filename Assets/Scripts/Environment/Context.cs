@@ -13,9 +13,10 @@ public class Context
 
     public CommandBase NextCommand;
 
-    public Score LastScore;
+    public PlayerStats LastScore;
 
     public Card LastDrawnCard;
+
 
     public UpdateGameStatCommand UpdateGameStatCommand;
     public Context(Environment env)

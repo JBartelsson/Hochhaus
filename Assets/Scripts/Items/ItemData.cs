@@ -7,9 +7,15 @@ namespace Items
 
     public class ItemData : ScriptableObject
     {
-        
-        
-        [Header("General Settings")]
+
+
+        [Header("General Settings")] [SerializeField]
+        private ItemClass itemClass;
+
+        public ItemClass ItemClass => itemClass;
+        [SerializeField] private bool isBasic;
+
+        public bool IsBasic => isBasic;
 
         [SerializeField] private string displayName;
 
@@ -39,16 +45,25 @@ namespace Items
         [SerializeField] private float pointGain;
         [SerializeField] private float multGain;
         [SerializeField] private float multMult;
+        [SerializeField] private float fabric;
+        [SerializeField] private float fabricMult;
 
 
-        [FormerlySerializedAs("effectColor1")] [SerializeField] private AppartmentSO effectRoom1;
+        [SerializeField] private AppartmentSO effectRoom1;
         [SerializeField] private AppartmentSO effectColor2;
         [SerializeField] private AppartmentSO effectColor3;
         [SerializeField] private float floatValue;
         [SerializeField] private int intValue;
+        [SerializeField] private int intValue2;
+
 
         public int INTValue => intValue;
+        
+        public int INTValue2 => intValue2;
         public float MultMult => multMult;
+        public float Fabric => fabric;
+        
+        public float FabricMult => fabricMult;
 
 
         public string DisplayName => displayName;
