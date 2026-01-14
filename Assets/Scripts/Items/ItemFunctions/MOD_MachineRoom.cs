@@ -13,7 +13,7 @@ namespace Items.ItemFunctions
             UpdateGameStatCommand fabric = new UpdateGameStatCommand(context.Env, context.CurrentItem,
                 PlayerStats.PlayerStat.FABRIC, effectData.Fabric);
             UpdateGameStatCommand fabricMult = new UpdateGameStatCommand(context.Env, context.CurrentItem,
-                PlayerStats.PlayerStat.FABRIC, effectData.FabricMult);
+                PlayerStats.PlayerStat.FABRIC_xMULT, effectData.FabricMult);
             context.Env.CommandInvoker.Execute(fabric);
             context.Env.CommandInvoker.Execute(fabricMult);
             return context;

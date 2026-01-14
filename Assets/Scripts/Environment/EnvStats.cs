@@ -19,6 +19,11 @@ public class EnvStats: ICloneable, IInitHandler
         get => Stats[PlayerStats.PlayerStat.FABRIC];
         set => Stats[PlayerStats.PlayerStat.FABRIC] = value;
     }
+    public float FabricTotal
+    {
+        get => Stats[PlayerStats.PlayerStat.FABRIC_TOTAL];
+        set => Stats[PlayerStats.PlayerStat.FABRIC_TOTAL] = value;
+    }
     public float FabricMult
     {
         get => Stats[PlayerStats.PlayerStat.FABRIC_MULT];
@@ -85,10 +90,10 @@ public class EnvStats: ICloneable, IInitHandler
         set => Stats[PlayerStats.PlayerStat.HANDS_TOTAL] = value;
     }
     
-    public float TotalScore
+    public float ScoreTotal
     {
-        get => Stats[PlayerStats.PlayerStat.TOTAL_SCORE];
-        set => Stats[PlayerStats.PlayerStat.TOTAL_SCORE] = value;
+        get => Stats[PlayerStats.PlayerStat.SCORE_TOTAL];
+        set => Stats[PlayerStats.PlayerStat.SCORE_TOTAL] = value;
     }
     
     //property for TOtal Score
@@ -121,7 +126,7 @@ public class EnvStats: ICloneable, IInitHandler
 
     public bool CanDraw()
     {
-        return Fabric - DrawCost >= 0;
+        return FabricTotal - DrawCost >= 0;
     }
 
     public void Init()

@@ -51,9 +51,7 @@ public class UIController : UIBase, ISubscriber
     public override void InitSubscriptions(UIController uiController)
     {
         base.InitSubscriptions(uiController);
-        animationCommandInvoker.InitSubscriptions(this);
-        towerVisual.InitSubscriptions(this);
-        uiInventoryManager.InitSubscriptions(this);
+        animationCommandInvoker?.InitSubscriptions(this);
 
         Environment env = EnvironmentManager.Instance.GetActiveEnvironment();
         env.CardSystem.OnCardSystemChanged += EnvOnOnCardSystemChanged;

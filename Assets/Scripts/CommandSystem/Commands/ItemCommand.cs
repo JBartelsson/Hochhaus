@@ -46,6 +46,9 @@ namespace CommandSystem.Commands
                 case ItemLocations.SHOP:
                     location = _env.Shop.Items;
                     break;
+                case ItemLocations.TOKENS:
+                    location = _env.Tokens;
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

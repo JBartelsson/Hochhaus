@@ -47,6 +47,7 @@ namespace Items
         [SerializeField] private float multMult;
         [SerializeField] private float fabric;
         [SerializeField] private float fabricMult;
+        [SerializeField] private float fabricxMult;
 
 
         [SerializeField] private AppartmentSO effectRoom1;

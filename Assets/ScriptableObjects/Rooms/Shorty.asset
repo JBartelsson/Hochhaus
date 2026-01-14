@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ce5d5ab9b1ad9043850dc0d2087bc4d, type: 3}
   m_Name: Shorty
   m_EditorClassIdentifier: 
-  height: 0.5
+  basePoints: 0.5
   appartmentName: Shorty
   appartmentColor: {r: 0.51680714, g: 1, b: 0.33018857, a: 1}
+  modifications:
+  - {fileID: 11400000, guid: 7d0482e3ee3908c4d86a448278f953f2, type: 2}

@@ -68,6 +68,10 @@ namespace Items
         {
             foreach (var item in items)
             {
+                if (context.TriggerOnlyBasic != item.ItemData.IsBasic)
+                {
+                    continue;
+                }
                 context.CurrentItem = item;
                 context = item.GameUpdate(gameStateType, context);
             }

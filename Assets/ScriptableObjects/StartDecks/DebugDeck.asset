@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 09582d52a96348619587b942e593530b, type: 3}
-  m_Name: Debug
+  m_Name: DebugDeck
   m_EditorClassIdentifier: 
   _deck:
   - Color: {fileID: 11400000, guid: 582a20bfd054756449833717b0021fc6, type: 2}
     Amount: 10
   - Color: {fileID: 11400000, guid: 6acde89f0f8c70c4f9ca858603624222, type: 2}
-    Amount: 20
+    Amount: 1
   - Color: {fileID: 11400000, guid: 85643627694547b4889f091e933b131b, type: 2}
     Amount: 10
   - Color: {fileID: 11400000, guid: 0c05ec859b7f10147b2d2a0f8ca1c734, type: 2}

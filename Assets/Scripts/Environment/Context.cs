@@ -17,6 +17,8 @@ public class Context
 
     public Card LastDrawnCard;
 
+    public bool TriggerOnlyBasic;
+
 
     public UpdateGameStatCommand UpdateGameStatCommand;
     public Context(Environment env)

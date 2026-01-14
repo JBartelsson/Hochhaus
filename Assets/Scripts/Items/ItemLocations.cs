@@ -2,5 +2,6 @@
     {
         INVENTORY,
         CONSUMABLES,
-        SHOP
+        SHOP,
+        TOKENS
     }

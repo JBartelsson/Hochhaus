@@ -10,26 +10,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f9c4792f35bd4fbfbd43ad21c1092c88, type: 3}
-  m_Name: MOD_MachineRoom
+  m_Name: WeirdPipe
   m_EditorClassIdentifier: 
-  itemClass: 2
+  itemClass: 0
   isBasic: 0
-  displayName: Work Ethic
-  image: {fileID: 0}
+  displayName: Weird Pipe
+  image: {fileID: 21300000, guid: 1ea72352565dcc948ac278bf8a588ff3, type: 3}
   description: 
-  itemType: 256
+  itemType: 12
   rarity: 0
   pointEffect: 0
   multEffect: 0
   pointGain: 0
   multGain: 0
   multMult: 0
-  fabric: 1
+  fabric: 0
   fabricMult: 2
   fabricxMult: 0
   effectRoom1: {fileID: 0}
   effectColor2: {fileID: 0}
   effectColor3: {fileID: 0}
-  floatValue: 0
+  floatValue: 0.5
   intValue: 0
   intValue2: 0

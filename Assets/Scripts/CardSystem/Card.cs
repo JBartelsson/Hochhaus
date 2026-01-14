@@ -8,6 +8,8 @@ public class Card: EnvBase, ICloneable
     private AppartmentSO appartmentReference;
     private Item sender;
     private List<Item> mods = new List<Item>();
+    
+    public List<Item> Mods => mods;
 
     public Item Sender
     {

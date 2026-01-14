@@ -57,7 +57,6 @@ public class PlayerStats : EnvBase, IInitHandler, IResetHandler, ICloneable
         get
         {
             float score = 0;
-            float xMult = 1f;
             foreach (var modifier in statModifiers)
             {
                 switch (modifier.stat)
@@ -65,18 +64,62 @@ public class PlayerStats : EnvBase, IInitHandler, IResetHandler, ICloneable
                     case PlayerStats.PlayerStat.SCORE_POINTS:
                         score += modifier.Value;
                         break;
+                    default:
+                        break;
+                }
+            }
+            return score * RoomMult;
+        }
+    }
+
+    public float RoomMult
+    {
+        get
+        {
+            float mult = 1f;
+            foreach (var modifier in statModifiers)
+            {
+                switch (modifier.stat)
+                {
+                    
                     case PlayerStats.PlayerStat.SCORE_MULT:
-                        score *= modifier.Value * xMult;
+                        mult += modifier.Value;
                         break;
                     case PlayerStats.PlayerStat.SCORE_xMULT:
-                        xMult *= modifier.Value;
+                        mult *= modifier.Value;
                         break;
                     default:
                         break;
                 }
             }
-            Debug.Log($"Score modifiers: {statModifiers.ToFormattedString()}");
-            return score;
+            return mult;
+        }
+    }
+
+    public float RoomFabric
+    {
+        get
+        {
+            //calculate Fabric based on the modifiers
+            float fabric = 0;
+            float fabricMult = 1f;
+            foreach (var modifier in statModifiers)
+            {
+                if (modifier.stat == PlayerStats.PlayerStat.FABRIC)
+                {
+                    fabric += modifier.Value;
+                }
+                if (modifier.stat == PlayerStats.PlayerStat.FABRIC_MULT)
+                {
+                    fabricMult += modifier.Value;
+                }
+                if (modifier.stat == PlayerStats.PlayerStat.FABRIC_xMULT)
+                {
+                    fabricMult *= modifier.Value;
+                }
+            }
+
+            return fabric * fabricMult;
         }
     }
 
@@ -102,7 +145,9 @@ public class PlayerStats : EnvBase, IInitHandler, IResetHandler, ICloneable
         CHANCE_DATA = 14,
         INT_DATA = 15,
         FLOAT_DATA = 16,
-        TOTAL_SCORE = 17
+        SCORE_TOTAL = 17,
+        FABRIC_TOTAL = 18,
+        FABRIC_xMULT = 19,
     }
 
     public EnvStats Stats => stats;
@@ -127,22 +172,27 @@ public class PlayerStats : EnvBase, IInitHandler, IResetHandler, ICloneable
     
     public void CalculateScore()
     {
-        stats.TotalScore += RoomScore;
+        //calculate the score of the room
+        stats.ScoreTotal += RoomScore;
+        stats.FabricTotal += RoomFabric;
+        // UpdateGameStatCommand fabricCommand = new UpdateGameStatCommand(Env, null, PlayerStat.FABRIC_TOTAL, RoomFabric);
+        // Env.CommandInvoker.Execute(fabricCommand);
+        // UpdateGameStatCommand scoreCommand = new UpdateGameStatCommand(Env, null, PlayerStat.SCORE_TOTAL, RoomScore);
+        // Env.CommandInvoker.Execute(scoreCommand);
         //log all the score modifiers
-        Debug.Log($"Room is worth {RoomScore} and total Score is {stats.TotalScore}");
+        // Debug.Log($"PlayerStats {ID}:" +statModifiers.ToFormattedString());
     }
 
     // Reset the score and multiplier
     public void ResetRoomScore()
     {
         statModifiers.RemoveAll((x) => x.removeCondition == Environment.GameStateType.BUILD_ROOM_END);
-        Debug.Log("Resetting Score");
         // Notify all listeners about the reset
     }
 
     public void ResetTotalScore()
     {
-        stats.TotalScore = 0;
+        stats.ScoreTotal = 0;
         ResetRoomScore();
     }
 
@@ -156,6 +206,6 @@ public class PlayerStats : EnvBase, IInitHandler, IResetHandler, ICloneable
 
     public override string ToString()
     {
-        return $"Player Stats ID {ID}" + stats.ToString();
+        return $"Player Stats ID {ID}" + stats.ToString() + " " + statModifiers.ToFormattedString();
     }
 }

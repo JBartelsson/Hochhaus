@@ -68,7 +68,7 @@ namespace CommandSystem.AnimationCommands
         }
         private void UpdateFabric()
         {
-            ui.DrawUI.FabricText.text = _updateGameStatCommand.NewValue.ToString();
+            ui.DrawUI.FabricText.text = _updateGameStatCommand.NewStats.Stats.FabricTotal.ToString();
         }
         
         private void UpdateDrawCost()
@@ -79,8 +79,8 @@ namespace CommandSystem.AnimationCommands
         private void UpdateScore()
         {
             PlayerStats newStats = _updateGameStatCommand.NewStats;
-            float oldScore = _updateGameStatCommand.LastStats.Stats.TotalScore;
-            Tween scoreTween = DOTween.To(() => oldScore, x => oldScore = x, _updateGameStatCommand.NewStats.Stats.TotalScore, 0.1f).OnUpdate(() => ui.ScoreUI.ScoreText.text = Mathf.FloorToInt(oldScore).ToString(""));
+            float oldScore = _updateGameStatCommand.LastStats.Stats.ScoreTotal;
+            Tween scoreTween = DOTween.To(() => oldScore, x => oldScore = x, _updateGameStatCommand.NewStats.Stats.ScoreTotal, 0.1f).OnUpdate(() => ui.ScoreUI.ScoreText.text = Mathf.FloorToInt(oldScore).ToString(""));
             if (_updateGameStatCommand.Init) return;
             
             s.Append(scoreTween);
@@ -92,7 +92,7 @@ namespace CommandSystem.AnimationCommands
                 
                 s.Join(roomVisual.Pivot.transform.DOScaleY(newStats.RoomScore, 0.5f));
             }
-            Debug.Log("Animation Update new Stats: " + newStats);
+            // Debug.Log("Animation Update new Stats: " + newStats);
 
         }
     }

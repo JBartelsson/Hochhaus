@@ -39,6 +39,10 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
     public CardSystem CardSystem => _cardSystem;
 
     private Inventory _inventory;
+
+    private Inventory _tokens;
+    
+    public Inventory Tokens => _tokens;
     public ItemLibrary ItemLibrary => itemLibrary;
 
     public Inventory Inventory => _inventory;
@@ -64,7 +68,8 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
         CARD_DESTROYED_FROM_HAND,
         ITEM_REMOVED,
         EMPTY,
-        MODIFICATION_TRIGGER
+        MODIFICATION_TRIGGER,
+        TOKEN_TRIGGER
     }
 
 
@@ -91,6 +96,7 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
 
         _cardSystem = new CardSystem(this);
         _inventory = new Inventory(itemLibrary);
+        _tokens = new Inventory(itemLibrary);
         shop = new Shop(this);
     }
 
@@ -134,11 +140,8 @@ public class Environment : MonoBehaviour, IInitHandler, IGameEventReceivable
         if (BlockActions) return;
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Debug.Log("Space Pressed");
             float time = Time.time;
-            Debug.Log($"oldTime {time}");
             PlayHand();
-            Debug.Log($"Duration {(Time.time - time).ToString("G")}");
         }
 
         if (Input.GetKeyDown(KeyCode.A))

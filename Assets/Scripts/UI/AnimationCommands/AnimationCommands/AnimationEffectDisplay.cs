@@ -2,6 +2,7 @@
 using CommandSystem.Commands;
 using DG.Tweening;
 using Items;
+using TMPro;
 using UI;
 using UnityEngine;
 
@@ -21,33 +22,11 @@ namespace CommandSystem.AnimationCommands
 
         protected override void ExecuteCmd()
         {
-            string valueString = "";
-            _effectDisplay.Text.text = valueString;
-            if (_command.GetType() == typeof(UpdateGameStatCommand))
-            {
-                UpdateGameStatCommand updateGameStatCommand = (UpdateGameStatCommand)_command;
-                valueString = GetInformation(updateGameStatCommand);
-                _effectDisplay.Text.text = valueString;
-            }
-            _effectDisplay.ImageContainer.SetActive(false);
-
-            if (_command.Sender != null)
-            {
-                if (_command.Sender.ItemData.ItemType != ItemType.BasicPoints)
-                {
-                    _effectDisplay.ImageContainer.SetActive(true);
-                }
-
-                _effectDisplay.Image.sprite = _command.Sender.ItemData.Image;
-            }
-            else
-            {
-                return;
-            }
+            SetValues(_command as UpdateGameStatCommand);
 
 
-            _effectDisplay.CanvasGroup.alpha = 0f;
-            s.Append(_effectDisplay.CanvasGroup.DOFade(1f, 0.4f));
+            _effectDisplay.CanvasGroup.alpha = 1f;
+            // s.Append(_effectDisplay.CanvasGroup.DOFade(1f, 0.4f));
                 
             int itemIndex = EnvironmentManager.Instance.GetActiveEnvironment().Inventory.Items.IndexOf(_command.Sender);
             if (itemIndex != -1 && !_command.Sender.ItemData.IsBasic)
@@ -56,7 +35,8 @@ namespace CommandSystem.AnimationCommands
                 s.JoinCallback(()=> DoItemScale(item));
             }
             s.AppendInterval(0.2f)
-                .Append(_effectDisplay.CanvasGroup.DOFade(0f, 0.4f));
+                // .Append(_effectDisplay.CanvasGroup.DOFade(0f, 0.4f))
+                ;
         }
 
         private void DoItemScale(Transform item)
@@ -67,37 +47,63 @@ namespace CommandSystem.AnimationCommands
                 .Join(item.DOScale(new Vector3(1f, 1f, 1f), 0.4f));
         }
 
-        private string GetInformation(UpdateGameStatCommand updateGameStatCommand)
+        private void SetValues(UpdateGameStatCommand updateGameStatCommand)
         {
             switch (updateGameStatCommand.PlayerStat)
             {
-                case PlayerStats.PlayerStat.SCORE_POINTS:
-                    return "+" + + updateGameStatCommand.Value;
-
-                    break;
                 case PlayerStats.PlayerStat.FABRIC:
-                    return "";
-
+                    UpdateText(_effectDisplay.FabricText, updateGameStatCommand.NewStats.Stats.Fabric);
                     break;
-                case PlayerStats.PlayerStat.DRAW_COST:
-                    return "Draws +" + + updateGameStatCommand.Value;
+                case PlayerStats.PlayerStat.SCORE_POINTS:
+                    UpdateText(_effectDisplay.PointsText, updateGameStatCommand.NewStats.Stats.ScorePoints);
+
                     break;
                 case PlayerStats.PlayerStat.SCORE_MULT:
-                    return "x" +  + updateGameStatCommand.Value + "\nx" + updateGameStatCommand.LastStats.xMult;
-
-                case PlayerStats.PlayerStat.SCORE_xMULT:
-                    return "+x" + updateGameStatCommand.Value;
-
-                case PlayerStats.PlayerStat.HAND_SIZE:
-                case PlayerStats.PlayerStat.SHOP_SIZE_ITEMS:
-                case PlayerStats.PlayerStat.SHOP_SIZE_CONSUMABLES:
-                case PlayerStats.PlayerStat.REROLL_COST:
-                case PlayerStats.PlayerStat.REROLL_COST_INCREASE:
-                default:
+                    UpdateText(_effectDisplay.MultText, updateGameStatCommand.NewStats.RoomMult);
                     break;
+                case PlayerStats.PlayerStat.SCORE_xMULT:
+                    UpdateText(_effectDisplay.MultText, updateGameStatCommand.NewStats.RoomMult);
+                    break;
+                case PlayerStats.PlayerStat.DRAW_COST:
+                    break;
+                case PlayerStats.PlayerStat.HAND_SIZE:
+                    break;
+                case PlayerStats.PlayerStat.SHOP_SIZE_ITEMS:
+                    break;
+                case PlayerStats.PlayerStat.SHOP_SIZE_CONSUMABLES:
+                    break;
+                case PlayerStats.PlayerStat.REROLL_COST:
+                    break;
+                case PlayerStats.PlayerStat.REROLL_COST_INCREASE:
+                    break;
+                case PlayerStats.PlayerStat.HANDS_UNTIL_INCREASE:
+                    break;
+                case PlayerStats.PlayerStat.HANDS_LEFT:
+                    break;
+                case PlayerStats.PlayerStat.HANDS_TOTAL:
+                    break;
+                case PlayerStats.PlayerStat.FABRIC_MULT:
+                    break;
+                case PlayerStats.PlayerStat.CHANCE_DATA:
+                    break;
+                case PlayerStats.PlayerStat.INT_DATA:
+                    break;
+                case PlayerStats.PlayerStat.FLOAT_DATA:
+                    break;
+                case PlayerStats.PlayerStat.SCORE_TOTAL:
+                    break;
+                case PlayerStats.PlayerStat.FABRIC_TOTAL:
+                    break;
+                case PlayerStats.PlayerStat.FABRIC_xMULT:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
+        }
 
-            return "+";
+        void UpdateText(TextMeshProUGUI text, float value)
+        {
+            text.text = value.ToString();
         }
     }
 }

@@ -13,12 +13,10 @@ namespace CommandSystem.AnimationCommands
 
         protected override void ExecuteCmd()
         {
-            Debug.Log("CHECK 1!");
 
             List<Item> items = EnvironmentManager.Instance.GetActiveEnvironment().Inventory.Items;
             List<Item> newItems = ReorderList(items, ui.UIInventoryManager.ItemDraggableManager);
             EnvironmentManager.Instance.GetActiveEnvironment().Inventory.Items = newItems;
-            Debug.Log("CHECK 2!");
             List<Card> hand = EnvironmentManager.Instance.GetActiveEnvironment().CardSystem.Hand;
             List<Card> newHand = ReorderList(hand, ui.UIInventoryManager.HandCardManager);
             EnvironmentManager.Instance.GetActiveEnvironment().CardSystem.Hand = newHand;

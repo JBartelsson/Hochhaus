@@ -7,5 +7,8 @@ namespace UI
         Primary,
         Secondary,
         Tertiary,
+        Score_Points,
+        Score_Mult,
+        Score_Fabric
     }
 }

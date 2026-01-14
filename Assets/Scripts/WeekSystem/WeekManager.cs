@@ -21,7 +21,7 @@ namespace WeekSystem
 
         public bool IsLevelSuccessful(PlayerStats roundScore)
         {
-            return weekData.GetScoreAt(currentWeek) <= roundScore.Stats.TotalScore;
+            return weekData.GetScoreAt(currentWeek) <= roundScore.Stats.ScoreTotal;
         }
 
         public void NextWeek()

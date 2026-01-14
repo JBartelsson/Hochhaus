@@ -18,6 +18,9 @@ namespace UI
         [Header("Tertiary")] 
         public Color tertiary_bg;
         public Color tertiary_text;
+        [Header("Effects")] public Color points;
+        public Color mult;
+        public Color fabric;
         [Header("Other")] 
         public Color disable;
         
@@ -48,6 +51,12 @@ namespace UI
                     return secondary_text;
                 case UIStyle.Tertiary:
                     return tertiary_text;
+                case UIStyle.Score_Points:
+                    return points;
+                case UIStyle.Score_Mult:
+                    return mult;
+                case UIStyle.Score_Fabric:
+                    return fabric;
                 default:
                     return Color.clear; // Return a default color if the style is not recognized
             }

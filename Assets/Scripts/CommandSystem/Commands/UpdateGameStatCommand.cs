@@ -47,7 +47,7 @@ namespace CommandSystem.Commands
             switch (_playerStat)
             {
                 case PlayerStats.PlayerStat.FABRIC:
-                    UpdateFabric();
+                    UpdateScore();
                     break;
 
                 case PlayerStats.PlayerStat.DRAW_COST:
@@ -89,11 +89,20 @@ namespace CommandSystem.Commands
                     UpdateHands();
                     break;
                 case PlayerStats.PlayerStat.FABRIC_MULT:
-                    UpdateFabricMult();
+                    UpdateScore();
+                    break;
+                case PlayerStats.PlayerStat.FABRIC_xMULT:
+                    UpdateScore();
                     break;
                 case PlayerStats.PlayerStat.CHANCE_DATA:
                 case PlayerStats.PlayerStat.INT_DATA:
                 case PlayerStats.PlayerStat.FLOAT_DATA:
+                case PlayerStats.PlayerStat.SCORE_TOTAL:
+                    UpdateScore();
+                    break;
+                case PlayerStats.PlayerStat.FABRIC_TOTAL:
+                    UpdateScore();
+                    break;
                 default:
                     break;
             }
@@ -111,12 +120,6 @@ namespace CommandSystem.Commands
             });
         }
 
-        private void UpdateFabricMult()
-        {
-            oldValue = _env.PlayerStats.Stats.FabricMult;
-            newValue = (float)_env.PlayerStats.Stats.FabricMult + value;
-            _env.PlayerStats.Stats.FabricMult = newValue;
-        }
         
         //Update Hands UNTIL Increase
         private void UpdateHandsUntilIncrease()
@@ -199,13 +202,6 @@ namespace CommandSystem.Commands
             _env.PlayerStats.Stats.HandSize = Mathf.FloorToInt(newValue);
         }
 
-        private void UpdateFabric()
-        {
-            oldValue = _env.PlayerStats.Stats.Fabric;
-            newValue = (float)_env.PlayerStats.Stats.Fabric + value;
-            _env.PlayerStats.Stats.Fabric = Mathf.FloorToInt(newValue);
-        }
-
         private void UpdateScore()
         {
             lastStats = (PlayerStats)_env.PlayerStats.Clone();
@@ -214,6 +210,11 @@ namespace CommandSystem.Commands
             newStats = (PlayerStats)_env.PlayerStats.Clone();
             newStats.CalculateScore();
             Debug.Log($"New Score {newStats}");
+            if (Init)
+            {
+                _env.PlayerStats.CalculateScore();
+                _env.PlayerStats.ResetRoomScore();
+            }
         }
 
         public override void Undo()

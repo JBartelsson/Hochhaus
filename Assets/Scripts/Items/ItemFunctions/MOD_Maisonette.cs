@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using CommandSystem.Commands;
 
 
 namespace Items.ItemFunctions
@@ -8,8 +9,11 @@ namespace Items.ItemFunctions
     {
         public new Context GameUpdate(Environment.GameStateType gameStateType, Context context)
         {
-            if (gameStateType != Environment.GameStateType.BUILD_ROOM) return context;
+            if (gameStateType != Environment.GameStateType.MODIFICATION_TRIGGER) return context;
 
+            UpdateGameStatCommand fabric = new UpdateGameStatCommand(context.Env, context.CurrentItem,
+                PlayerStats.PlayerStat.SCORE_xMULT, effectData.MultMult);
+            context.Env.CommandInvoker.Execute(fabric);
             return context;
         }
     }

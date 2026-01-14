@@ -177,8 +177,9 @@ public class CardSystem : IResetHandler, IInitHandler
             return;
         }
         
-        UpdateGameStatCommand updateGameStatCommand = new UpdateGameStatCommand(_env, null, PlayerStats.PlayerStat.FABRIC, -_env.PlayerStats.Stats.DrawCost);
+        UpdateGameStatCommand updateGameStatCommand = new UpdateGameStatCommand(_env, null, PlayerStats.PlayerStat.FABRIC, -_env.PlayerStats.Stats.DrawCost, true);
         _env.CommandInvoker.Execute(updateGameStatCommand);
+        
         Debug.Log("HANDS UPDATE YEAH!");
         UpdateGameStatCommand updateHands = new UpdateGameStatCommand(_env, null, PlayerStats.PlayerStat.HANDS_TOTAL, 1);
         _env.CommandInvoker.Execute(updateHands);

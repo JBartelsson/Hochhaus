@@ -10,6 +10,7 @@
         ShinyNail = 9,
         TheRichest = 10,
         Ladder = 11,
+        WeirdPipe = 12,
         MOD_MachineRoom = 256,
         MOD_SwimmingPool = 257,
         MOD_Maisonette = 258,

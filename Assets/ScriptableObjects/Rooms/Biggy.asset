@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ce5d5ab9b1ad9043850dc0d2087bc4d, type: 3}
   m_Name: Biggy
   m_EditorClassIdentifier: 
-  height: 2
+  basePoints: 1
   appartmentName: Biggy
   appartmentColor: {r: 0.6075471, g: 0.017194625, b: 0.54663795, a: 1}
+  modifications:
+  - {fileID: 11400000, guid: 24e686a6433be3b4b944970f63a9829e, type: 2}

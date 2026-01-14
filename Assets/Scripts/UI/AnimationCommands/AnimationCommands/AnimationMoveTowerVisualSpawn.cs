@@ -19,7 +19,7 @@ namespace CommandSystem.AnimationCommands
             _updateGameStatCommand = updateGameStatCommand;
             // Debug.Log($"Visual Spawn Update Game Stat {_updateGameStatCommand}");
             newStats = _updateGameStatCommand.NewStats;
-            float totalScore = newStats.Stats.TotalScore;
+            float totalScore = newStats.Stats.ScoreTotal;
             float halfDownTotal = totalScore - newStats.RoomScore / 2f;
             yOffsetSpawn = totalScore * ui.VisualSettings.roomPxPerUnit;
             yOffsetDisplayText = halfDownTotal * ui.VisualSettings.roomPxPerUnit;
@@ -27,8 +27,8 @@ namespace CommandSystem.AnimationCommands
 
         public AnimationMoveTowerVisualSpawn(UIController ui, CreateRoomCommand createRoomCommand) : base(ui)
         {
-            float totalScore = createRoomCommand.PlacedRoom.LastStats.Stats.TotalScore + createRoomCommand.PlacedRoom._PlacedCard.CardCopy.AppartmentReference.BasePoints;
-            float halfDownTotal = createRoomCommand.PlacedRoom.LastStats.Stats.TotalScore + createRoomCommand.PlacedRoom._PlacedCard.CardCopy.AppartmentReference.BasePoints * .5f;
+            float totalScore = createRoomCommand.PlacedRoom.LastStats.Stats.ScoreTotal + createRoomCommand.PlacedRoom._PlacedCard.CardCopy.AppartmentReference.BasePoints;
+            float halfDownTotal = createRoomCommand.PlacedRoom.LastStats.Stats.ScoreTotal + createRoomCommand.PlacedRoom._PlacedCard.CardCopy.AppartmentReference.BasePoints * .5f;
             yOffsetSpawn = totalScore * ui.VisualSettings.roomPxPerUnit;
             yOffsetDisplayText  = halfDownTotal * ui.VisualSettings.roomPxPerUnit;
             // Debug.Log($"Calculated offset as {yOffsetSpawn} and {yOffsetDisplayText}");
